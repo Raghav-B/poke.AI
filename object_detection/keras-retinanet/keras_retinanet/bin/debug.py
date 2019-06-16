@@ -47,16 +47,16 @@ def create_generator(args):
     """
     # create random transform generator for augmenting training data
     transform_generator = random_transform_generator(
-        min_rotation=-0.1,
-        max_rotation=0.1,
-        min_translation=(-0.1, -0.1),
-        max_translation=(0.1, 0.1),
-        min_shear=-0.1,
-        max_shear=0.1,
-        min_scaling=(0.9, 0.9),
-        max_scaling=(1.1, 1.1),
-        flip_x_chance=0.5,
-        flip_y_chance=0.5,
+        #min_rotation=-0.1,
+        #max_rotation=0.1,
+        min_translation=(-1, -1),
+        max_translation=(1, 1),
+        #min_shear=-0.1,
+        #max_shear=0.1,
+        #min_scaling=(0.9, 0.9),
+        #max_scaling=(1.1, 1.1),
+        #flip_x_chance=0.5,
+        #flip_y_chance=0.5,
     )
 
     if args.dataset_type == 'coco':
@@ -202,7 +202,7 @@ def run(generator, args, anchor_params):
                 draw_boxes(image, annotations['bboxes'][max_indices[positive_indices], :], (0, 255, 0))
 
         cv2.imshow('Image', image)
-        if cv2.waitKey() == ord('q'):
+        if cv2.waitKey(3000) == ord('q'):
             return False
     return True
 

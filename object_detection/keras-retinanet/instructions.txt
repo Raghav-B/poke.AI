@@ -1,0 +1,8 @@
+# Running debug command to check annotations
+python keras_retinanet/bin/debug.py --random-transform --loop --annotations csv ../training_csvs/keras_train.csv ../training_csvs/labels.csv
+
+# Training the model
+python keras_retinanet/bin/train.py --random-transform --imagenet-weights --backbone=resnet101 --batch-size=1 --epochs=50 --steps=1000 csv ../training_csvs/keras_train.csv ../training_csvs/labels.csv 
+
+# Creating inference models from training models
+retinanet-convert-model snapshots/resnet101_csv_24.h5 inference_graphs/resnet101_csv_24.h5

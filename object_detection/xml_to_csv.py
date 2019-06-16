@@ -3,12 +3,12 @@ import glob
 import pandas as pd
 import xml.etree.ElementTree as ET
 
-image_path = 'train/'
+image_path = 'training_maps/'
 #image_path = 'test/'
 
 def xml_to_csv(path):
     xml_list = []
-    for xml_file in glob.glob(path + '/*.xml'):
+    for xml_file in glob.glob(path + '*.xml'):
         tree = ET.parse(xml_file)
         root = tree.getroot()
         for member in root.findall('object'):
@@ -28,7 +28,7 @@ def xml_to_csv(path):
 
 def main():
     xml_df = xml_to_csv(image_path)
-    xml_df.to_csv('split_outputs/train.csv', index=None)
+    xml_df.to_csv('training_csvs/train.csv', index=None)
     #xml_df.to_csv('test/test.csv', index=None)
     print('Successfully converted xml to csv.')
 
