@@ -1,0 +1,6 @@
+normal_house
+pokemon_center
+pokemart
+gym
+misc
+cave

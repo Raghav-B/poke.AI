@@ -1,0 +1,38 @@
+<annotation>
+	<folder>training_maps</folder>
+	<filename>route119.DIB.png</filename>
+	<path>D:\App Development\Orbital\training_maps\route119.DIB.png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>640</width>
+		<height>2240</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>misc</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>62</xmin>
+			<ymin>481</ymin>
+			<xmax>146</xmax>
+			<ymax>539</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>normal_house</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>509</xmin>
+			<ymin>1694</ymin>
+			<xmax>581</xmax>
+			<ymax>1763</ymax>
+		</bndbox>
+	</object>
+</annotation>

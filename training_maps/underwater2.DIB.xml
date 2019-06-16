@@ -1,0 +1,26 @@
+<annotation>
+	<folder>training_maps</folder>
+	<filename>underwater2.DIB.png</filename>
+	<path>D:\App Development\Orbital\training_maps\underwater2.DIB.png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1280</width>
+		<height>1280</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>cave</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>674</xmin>
+			<ymin>1003</ymin>
+			<xmax>780</xmax>
+			<ymax>1061</ymax>
+		</bndbox>
+	</object>
+</annotation>
