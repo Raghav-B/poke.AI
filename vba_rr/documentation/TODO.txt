@@ -1,0 +1,14 @@
+* Write a proper TODO.txt.
+* Write a proper readme.txt.
+* Better savestate format/handling.
+* Fix Lua support with GBx games.
+* Fix vba.ini settings.
+* Fix vba-over.ini settings.
+* Fix frame timing, which is required for the following thing.
+* Multiplayer re-recording support for GBA and/or GB games?
+* Fix non-smooth motion on LCDs@60Hz
+* Enable GBA mode recording for special GBC games like Shantae that can utilize GBA's hardware feature.
+* Clean the code, which is a whole mess at this moment.
+* Fix the SDL/gtk build.
+* Resolve all other issues on the tracker.
+* Better documentation.

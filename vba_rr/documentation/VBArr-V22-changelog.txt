@@ -1,0 +1,54 @@
+VBA rercording v22 
+http://code.google.com/p/vba-rerecording/
+
+The rercording (rr) branch of VBA is designed for making Tool-assisted Movies
+http://tasvideos.org
+
+New Features
+--Added RAM search and RAM watch dialogs from Gens! 
+--Added support for loading ROMs and movies in 7z/rar/zip/etc archives, including multi-file archive selection support
+
+Win32 GUI features 
+--Now the emulator will never write to the Windows Registry anymore. 
+--Added an option to make the emulator prefer the old-fashion save/movie/etc. file naming to the new-fashion. 
+--Enabled directory override edit boxes 
+--Added directory overrides for GBx rom, cheats, ips, LUA scritps, AVI and sound recording. 
+--Re-added the "Open GBx ROM..." menu command. "Open ROM..." changed to "Open GBA ROM...". 
+--Cleaned hotkeys (somehow). Old hotkeys settings might fail.
+
+Lua
+--Added input.get(). 
+--gui.gdscreenshot, gui.gdoverlay code changes. removed the upper limit of opacity. 
+--Changed the draw timing of Lua GUI (use gui.register to display something). 
+--accept a table for color value. 
+--add gui.parsecolor, joypad.getup, joypad.getdown, emu.emulating.
+--gui.line, gui.box, joypad.get becomes like Gens. 
+--Win32 Lua console - add a menu to Lua window with "Font..." and "Clear" items.
+
+Filters
+--Added Pixelate 3x and Pixelate 4x filters 
+--Fixed GDI/D3D/OpenGL display with 3x filters.
+--Added Simple 3x and Simple 4x filters (unoptimized).
+
+Bug Fixes
+--Fixed a bug that certain accelerator keys would not be enabled correctly. 
+--Fixed an assertion failure in the old cheat search dialog. 
+--Fixed several activation problems of the main window and dialogs. 
+--Fixed an old bug that would crash the emulator if the user paused it with the throttle set to 25% or less and without a ROM loaded. 
+--Fixed menu item File->Pause. It now updates correctly. --Fixed display of timestamps of Save Slots. It can be enabled via File->Current Slot->Display Timestamps. 
+--Fixed an old bug that caused the emulator to freeze. 
+--Fixed various out-of-range errors within some file dialogs. 
+--Fixed GB memory viewer crash 
+--Fixed read-only toggle to refuse toggling when the movie file is not writable 
+--Fixed browse dialog filter selection crash 
+--Added "All Files" filter option to all browse dialogs 
+--Fixed movie drag & drop behavior. 
+--Fixed Reset/Cancel in the Directories dialog.
+--Fixed compilation with SDL and gtk. Still malfunctioning. 
+--Fixed small bugs in Memory Viewer 
+--(Probably) the gbx SRAM issue (  issue 29  ) is now fixed.
+
+Misc/Exerimental
+--Unfreezed GBx "from SRAM" check for the time being. VBA now tells you that the feature might be problematic. 
+--Removed all the skin functions and CxImage?. 
+--Provided several options for what to do at movie end (buggy right now). 

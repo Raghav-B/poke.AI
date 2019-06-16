@@ -1,0 +1,183 @@
+emu / vba =
+    // { "speedmode", vba_speedmode }, // TODO: NYI
+    { "frameadvance",    vba_frameadvance     },
+    { "pause",           vba_pause            },
+    { "framecount",      vba_framecount       },
+    { "lagcount",        vba_getlagcount      },
+    { "lagged",          vba_lagged           },
+    { "emulating",       vba_emulating        },
+    { "registerbefore",  vba_registerbefore   },
+    { "registerafter",   vba_registerafter    },
+    { "registerexit",    vba_registerexit     },
+    { "registerrun",     vba_registerpoweron  },
+    { "registerclose",   vba_registerpoweroff },
+    { "registerloading", vba_registerloading  },
+    { "registerloaded",  vba_registerloaded   },
+    { "registersaving",  vba_registersaving   },
+    { "registersaved",   vba_registersaved    },
+    { "message",         vba_message          },
+    { "print",           print                }, // sure, why not
+
+memory =
+    { "readbyte",             memory_readbyte             },
+    { "readbytesigned",       memory_readbytesigned       },
+    { "readword",             memory_readword             },
+    { "readwordsigned",       memory_readwordsigned       },
+    { "readdword",            memory_readdword            },
+    { "readdwordsigned",      memory_readdwordsigned      },
+    { "readbyterange",        memory_readbyterange        },
+    { "writebyte",            memory_writebyte            },
+    { "writeword",            memory_writeword            },
+    { "writedword",           memory_writedword           },
+    { "getregister",          memory_getregister          },
+    { "setregister",          memory_setregister          },
+    { "gbromreadbyte",        memory_gbromreadbyte        },
+    { "gbromreadbytesigned",  memory_gbromreadbytesigned  },
+    { "gbromreadword",        memory_gbromreadword        },
+    { "gbromreadwordsigned",  memory_gbromreadwordsigned  },
+    { "gbromreaddword",       memory_gbromreaddword       },
+    { "gbromreaddwordsigned", memory_gbromreaddwordsigned },
+    { "gbromreadbyterange",   memory_gbromreadbyterange   },
+
+    // alternate naming scheme for word and double-word and unsigned
+    { "readbyteunsigned",       memory_readbyte             },
+    { "readwordunsigned",       memory_readword             },
+    { "readdwordunsigned",      memory_readdword            },
+    { "readshort",              memory_readword             },
+    { "readshortunsigned",      memory_readword             },
+    { "readshortsigned",        memory_readwordsigned       },
+    { "readlong",               memory_readdword            },
+    { "readlongunsigned",       memory_readdword            },
+    { "readlongsigned",         memory_readdwordsigned      },
+    { "writeshort",             memory_writeword            },
+    { "writelong",              memory_writedword           },
+    { "gbromreadbyteunsigned",  memory_gbromreadbyte        },
+    { "gbromreadwordunsigned",  memory_gbromreadword        },
+    { "gbromreaddwordunsigned", memory_gbromreaddword       },
+    { "gbromreadshort",         memory_gbromreadword        },
+    { "gbromreadshortunsigned", memory_gbromreadword        },
+    { "gbromreadshortsigned",   memory_gbromreadwordsigned  },
+    { "gbromreadlong",          memory_gbromreaddword       },
+    { "gbromreadlongunsigned",  memory_gbromreaddword       },
+    { "gbromreadlongsigned",    memory_gbromreaddwordsigned },
+
+    // memory hooks
+    { "registerwrite",   memory_registerwrite },
+    { "registerread",    memory_registerread  },
+    { "registerexec",    memory_registerexec  },
+    // alternate names
+    { "register",        memory_registerwrite },
+    { "registerrun",     memory_registerexec  },
+    { "registerexecute", memory_registerexec  },
+
+joypad =
+    { "get",      joypad_get     },
+    { "getdown",  joypad_getdown },
+    { "getup",    joypad_getup   },
+    { "set",      joypad_set     },
+
+    // alternative names
+    { "read",     joypad_get     },
+    { "write",    joypad_set     },
+    { "readdown", joypad_getdown },
+    { "readup",   joypad_getup   },
+
+savestate =
+    { "create", savestate_create },
+    { "save",   savestate_save   },
+    { "load",   savestate_load   },
+
+movie =
+    { "active",           movie_isactive         },
+    { "recording",        movie_isrecording      },
+    { "playing",          movie_isplaying        },
+    { "mode",             movie_getmode          },
+
+    { "length",           movie_getlength        },
+    { "author",           movie_getauthor        },
+    { "name",             movie_getfilename      },
+    { "rerecordcount",    movie_rerecordcount    },
+    { "setrerecordcount", movie_setrerecordcount },
+
+    { "rerecordcounting", movie_rerecordcounting },
+    { "framecount",       vba_framecount         }, // for those familiar with
+                                                    // other emulators that have
+                                                    // movie.framecount()
+                                                    // instead of
+                                                    // emulatorname.framecount()
+    { "stop",             movie_stop             },
+
+    // alternative names
+    { "close",            movie_stop             },
+    { "getauthor",        movie_getauthor        },
+    { "getname",          movie_getfilename      },
+
+gui =
+    { "register",     gui_register     },
+    { "text",         gui_text         },
+    { "box",          gui_drawbox      },
+    { "line",         gui_drawline     },
+    { "pixel",        gui_drawpixel    },
+    { "opacity",      gui_setopacity   },
+    { "transparency", gui_transparency },
+    { "popup",        gui_popup        },
+    { "parsecolor",   gui_parsecolor   },
+    { "gdscreenshot", gui_gdscreenshot },
+    { "gdoverlay",    gui_gdoverlay    },
+    { "getpixel",     gui_getpixel     },
+
+    // alternative names
+    { "drawtext",     gui_text         },
+    { "drawbox",      gui_drawbox      },
+    { "drawline",     gui_drawline     },
+    { "drawpixel",    gui_drawpixel    },
+    { "setpixel",     gui_drawpixel    },
+    { "writepixel",   gui_drawpixel    },
+    { "rect",         gui_drawbox      },
+    { "drawrect",     gui_drawbox      },
+    { "drawimage",    gui_gdoverlay    },
+    { "image",        gui_gdoverlay    },
+    { "readpixel",    gui_getpixel     },
+
+input =
+    { "get",  input_getcurrentinputstatus },
+
+    // alternative names
+    { "read", input_getcurrentinputstatus },
+
+sound =
+    { "get", sound_get },
+
+bit =
+    { "tobit",   bit_tobit   },
+    { "bnot",    bit_bnot    },
+    { "band",    bit_band    },
+    { "bor",     bit_bor     },
+    { "bxor",    bit_bxor    },
+    { "lshift",  bit_lshift  },
+    { "rshift",  bit_rshift  },
+    { "arshift", bit_arshift },
+    { "rol",     bit_rol     },
+    { "ror",     bit_ror     },
+    { "bswap",   bit_bswap   },
+    { "tohex",   bit_tohex   },
+
+// gocha: since vba dumps avi so badly,
+// I add avilib as a workaround for enhanced video encoding.
+avi =
+    { "framecount", avi_framecount },
+    { "pause",      avi_pause      },
+    { "resume",     avi_resume     },
+
+GLOBAL:
+* print
+* tostring
+* addressof
+* copytable
+
+GLOBAL LEGACY:
+* AND
+* OR
+* XOR
+* SHIFT
+* BIT
