@@ -1,7 +1,7 @@
 **/snapshots
 **/inference_graphs
 **/training_inputs
+**/split_training_maps
 **/test_outputs
-**/test_inputs
 **/logs
 

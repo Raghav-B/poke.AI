@@ -4,9 +4,9 @@ import glob
 import os
 import pandas as pd
 
-output_dir = "split_outputs/"
-image_list = glob.glob("train/*.jpg")
-csv_file = pd.read_csv("split_outputs/train.csv")
+output_dir = "split_training_maps/"
+image_list = glob.glob("training_maps/*.png")
+csv_file = pd.read_csv("training_csvs/train.csv")
 split_data = []
 
 for i in range(len(image_list)):
@@ -51,7 +51,7 @@ for i in range(len(image_list)):
 			(j_coords[2] >= segments[seg][1][0] and j_coords[2] <= segments[seg][1][1]\
 			and j_coords[3] >= segments[seg][0][0] and j_coords[3] <= segments[seg][0][1])):
 				
-				thresh_area = 0.5 * (j_coords[2] - j_coords[0]) * (j_coords[3] - j_coords[1])
+				thresh_area = 0.25 * (j_coords[2] - j_coords[0]) * (j_coords[3] - j_coords[1])
 				
 				# Splices boxes that intersect with cropped regions
 				if (j_coords[0] <= segments[seg][1][0]):
@@ -105,4 +105,4 @@ for i in range(len(image_list)):
 	print("Finished " + str(i + 1) + " out of " + str(len(image_list)) + " images.")
 
 final_data_frame = pd.DataFrame(split_data, columns = ["filename", "width", "height", "class", "xmin", "ymin", "xmax", "ymax"])
-final_data_frame.to_csv("split_outputs/new_train.csv", index = False)
+final_data_frame.to_csv("training_csvs/split_train.csv", index = False)

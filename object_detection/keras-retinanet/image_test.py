@@ -29,14 +29,14 @@ def get_session():
 # set the modified tf session as backend in keras
 keras.backend.tensorflow_backend.set_session(get_session())
 
-model_path = "inference_graphs/resnet101_csv_50.h5"
+model_path = "inference_graphs/resnet101_csv_05.h5"
 model = models.load_model(model_path, backbone_name='resnet101')
 
 labels_to_names = {0: "normal_house", 1: "pokemon_center", 2: "pokemart", 3: "gym", 4: "misc", 5: "cave"}
 
-input_images = glob.glob("test_inputs/*.png")
-#input_images_png = glob.glob("test_inputs/*.png")
-#input_images.(input_images_png)
+input_images = glob.glob("test_inputs/*.jpg")
+input_images_png = glob.glob("test_inputs/*.png")
+input_images.extend(input_images_png)
 
 index = 0
 len_inputs = len(input_images)
@@ -56,7 +56,7 @@ for i in input_images:
     boxes /= scale
 
     for box, score, label in zip(boxes[0], scores[0], labels[0]):
-        if score < 0.2:
+        if score < 0.7:
             break
             
         color = label_color(label)
