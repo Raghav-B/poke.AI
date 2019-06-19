@@ -1,11 +1,11 @@
 import numpy as np
 import cv2
 
-input_vid = cv2.VideoCapture("gameplay_reduced.mp4")
+input_vid = cv2.VideoCapture("videos/gameplay_reduced.mp4")
 total_frames = int(input_vid.get(cv2.CAP_PROP_FRAME_COUNT))
 
 frame_index = 0
-skip_frames = 100
+skip_frames = 0
 
 ret = True
 
@@ -15,7 +15,7 @@ while (ret):
 
     ret, frame = input_vid.read()
 
-    output_path = "../training_gameplay/" + str(frame_index) + ".jpg"
+    output_path = "extracted_frames/" + str(frame_index) + ".jpg"
     #print(output_path)
     
     cv2.imwrite(output_path, frame)
