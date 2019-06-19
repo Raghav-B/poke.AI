@@ -7,3 +7,6 @@
 **/logs
 **/results_archive
 **/videos
+**/training_maps
+**/test_inputs
+

@@ -30,16 +30,16 @@ def get_session():
 keras.backend.tensorflow_backend.set_session(get_session())
 
 #model_path = "inference_graphs/no_random_transform/resnet101_csv_50.h5"
-model_path = "inference_graphs/resnet101_csv_05.h5"
+model_path = "inference_graphs/resnet101_csv_09.h5"
 model = models.load_model(model_path, backbone_name='resnet101')
 
-labels_to_names = {0: "normal_house", 1: "pokemon_center", 2: "pokemart", 3: "gym", 4: "misc", 5: "cave"}
+labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"}
 
-#input_images = glob.glob("training_inputs/*.jpg")
-#input_images_png = glob.glob("training_inputs/*.png")
+input_images = glob.glob("training_inputs/*.jpg")
+input_images_png = glob.glob("training_inputs/*.png")
 
-input_images = glob.glob("test_inputs/*.jpg")
-input_images_png = glob.glob("test_inputs/*.png")
+#input_images = glob.glob("test_inputs/*.jpg")
+#input_images_png = glob.glob("test_inputs/*.png")
 input_images.extend(input_images_png)
 
 index = 0

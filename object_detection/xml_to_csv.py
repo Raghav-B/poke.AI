@@ -3,7 +3,7 @@ import glob
 import pandas as pd
 import xml.etree.ElementTree as ET
 
-image_path = 'training_maps/'
+image_path = 'training_gameplay/'
 #image_path = 'test/'
 
 def xml_to_csv(path):

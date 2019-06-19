@@ -19,10 +19,10 @@ def get_session():
     return tf.Session(config=config)
 keras.backend.tensorflow_backend.set_session(get_session())
 
-model_path = os.path.join('inference_graphs', 'resnet101_csv_05.h5')
+model_path = os.path.join('inference_graphs', 'resnet101_csv_09.h5')
 model = models.load_model(model_path, backbone_name='resnet101')
 
-labels_to_names = {0: "normal_house", 1: "pokemon_center", 2: "pokemart", 3: "gym", 4: "misc", 5: "cave"}
+labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"}
 
 video = cv2.VideoCapture("../videos/gameplay_reduced.mp4")
 total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -30,14 +30,26 @@ frame_skip_amt = 2
 
 cur_frame = 0
 fourcc = cv2.VideoWriter_fourcc(*"XVID")
-output_video = cv2.VideoWriter("../videos/output.avi", fourcc, 30.0, (720, 480))
+output_video = cv2.VideoWriter("../videos/output.avi", fourcc, 30.0, (720, 720))
 
 while(True):
     # Performing frame-skip for increased performance
     #for i in range(0, frame_skip_amt):
     #    ret, frame = video.read()
     ret, frame = video.read()
+    if ret == False:
+        break
     
+    rows = frame.shape[0]
+    cols = frame.shape[1]
+
+    if rows < cols:
+        padding = int((cols - rows) / 2)
+        frame = cv2.copyMakeBorder(frame, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
+    elif rows > cols:
+        padding = int((rows - cols) / 2)
+        frame = cv2.copyMakeBorder(frame, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
+
     draw = frame.copy()
     draw = cv2.cvtColor(draw, cv2.COLOR_BGR2RGB)
 
@@ -65,7 +77,7 @@ while(True):
         draw_caption(draw, b, caption)
     
     output_img = cv2.cvtColor(draw, cv2.COLOR_RGB2BGR)
-    #cv2.imshow("Detection", output_img)
+    cv2.imshow("Detection", output_img)
 
     output_video.write(output_img)
     cur_frame += 1

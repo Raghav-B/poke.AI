@@ -1,6 +1,6 @@
-normal_house
-pokemon_center
+pokecen
 pokemart
+npc
+house
 gym
-misc
-cave
+exit
