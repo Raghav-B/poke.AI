@@ -1,0 +1,87 @@
+What is success in a Pokemon game?
+- Exploration
+    - Being able to explore as much of the map as possible (how much the ai chooses to explore the map can be trained)
+    - Being able to do this as efficiently as possible (this can be trained)
+- Collecting normal and key items
+- Reaching key parts of a story
+
+So what are the things the AI's actually learning?
+- How to do things as fast/efficiently as possible
+- If we clearly define meeting certain NPCs in a particular order with very high rewards, the AI can learn how to finish the game in the fastest way possible.
+- 
+
+Events procedure for first part:
+- Enter May's house
+- Touch pokeball
+- Go to grass
+- Go back to grass
+
+First just make an AI that can map out the level and perform exploration in the most efficient way possible
+
+List of decision inputs:
+All are binary - think about whether to change some of the binary ones to just x and y coordinates.
+- Is there an unvisited house up?
+- Is there an unvisited house below?
+- Is there an unvisited house left?
+- Is there an unvisited house right?
+- Is there a visited house up?
+- Is there a visited house below?
+- Is there a visited house left?
+- Is there a visited house right?
+- Is there an uninteracted npc up?
+- Is there an uninteracted npc below?
+- Is there an uninteracted npc left?
+- Is there an uninteracted npc right?
+- Did my position change since the last command?
+- Have I visited up?
+- Have I visited below?
+- Have I visited left?
+- Have I visited right?
+
+Additional ones
+- Is there an unvisited gym up?
+- Is there an unvisited gym below?
+- Is there an unvisited gym left?
+- Is there an unvisited gym right?
+- Is there a visited gym up?
+- Is there a visited gym below?
+- Is there a visited gym left?
+- Is there a visited gym right?
+- Is there an unvisited pokecen up?
+- Is there an unvisited pokecen below?
+- Is there an unvisited pokecen left?
+- Is there an unvisited pokecen right?
+- Is there a visited pokecen up?
+- Is there a visited pokecen below?
+- Is there a visited pokecen left?
+- Is there a visited pokecen right?
+- Is there an unvisited pokemart up?
+- Is there an unvisited pokemart below?
+- Is there an unvisited pokemart left?
+- Is there an unvisited pokemart right?
+- Is there a visited pokemart up?
+- Is there a visited pokemart below?
+- Is there a visited pokemart left?
+- Is there a visited pokemart right?
+
+// Hidden layers come hereeeee
+
+List of outputs:
+You will be output a probability that tells which action the AI believes is the best.
+- Go up
+- Go down
+- Go left
+- Go right
+- Interact
+
+Score:
+- Based on how close the drawn map is to the ground truth map.
+- Based on time taken to reach the end (or if time expired)
+- Give score based on rate of NPCs met and houses visited over time.
+    - A different score is given for visiting the gym, pokemon center, and pokemart, in descending order.
+    - Therefore the longer it takes to explore, the worse score it gets.
+
+Things to randomize and mutate and evolve:
+- Hidden layers in neural network
+- Number of nodes in each layer
+- ??? Weights and biases for each node ???
