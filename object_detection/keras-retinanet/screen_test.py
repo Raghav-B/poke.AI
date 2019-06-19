@@ -3,16 +3,13 @@ from keras_retinanet import models
 from keras_retinanet.utils.image import read_image_bgr, preprocess_image, resize_image
 from keras_retinanet.utils.visualization import draw_box, draw_caption
 from keras_retinanet.utils.colors import label_color
+import tensorflow as tf
 
 import cv2
 import numpy as np
-
-import matplotlib.pyplot as plt
-import os
-import glob
+from mss import mss
+from PIL import Image
 import time
-
-import tensorflow as tf
 
 def get_session():
     config = tf.ConfigProto()
@@ -20,76 +17,108 @@ def get_session():
     return tf.Session(config=config)
 keras.backend.tensorflow_backend.set_session(get_session())
 
-model_path = os.path.join('inference_graphs', 'resnet101_csv_09.h5')
+model_path = "inference_graphs/resnet101_csv_09.h5"
 model = models.load_model(model_path, backbone_name='resnet101')
 
 labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"}
 
-video = cv2.VideoCapture("../videos/Pokemon Emerald Gameplay - Part 2.mp4")
-total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-frame_skip_amt = 1
+rect = []
+current_step = 0
+now_drawing = False
+start_pos = ()
+end_pos = ()
+frame = None
+gameplay_window_size = {}
 
-cur_frame = 0
-#fourcc = cv2.VideoWriter_fourcc(*"XVID")
-#output_video = cv2.VideoWriter("../videos/output.avi", fourcc, 30.0, (720, 720))
+init_screen_size = {'top': 0, 'left': 0, 'width': 1280, 'height': 720}
 
+def nothing(x):
+    pass
 
-while(True):
-    start_time = time.time()
-    # Performing frame-skip for increased performance
-    for i in range(0, frame_skip_amt):
-        ret, frame = video.read()
-    ret, frame = video.read()
-    if ret == False:
-        break
-    
-    rows = frame.shape[0]
-    cols = frame.shape[1]
+def draw_rect(event, x, y, flags, param):
+    global now_drawing
+    global start_pos
+    global end_pos
+    global frame
+    global current_step
+    global gameplay_window_size
 
-    if rows < cols:
-        padding = int((cols - rows) / 2)
-        frame = cv2.copyMakeBorder(frame, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
-    elif rows > cols:
-        padding = int((rows - cols) / 2)
-        frame = cv2.copyMakeBorder(frame, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
-    
-    draw = frame.copy()
+    if (current_step == 0):
+        if event == cv2.EVENT_LBUTTONDOWN:
+            now_drawing = True
+            start_pos = (x, y)
+        elif event == cv2.EVENT_MOUSEMOVE:
+            if (now_drawing == True):
+                frame = cv2.rectangle(frame, start_pos, (x, y), (0, 255, 0), 1)
+        elif event == cv2.EVENT_LBUTTONUP:
+            now_drawing = False
+            end_pos = (x, y)
+            current_step = 1
+            gameplay_window_size = {"top": start_pos[1], "left": start_pos[0],\
+            "width": end_pos[0]-start_pos[0], "height": end_pos[1]-start_pos[1]}
 
-    # preprocess image for network
-    image = preprocess_image(frame)
-    image, scale = resize_image(image, min_side = 720)
+    cv2.imshow("Screen", frame)
 
-    # process image
-    boxes, scores, labels = model.predict_on_batch(np.expand_dims(image, axis=0))
+cv2.namedWindow("Screen")
+cv2.setMouseCallback("Screen", draw_rect)
+cv2.createTrackbar("FrameSkip", "Screen", 0, 15, nothing)
+cv2.createTrackbar("ScoreThresh", "Screen", 70, 99, nothing)
 
-    # correct for image scale
-    boxes /= scale
+sct = mss()
+while (True):
+    if (current_step == 0):
+        sct.get_pixels(init_screen_size)
+        img = Image.frombytes('RGB', (sct.width, sct.height), sct.image)
+        frame = np.array(img)
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
-    # visualize detections
-    for box, score, label in zip(boxes[0], scores[0], labels[0]):
-        if score < 0.7:
-            break
+    elif (current_step == 1):
+        frame_skip_amt = cv2.getTrackbarPos("FrameSkip", "Screen")
+        score_thresh = cv2.getTrackbarPos("ScoreThresh", "Screen")
+
+        for i in range(0, frame_skip_amt):
+            sct.get_pixels(gameplay_window_size)
+            img = Image.frombytes("RGB", (sct.width, sct.height), sct.image)
+            frame = np.array(img)
+            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
         
-        color = label_color(label)
-        
-        b = box.astype(int)
-        draw_box(draw, b, color=color)
-        
-        caption = "{} {:.2f}".format(labels_to_names[label], score)
-        draw_caption(draw, b, caption)
-    
-    #output_img = cv2.cvtColor(draw, cv2.COLOR_RGB2BGR)
-    cv2.imshow("Detection", draw)
-    framerate = (1 / (time.time() - start_time)) * (frame_skip_amt + 1)
+        sct.get_pixels(gameplay_window_size)
+        img = Image.frombytes("RGB", (sct.width, sct.height), sct.image)
+        frame = np.array(img)
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
-    #output_video.write(output_img)
-    cur_frame += 1
-    #print("Finished " + str(cur_frame) + " out of " + str(total_frames) + " total frames...")
-    print(framerate)
+        # Making input a square
+        rows = frame.shape[0]
+        cols = frame.shape[1]
+        if rows < cols:
+            padding = int((cols - rows) / 2)
+            frame = cv2.copyMakeBorder(frame, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
+        elif rows > cols:
+            padding = int((rows - cols) / 2)
+            frame = cv2.copyMakeBorder(frame, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
+
+        # preprocess image for network
+        image = preprocess_image(frame)
+        image, scale = resize_image(image, min_side = 720)
+
+        boxes, scores, labels = model.predict_on_batch(np.expand_dims(image, axis=0))
+        boxes /= scale
+
+        # visualize detections
+        for box, score, label in zip(boxes[0], scores[0], labels[0]):
+            if score < (score_thresh / 100):
+                break
+            
+            color = label_color(label)
+            b = box.astype(int)
+            draw_box(frame, b, color=color)
+            caption = "{} {:.2f}".format(labels_to_names[label], score)
+            draw_caption(frame, b, caption)
+
+    if (now_drawing == False):
+        cv2.imshow("Screen", frame)
 
     if cv2.waitKey(1) == ord('q'):
         break
 
-#output_video.release()
-video.release()
 cv2.destroyAllWindows()
