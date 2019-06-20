@@ -1,0 +1,18 @@
+Remainder = coordinate % 48
+If remainder < int(48 / 2)
+    fixed_coordinate = coordinate - remainder
+else
+    fixed_coordinate = coordinate + remainder
+
+The bounding box of an object gives us 4 coordinates.
+
+
+Suppose:
+
+(0, 0)   # # # #
+         # # # #
+         # # # #   (3, 4)
+
+We fill all boxes/tiles within this region...
+
+
