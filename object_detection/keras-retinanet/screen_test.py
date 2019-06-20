@@ -90,6 +90,7 @@ while (True):
         # Making input a square
         rows = frame.shape[0]
         cols = frame.shape[1]
+        print(frame.shape)
         if rows < cols:
             padding = int((cols - rows) / 2)
             frame = cv2.copyMakeBorder(frame, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
