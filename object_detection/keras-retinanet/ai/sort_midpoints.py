@@ -68,7 +68,7 @@ class midpoint_sorter:
 
         for new_point in cur_midpoints:
             if new_point[1] == -1:
-                print ("new detected")
+                #print ("new detected")
                 #new_index = 0
                 #k = 0
 
@@ -87,8 +87,8 @@ class midpoint_sorter:
         #for i in self.prev_indexes: 
             # If old object is not found in new frame.
             #if (i in self.cur_indexes) == False:
-        print("new_frame")
-        print(self.cur_indexes)
+        #print("new_frame")
+        #print(self.cur_indexes)
         return cur_midpoints
 
 

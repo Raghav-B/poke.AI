@@ -13,6 +13,7 @@ import time
 
 # Custom imports
 from sort_midpoints import midpoint_sorter
+from mapper import live_map
 
 def get_session():
     config = tf.ConfigProto()
@@ -31,51 +32,37 @@ now_drawing = False
 start_pos = ()
 end_pos = ()
 frame = None
-gameplay_window_size = {}
 
-init_screen_size = {'top': 0, 'left': 0, 'width': 1280, 'height': 720}
+screen_size = {'top': 100, 'left': 0, 'width': 720, 'height': 720}
+game_window_size = {'top': 220, 'left': 0, 'width': 720, 'height': 480}
 
 def nothing(x):
     pass
 
 def draw_rect(event, x, y, flags, param):
-    global now_drawing
-    global start_pos
-    global end_pos
-    global frame
     global current_step
-    global gameplay_window_size
-
     if (current_step == 0):
-        if event == cv2.EVENT_LBUTTONDOWN:
-            now_drawing = True
-            start_pos = (x, y)
-        elif event == cv2.EVENT_MOUSEMOVE:
-            if (now_drawing == True):
-                frame = cv2.rectangle(frame, start_pos, (x, y), (0, 255, 0), 1)
-        elif event == cv2.EVENT_LBUTTONUP:
-            now_drawing = False
-            end_pos = (x, y)
+        if event == cv2.EVENT_LBUTTONDBLCLK:
             current_step = 1
-            gameplay_window_size = {"top": start_pos[1], "left": start_pos[0],\
-            "width": end_pos[0]-start_pos[0], "height": end_pos[1]-start_pos[1]}
-
-    cv2.imshow("Screen", frame)
-
+        
 cv2.namedWindow("Screen")
 cv2.setMouseCallback("Screen", draw_rect)
 cv2.createTrackbar("FrameSkip", "Screen", 0, 15, nothing)
 cv2.createTrackbar("ScoreThresh", "Screen", 70, 99, nothing)
 
+sct = mss()
+
+is_init_frame = True
+ot = midpoint_sorter() # object tracking across consequent frames
 prev_frame_midpoints = []
 cur_frame_midpoints = []
-is_init_frame = True
 
-sct = mss()
-ot = midpoint_sorter() # object tracking across consequent frames
+mp = None
+predictions_for_map = []
+
 while (True):
     if (current_step == 0):
-        sct.get_pixels(init_screen_size)
+        sct.get_pixels(screen_size)
         img = Image.frombytes('RGB', (sct.width, sct.height), sct.image)
         frame = np.array(img)
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
@@ -85,12 +72,12 @@ while (True):
         score_thresh = cv2.getTrackbarPos("ScoreThresh", "Screen")
 
         for i in range(0, frame_skip_amt):
-            sct.get_pixels(gameplay_window_size)
+            sct.get_pixels(game_window_size)
             img = Image.frombytes("RGB", (sct.width, sct.height), sct.image)
             frame = np.array(img)
             frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
         
-        sct.get_pixels(gameplay_window_size)
+        sct.get_pixels(game_window_size)
         img = Image.frombytes("RGB", (sct.width, sct.height), sct.image)
         frame = np.array(img)
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
@@ -98,13 +85,20 @@ while (True):
         # Making input a square
         rows = frame.shape[0]
         cols = frame.shape[1]
-        #print(frame.shape)
+        padding = 0
         if rows < cols:
             padding = int((cols - rows) / 2)
             frame = cv2.copyMakeBorder(frame, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
+            #print(padding)
         elif rows > cols:
             padding = int((rows - cols) / 2)
             frame = cv2.copyMakeBorder(frame, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
+        rows = frame.shape[0]
+        cols = frame.shape[1]
+
+        # Initialising live map object
+        if (is_init_frame == True):
+            mp = live_map(cols, rows, padding)
 
         # preprocess image for network
         image = preprocess_image(frame)
@@ -114,6 +108,7 @@ while (True):
         boxes /= scale
 
         # visualize detections
+        predictions_for_map = []
         for box, score, label in zip(boxes[0], scores[0], labels[0]):
             if score < (score_thresh / 100):
                 break
@@ -121,6 +116,8 @@ while (True):
             midpoint_x = int((box[2] + box[0]) / 2)
             midpoint_y = int((box[3] + box[1]) / 2)
             
+            predictions_for_map.append((label, box))
+
             if (is_init_frame == True):
                 # Indexing previous frame
                 prev_frame_midpoints.append([(midpoint_x, midpoint_y), ot.get_init_index()])
@@ -132,18 +129,18 @@ while (True):
             draw_box(frame, b, color=color)
             caption = "{} {:.2f}".format(labels_to_names[label], score)
             draw_caption(frame, b, caption)
-        print(len(cur_frame_midpoints))
+        #print(len(cur_frame_midpoints))
 
         # Sorting cur_frame midpoints
         if (is_init_frame == False):
-            print("prev_frame")
-            print(prev_frame_midpoints)
-            print("cur_frame")
-            print(cur_frame_midpoints)
+            #print("prev_frame")
+            #print(prev_frame_midpoints)
+            #print("cur_frame")
+            #print(cur_frame_midpoints)
             cur_frame_midpoints = ot.sort_cur_midpoints(prev_frame_midpoints, cur_frame_midpoints)
-            print("after_sorting")
-            print(cur_frame_midpoints)
-            print("")
+            #print("after_sorting")
+            #print(cur_frame_midpoints)
+            #print("")
 
         font = cv2.FONT_HERSHEY_SIMPLEX
         for point in cur_frame_midpoints:
@@ -155,10 +152,18 @@ while (True):
             prev_frame_midpoints = cur_frame_midpoints
             # current frame can be reset because we will detect points again next frame
             cur_frame_midpoints = []
-        is_init_frame = False
 
-    if (now_drawing == False):
-        cv2.imshow("Screen", frame)
+            #print(predictions_for_map)
+            mp.draw_map(predictions_for_map)
+        is_init_frame = False
+    
+    tile_width = int(720 / 15) # increment
+    for i in range(0, 16): # drawing vertical lines
+        cv2.line(frame, (i * tile_width, 120), (i * tile_width, 600), (0,0,0), 1)
+    for i in range(0, 10): # drawing horizontal lines
+        cv2.line(frame, (0, 120 + 24 + (i * tile_width)), (720, 120 + 24 + (i * tile_width)), (0,0,0), 1)
+
+    cv2.imshow("Screen", frame)
 
     if cv2.waitKey(1) == ord('q'):
         break
