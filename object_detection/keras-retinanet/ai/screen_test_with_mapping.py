@@ -132,6 +132,7 @@ while (True):
             draw_box(frame, b, color=color)
             caption = "{} {:.2f}".format(labels_to_names[label], score)
             draw_caption(frame, b, caption)
+        print(len(cur_frame_midpoints))
 
         # Sorting cur_frame midpoints
         if (is_init_frame == False):
@@ -139,8 +140,10 @@ while (True):
             print(prev_frame_midpoints)
             print("cur_frame")
             print(cur_frame_midpoints)
-            print("")
             cur_frame_midpoints = ot.sort_cur_midpoints(prev_frame_midpoints, cur_frame_midpoints)
+            print("after_sorting")
+            print(cur_frame_midpoints)
+            print("")
 
         font = cv2.FONT_HERSHEY_SIMPLEX
         for point in cur_frame_midpoints:
