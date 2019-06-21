@@ -12,7 +12,7 @@ from PIL import Image
 import time
 
 # Custom imports
-import sort_midpoints
+from sort_midpoints import midpoint_sorter
 
 def get_session():
     config = tf.ConfigProto()
@@ -72,6 +72,7 @@ cur_frame_midpoints = []
 is_init_frame = True
 
 sct = mss()
+ot = midpoint_sorter() # object tracking across consequent frames
 while (True):
     if (current_step == 0):
         sct.get_pixels(init_screen_size)
@@ -112,7 +113,6 @@ while (True):
         boxes, scores, labels = model.predict_on_batch(np.expand_dims(image, axis=0))
         boxes /= scale
 
-        detection_index = 0
         # visualize detections
         for box, score, label in zip(boxes[0], scores[0], labels[0]):
             if score < (score_thresh / 100):
@@ -123,10 +123,9 @@ while (True):
             
             if (is_init_frame == True):
                 # Indexing previous frame
-                prev_frame_midpoints.append([(midpoint_x, midpoint_y), detection_index, 0])
+                prev_frame_midpoints.append([(midpoint_x, midpoint_y), ot.get_init_index()])
             else:
-                cur_frame_midpoints.append([(midpoint_x, midpoint_y), detection_index, 0])
-            detection_index += 1
+                cur_frame_midpoints.append([(midpoint_x, midpoint_y), -1])
 
             color = label_color(label)
             b = box.astype(int)
@@ -136,11 +135,12 @@ while (True):
 
         # Sorting cur_frame midpoints
         if (is_init_frame == False):
+            print("prev_frame")
             print(prev_frame_midpoints)
-            print("n")
+            print("cur_frame")
             print(cur_frame_midpoints)
-            
-            prev_frame_midpoints, cur_frame_midpoints = sort_midpoints.sort_cur_midpoints(prev_frame_midpoints, cur_frame_midpoints)
+            print("")
+            cur_frame_midpoints = ot.sort_cur_midpoints(prev_frame_midpoints, cur_frame_midpoints)
 
         font = cv2.FONT_HERSHEY_SIMPLEX
         for point in cur_frame_midpoints:
@@ -148,8 +148,10 @@ while (True):
             cv2.putText(frame, str(point[1]), point[0], font, 0.5, (255, 255, 0), 2, cv2.LINE_AA)
         
         if (is_init_frame == False):
+            # current frame becomes previous frame
             prev_frame_midpoints = cur_frame_midpoints
-            #cur_frame_midpoints = []
+            # current frame can be reset because we will detect points again next frame
+            cur_frame_midpoints = []
         is_init_frame = False
 
     if (now_drawing == False):
