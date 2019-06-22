@@ -53,22 +53,15 @@ class controller:
 
     def random_movement(self):
         action = random.randint(0, 4)
+        key_pressed = None
         if action == 0:
-            self.move_up()
+            key_pressed = self.move_up()
         elif action == 1:
-            self.move_right()
+            key_pressed = self.move_right()
         elif action == 2:
-            self.move_down()
+            key_pressed = self.move_down()
         elif action == 3:
-            self.move_left()
+            key_pressed = self.move_left()
         elif action == 4:
-            self.interact()
-
-
-    
-
-    
-        
-
-    
-
+            key_pressed = self.interact()
+        return key_pressed

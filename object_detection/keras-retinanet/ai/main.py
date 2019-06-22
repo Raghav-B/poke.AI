@@ -107,7 +107,7 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_midpoints, \
     if (is_init_frame == False):
         prev_frame_midpoints = cur_frame_midpoints
         cur_frame_midpoints = []
-        print(mp.draw_map(predictions_for_map))
+        #print(mp.draw_map(predictions_for_map))
 
     # Show grid lines
     #for i in range(0, 16): # drawing vertical lines
@@ -119,13 +119,16 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_midpoints, \
     status = "ok"
     if cv2.waitKey(1) == ord('q'):
         status = "quit"
-    return status, prev_frame_midpoints, cur_frame_midpoints, False
+    return status, prev_frame_midpoints, cur_frame_midpoints, predictions_for_map, False
 
 def random_loop(ctrl):
+    global key_pressed
     while True:
-        ctrl.random_movement()
+        key_pressed = ctrl.random_movement()
+        time.sleep(5)
 
 if __name__ == "__main__":
+    key_pressed = 24
     # Setup variables here
     game_width = 720
     game_height = 480
@@ -145,9 +148,17 @@ if __name__ == "__main__":
 
     while True:     
         frame, temp = get_screen(game_window, window_x, window_y)
-        status, prev_frame_midpoints, cur_frame_midpoints, is_init_frame = \
+        status, prev_frame_midpoints, cur_frame_midpoints, predictions_for_map, temp_bool = \
             run_detection(frame, model, labels_to_names, mp, ot, prev_frame_midpoints, \
             cur_frame_midpoints, is_init_frame)
+        
+        if (is_init_frame == False):
+            print(mp.draw_map(predictions_for_map))
+        else:
+            is_init_frame = temp_bool
+
+        print(key_pressed)
+
         if (status == "quit"):
             break
 
