@@ -7,8 +7,8 @@ import tensorflow as tf
 
 import cv2
 import numpy as np
-from mss import mss
-from PIL import Image
+from fastgrab._linux_x11 import screenshot
+import pyautogui as pag
 import time
 
 # Custom imports
@@ -31,10 +31,15 @@ current_step = 0
 now_drawing = False
 start_pos = ()
 end_pos = ()
-frame = None
 
-screen_size = {'top': 100, 'left': 0, 'width': 720, 'height': 720}
-game_window_size = {'top': 220, 'left': 0, 'width': 720, 'height': 480}
+# Setup variables here
+window_x = 0 # Initialized here
+window_y = 0 # Initialized here
+game_width = 720
+game_height = 480
+game_window = np.zeros((game_height, game_width, 4), "uint8")
+tile_width = int(game_width / 15) # This 15 is always constant
+padding = 0 # Initialized here
 
 def nothing(x):
     pass
@@ -46,11 +51,9 @@ def draw_rect(event, x, y, flags, param):
             current_step = 1
         
 cv2.namedWindow("Screen")
-cv2.setMouseCallback("Screen", draw_rect)
+#cv2.setMouseCallback("Screen", draw_rect)
 cv2.createTrackbar("FrameSkip", "Screen", 0, 15, nothing)
 cv2.createTrackbar("ScoreThresh", "Screen", 70, 99, nothing)
-
-sct = mss()
 
 is_init_frame = True
 ot = midpoint_sorter() # object tracking across consequent frames
@@ -62,43 +65,33 @@ predictions_for_map = []
 
 while (True):
     if (current_step == 0):
-        sct.get_pixels(screen_size)
-        img = Image.frombytes('RGB', (sct.width, sct.height), sct.image)
-        frame = np.array(img)
-        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+        window_x, window_y, temp1, temp2 = pag.locateOnScreen("find_game_window.png")
+        # Adding a 20 pixel offset to the y coordinate since our gameplay is slightly lower.
+        window_y += 20
+        current_step = 1
 
     elif (current_step == 1):
         frame_skip_amt = cv2.getTrackbarPos("FrameSkip", "Screen")
         score_thresh = cv2.getTrackbarPos("ScoreThresh", "Screen")
 
+        # Getting game screen as input
         for i in range(0, frame_skip_amt):
-            sct.get_pixels(game_window_size)
-            img = Image.frombytes("RGB", (sct.width, sct.height), sct.image)
-            frame = np.array(img)
-            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-        
-        sct.get_pixels(game_window_size)
-        img = Image.frombytes("RGB", (sct.width, sct.height), sct.image)
-        frame = np.array(img)
-        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+            screenshot(window_x, window_y, game_window)
+        screenshot(window_x, window_y, game_window)
+        frame = game_window[:, :, :3]
 
         # Making input a square
-        rows = frame.shape[0]
-        cols = frame.shape[1]
-        padding = 0
-        if rows < cols:
-            padding = int((cols - rows) / 2)
+        if game_height < game_width:
+            padding = int((game_width - game_height) / 2)
             frame = cv2.copyMakeBorder(frame, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
             #print(padding)
-        elif rows > cols:
-            padding = int((rows - cols) / 2)
+        elif game_height > game_width:
+            padding = int((game_width - game_width) / 2)
             frame = cv2.copyMakeBorder(frame, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
-        rows = frame.shape[0]
-        cols = frame.shape[1]
 
         # Initialising live map object
         if (is_init_frame == True):
-            mp = live_map(cols, rows, padding)
+            mp = live_map(game_width, game_height, padding)
 
         # preprocess image for network
         image = preprocess_image(frame)
@@ -133,14 +126,7 @@ while (True):
 
         # Sorting cur_frame midpoints
         if (is_init_frame == False):
-            #print("prev_frame")
-            #print(prev_frame_midpoints)
-            #print("cur_frame")
-            #print(cur_frame_midpoints)
             cur_frame_midpoints = ot.sort_cur_midpoints(prev_frame_midpoints, cur_frame_midpoints)
-            #print("after_sorting")
-            #print(cur_frame_midpoints)
-            #print("")
 
         font = cv2.FONT_HERSHEY_SIMPLEX
         for point in cur_frame_midpoints:
@@ -156,16 +142,15 @@ while (True):
             #print(predictions_for_map)
             mp.draw_map(predictions_for_map)
         is_init_frame = False
-    
-    tile_width = int(720 / 15) # increment
-    for i in range(0, 16): # drawing vertical lines
-        cv2.line(frame, (i * tile_width, 120), (i * tile_width, 600), (0,0,0), 1)
-    for i in range(0, 10): # drawing horizontal lines
-        cv2.line(frame, (0, 120 + 24 + (i * tile_width)), (720, 120 + 24 + (i * tile_width)), (0,0,0), 1)
 
-    cv2.imshow("Screen", frame)
+        for i in range(0, 16): # drawing vertical lines
+            cv2.line(frame, (i * tile_width, padding), (i * tile_width, padding + game_height), (0,0,0), 1)
+        for i in range(0, 10): # drawing horizontal lines
+            cv2.line(frame, (0, padding + int(tile_width / 2) + (i * tile_width)), (game_width, padding + int(tile_width / 2) + (i * tile_width)), (0,0,0), 1)
 
-    if cv2.waitKey(1) == ord('q'):
-        break
+        cv2.imshow("Screen", frame)
+
+        if cv2.waitKey(1) == ord('q'):
+            break
 
 cv2.destroyAllWindows()

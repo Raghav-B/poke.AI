@@ -45,7 +45,7 @@ class live_map:
 
             # y1
             q = (box[1] - self.padding) / self.tile_size
-            if abs((box[1] - self.padding) - (self.tile_size * math.floor(q))) < \
+            if abs((box[1] - self.padding + (self.tile_size/2)) - (self.tile_size * math.floor(q))) < \
             abs((box[1] - self.padding) - (self.tile_size * math.ceil(q))):
                 coords[1] = math.floor(q)
             else:
@@ -61,7 +61,7 @@ class live_map:
 
             # y2
             q = (box[3] - self.padding) / self.tile_size
-            if abs((box[3] - self.padding) - (self.tile_size * math.floor(q))) < \
+            if abs((box[3] - self.padding + (self.tile_size/2)) - (self.tile_size * math.floor(q))) < \
             abs((box[3] - self.padding) - (self.tile_size * math.ceil(q))):
                 coords[3] = math.floor(q) - 1
             else:
@@ -71,14 +71,23 @@ class live_map:
         return tiles
 
     def fill_area(self, area_bound, symbol):
-        #print(area_bound)
-        x = area_bound[0] 
-        while (x <= area_bound[2]):
-            y = area_bound[1]
-            while (y <= area_bound[3]):
-                self.map_grid[y][x] = symbol
-                y += 1
-            x += 1
+        if (symbol == 'A'):
+            self.map_grid[area_bound[3]][area_bound[2]] = 'A'
+        elif (symbol == 'X'):
+            if (self.map_grid[area_bound[1]][area_bound[0]] != 'A'):
+                self.map_grid[area_bound[1]][area_bound[0]] = 'X'
+            if (self.map_grid[area_bound[1]][area_bound[2]] != 'A'):
+                self.map_grid[area_bound[1]][area_bound[2]] = 'X'
+        else:
+            #print(area_bound)
+            x = area_bound[0] 
+            while (x <= area_bound[2]):
+                y = area_bound[1]
+                while (y <= area_bound[3]):
+                    if (self.map_grid[y][x] != 'A'):
+                        self.map_grid[y][x] = symbol
+                    y += 1
+                x += 1
 
     def draw_map(self, bounding_box_list):
         tiles = self.convert_points_to_grid(bounding_box_list)

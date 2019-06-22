@@ -4,10 +4,6 @@ class midpoint_sorter:
     cur_indexes = set()
     init_index = -1
 
-    #def __init__(self, prev_midpoints):
-    #    index = 0
-    #    for point in prev_midpoints:
-
     def get_init_index(self):
         self.init_index += 1
         return self.init_index
@@ -45,50 +41,14 @@ class midpoint_sorter:
                     # We can safely break because we assume that there is only one possible point that
                     # in such close proximity to our current point to be indexed.
                 # In this event find the point closest to this one
-                
-                """elif (temp_dist < self.max_thresh_dist):
-                    min_val = temp_dist
-                    min_val_index = -1
-                    k = 0
-
-                    while (k < len(prev_midpoints)):
-                        new_temp_dist = get_dist(prev_midpoints[0][k]), cur_midpoints[i][0]
-                        if new_temp_dist < min_val:
-                            min_val = new_temp_dist
-                            min_val_index = k
-                        k += 1
-
-                    cur_midpoints[i][1] = min_val_index
-                    self.cur_indexes.add(min_val_index)
-                    break
-                """
-
                 j += 1
             i += 1
 
         for new_point in cur_midpoints:
             if new_point[1] == -1:
-                #print ("new detected")
-                #new_index = 0
-                #k = 0
-
-                #while True:
-                #    if (new_index in cur_midpoints[:][:1]) == True:
-                #        new_index += 1
-                #    else:
-                #        break
-                #    
-                #cur_midpoints[i][1] = new_index
-
                 new_point[1] = self.find_next_free_index()
                 self.cur_indexes.add(new_point[1])
 
-        # If a midpoint has been lost in the new frame as compared to the prev frame.
-        #for i in self.prev_indexes: 
-            # If old object is not found in new frame.
-            #if (i in self.cur_indexes) == False:
-        #print("new_frame")
-        #print(self.cur_indexes)
         return cur_midpoints
 
 
