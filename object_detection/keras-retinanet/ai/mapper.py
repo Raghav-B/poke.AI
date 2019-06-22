@@ -11,7 +11,8 @@ class live_map:
     definite_frames_thresh = 4 # If object is detected continuously for 4 frames, then it is definitely a valid detection
 
     # Internals used by mapper
-    map_grid = None # The detected map represented as a 2D array
+    prev_map_grid = None # The detected map represented as a 2D array
+    cur_map_grid = None
     grid_x = 16 # Tiles in x axis + 1
     grid_y = 12 # Tiles in y axis + 1
 
@@ -21,7 +22,7 @@ class live_map:
         self.padding = pad
         self.tile_size = int(w / (self.grid_x - 1))
         self.definite_frames_thresh = dft
-        self.map_grid = np.full((self.grid_y - 1, self.grid_x - 1), ['.'], dtype=str)
+        self.prev_map_grid = np.full((self.grid_y - 1, self.grid_x - 1), ['.'], dtype=str)
 
     # bounding_box_list is of shape (box_dimensions, score, label)
     def convert_points_to_grid(self, bounding_box_list):
@@ -72,28 +73,30 @@ class live_map:
 
     def fill_area(self, area_bound, symbol):
         if (symbol == 'A'):
-            self.map_grid[area_bound[3]][area_bound[2]] = 'A'
+            self.cur_map_grid[area_bound[3]][area_bound[2]] = 'A'
         elif (symbol == 'X'):
-            if (self.map_grid[area_bound[1]][area_bound[0]] != 'A'):
-                self.map_grid[area_bound[1]][area_bound[0]] = 'X'
-            if (self.map_grid[area_bound[1]][area_bound[2]] != 'A'):
-                self.map_grid[area_bound[1]][area_bound[2]] = 'X'
+            if (self.cur_map_grid[area_bound[1]][area_bound[0]] != 'A'):
+                self.cur_map_grid[area_bound[1]][area_bound[0]] = 'X'
+            if (self.cur_map_grid[area_bound[1]][area_bound[2]] != 'A'):
+                self.cur_map_grid[area_bound[1]][area_bound[2]] = 'X'
         else:
             #print(area_bound)
             x = area_bound[0] 
             while (x <= area_bound[2]):
                 y = area_bound[1]
                 while (y <= area_bound[3]):
-                    if (self.map_grid[y][x] != 'A'):
-                        self.map_grid[y][x] = symbol
+                    if (self.cur_map_grid[y][x] != 'A'):
+                        self.cur_map_grid[y][x] = symbol
                     y += 1
                 x += 1
 
+    # Returns true if a change has been detected, otherwise returns false.
     def draw_map(self, bounding_box_list):
         tiles = self.convert_points_to_grid(bounding_box_list)
         print(tiles)
         symbol = None
-        self.map_grid = np.full((self.grid_y - 1, self.grid_x - 1), ['.'], dtype=str)
+        self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1), ['.'], dtype=str)
+        has_map_changed = None
 
         for label, box in tiles:
             if (label == 0): # pokecen
@@ -107,12 +110,14 @@ class live_map:
             elif (label == 4): # gym
                 symbol = 'Y'
             elif (label == 5): # exit
-                symbol = 'X'
-            
+                symbol = 'X'    
             self.fill_area(box, symbol)
-
-        print(self.map_grid)
+        
+        has_map_changed = np.array_equal(self.prev_map_grid, self.cur_map_grid)
+        self.prev_map_grid = self.cur_map_grid
+        print(self.cur_map_grid)
         print("")
+        return has_map_changed
 
         #output_map = self.map_grid.view(np.uint8)
         #plt.matshow(output_map)
