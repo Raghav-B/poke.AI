@@ -25,7 +25,7 @@ class live_map:
         self.padding = pad
         self.tile_size = int(w / (self.grid_x - 1))
         self.definite_frames_thresh = dft
-        self.prev_map_grid = np.full((self.grid_y - 1, self.grid_x - 1), ['.'], dtype=str)
+        self.prev_map_grid = np.full((self.grid_y - 1, self.grid_x - 1), 255, dtype=np.uint8)
 
     # bounding_box_list is of shape (box_dimensions, score, label)
     def convert_points_to_grid(self, bounding_box_list):
@@ -37,7 +37,7 @@ class live_map:
 
             coords = [0, 0, 0, 0]
 
-            print(box)
+            #print(box)
             #print(label)
             # x1
             q = box[0] / self.tile_size
@@ -80,75 +80,72 @@ class live_map:
         return tiles
 
     def fill_area(self, area_bound, symbol):
-        if (symbol == 'A'):
-            self.cur_map_grid[area_bound[3]][area_bound[2]] = 'A'
-        elif (symbol == 'X'):
-            if (self.cur_map_grid[area_bound[1]][area_bound[0]] != 'A'):
-                self.cur_map_grid[area_bound[1]][area_bound[0]] = 'X'
-            if (self.cur_map_grid[area_bound[1]][area_bound[2]] != 'A'):
-                self.cur_map_grid[area_bound[1]][area_bound[2]] = 'X'
+        if (symbol == 0):
+            self.cur_map_grid[area_bound[3]][area_bound[2]] = 0
+        elif (symbol == 128):
+            if (self.cur_map_grid[area_bound[1]][area_bound[0]] != 0):
+                self.cur_map_grid[area_bound[1]][area_bound[0]] = 128
+            if (self.cur_map_grid[area_bound[1]][area_bound[2]] != 0):
+                self.cur_map_grid[area_bound[1]][area_bound[2]] = 128
         else:
             #print(area_bound)
             x = area_bound[0] 
             while (x <= area_bound[2]):
                 y = area_bound[1]
                 while (y <= area_bound[3]):
-                    if (self.cur_map_grid[y][x] != 'A'):
+                    if (self.cur_map_grid[y][x] != 0):
                         self.cur_map_grid[y][x] = symbol
                     y += 1
                 x += 1
 
     # Returns true if a change has been detected, otherwise returns false.
     def draw_map(self, key_pressed, bounding_box_list):
-        self.cur_map_grid = self.prev_map_grid 
-        if (key_pressed == "up"):
-            #self.map_cutout_y += 1
-            self.grid_y += 1
-            append_arr = np.full((1, self.grid_x - 1), ['.'], dtype=str)
-            self.cur_map_grid = np.append(append_arr, self.cur_map_grid, axis=0)
+        self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1), 255, dtype=np.uint8)
+        #self.cur_map_grid = self.prev_map_grid 
+        #if (key_pressed == "up"):
+            #self.grid_y += 1
+            #append_arr = np.full((1, self.grid_x - 1), 255, dtype=np.uint8)
+            #self.cur_map_grid = np.append(append_arr, self.cur_map_grid, axis=0)
 
-        elif (key_pressed == "right"):
-            self.map_cutout_x += 1
-            self.grid_x += 1
-            append_arr = np.full((self.grid_y - 1, 1), ['.'], dtype=str)
-            self.cur_map_grid = np.append(self.cur_map_grid, append_arr, axis=1)
+        #elif (key_pressed == "right"):
+            #self.map_cutout_x += 1
+            #self.grid_x += 1
+            #append_arr = np.full((self.grid_y - 1, 1), 255, dtype=np.uint8)
+            #self.cur_map_grid = np.append(self.cur_map_grid, append_arr, axis=1)
 
-        elif (key_pressed == "down"):
-            self.map_cutout_y -= 1
-            self.grid_y += 1
-            append_arr = np.full((1, self.grid_x - 1), ['.'], dtype=str)
-            self.cur_map_grid = np.append(self.cur_map_grid, append_arr, axis=0)
+        #elif (key_pressed == "down"):
+            #self.map_cutout_y -= 1
+            #self.grid_y += 1
+            #append_arr = np.full((1, self.grid_x - 1), 255, dtype=np.uint8)
+            #self.cur_map_grid = np.append(self.cur_map_grid, append_arr, axis=0)
 
-        elif (key_pressed == "left"):
-            #self.map_cutout_x -= 1
-            self.grid_x += 1
-            append_arr = np.full((self.grid_y - 1, 1), ['.'], dtype=str)
-            self.cur_map_grid = np.append(append_arr, self.cur_map_grid, axis=1)
+        #elif (key_pressed == "left"):
+            #self.grid_x += 1
+            #append_arr = np.full((self.grid_y - 1, 1), 255, dtype=np.uint8)
+            #self.cur_map_grid = np.append(append_arr, self.cur_map_grid, axis=1)
             
-        else: # If key is "x"
-            pass
-        
-        
-        
+        #else: # If key is "x"
+        #    pass
+
         tiles = self.convert_points_to_grid(bounding_box_list)
-        print(tiles)
+        #print(tiles)
         symbol = None
         
         has_map_changed = None
 
         for label, box in tiles:
             if (label == 0): # pokecen
-                symbol = '@'
+                symbol = 16
             elif (label == 1): # pokemart
-                symbol = '$'
+                symbol = 32
             elif (label == 2): # npc
-                symbol = 'A'
+                symbol = 0
             elif (label == 3): # house
-                symbol = '#'
+                symbol = 64
             elif (label == 4): # gym
-                symbol = 'Y'
+                symbol = 48
             elif (label == 5): # exit
-                symbol = 'X'    
+                symbol = 128    
             self.fill_area(box, symbol)
         
         has_map_changed = np.array_equiv(self.prev_map_grid, self.cur_map_grid)

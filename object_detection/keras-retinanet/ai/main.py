@@ -31,6 +31,8 @@ def initialise(game_window, game_width, game_height, model_path):
     keras.backend.tensorflow_backend.set_session(get_session())
     model = models.load_model(model_path, backbone_name='resnet101')
 
+    cv2.namedWindow("Map", cv2.WINDOW_NORMAL)
+    cv2.resizeWindow("Map", 720, 480)
     cv2.namedWindow("Screen")
     cv2.createTrackbar("ScoreThresh", "Screen", 70, 99, nothing)
 
@@ -80,8 +82,13 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_midpoints, \
         if score < (score_thresh / 100):
             break
         
-        midpoint_x = int((box[2] + box[0]) / 2)
-        midpoint_y = int((box[3] + box[1]) / 2)
+        #if (label == 2):
+        #    continue
+
+        #midpoint_x = int((box[2] + box[0]) / 2)
+        #midpoint_y = int((box[3] + box[1]) / 2)
+        midpoint_x = box[0]
+        midpoint_y = box[1]
         predictions_for_map.append((label, box))
 
         if (is_init_frame == True):
@@ -122,7 +129,7 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_midpoints, \
         status = "quit"
     return status, prev_frame_midpoints, cur_frame_midpoints, predictions_for_map, False
 
-map_grid = []
+map_grid = np.full((2, 2), 255, dtype=np.uint8)
 
 def control_loop(ctrl, mp):
     #global key_pressed
@@ -133,7 +140,7 @@ def control_loop(ctrl, mp):
     while True:
         if (is_init_frame == False):
             print("Sleeping for 5 seconds...")
-            time.sleep(5)
+            #time.sleep(5)
             
             key_pressed = ctrl.random_movement()
             print(key_pressed)
@@ -166,14 +173,13 @@ if __name__ == "__main__":
             cur_frame_midpoints, is_init_frame)
         
         if (is_init_frame == False):
-            output_map = map_grid.view(np.uint8)
-            plt.imshow(output_map)
-            plt.show()
+            cv2.imshow("Map", map_grid)            
         else:
             is_init_frame = temp_bool
 
         if (status == "quit"):
             break
 
+    plt.show()
     cv2.destroyAllWindows()
     sys.exit()
