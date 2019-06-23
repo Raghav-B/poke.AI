@@ -15,7 +15,7 @@ import sys
 import matplotlib.pyplot as plt
 
 # Custom imports
-from sort_midpoints import midpoint_sorter
+from sort_midpoints import object_sorter # TODO: Chance filename
 from mapper import live_map
 from auto_controller import controller
 
@@ -46,7 +46,7 @@ def initialise(game_window, game_width, game_height, model_path):
     # Initialising mapper object
     mp = live_map(game_width, game_height, padding)
     # Initialising object sorter
-    ot = midpoint_sorter()
+    ot = object_sorter()
     return ctrl, window_x, window_y, model, mp, ot
 
 def get_screen(game_window, window_x, window_y):
@@ -66,8 +66,8 @@ def get_screen(game_window, window_x, window_y):
     
     return frame, padding
 
-def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_midpoints, \
-    cur_frame_midpoints, is_init_frame):
+def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_objects, \
+    cur_frame_objects, is_init_frame):
     score_thresh = cv2.getTrackbarPos("ScoreThresh", "Screen")
 
     # Process image and run inference
@@ -84,18 +84,20 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_midpoints, \
         
         #if (label == 2):
         #    continue
+        predictions_for_map.append((label, box))
 
         #midpoint_x = int((box[2] + box[0]) / 2)
         #midpoint_y = int((box[3] + box[1]) / 2)
-        midpoint_x = box[0]
-        midpoint_y = box[1]
-        predictions_for_map.append((label, box))
+        x1 = box[0]
+        y1 = box[1]
+        x2 = box[2]
+        y2 = box[3]
 
         if (is_init_frame == True):
             # Indexing previous frame
-            prev_frame_midpoints.append([(midpoint_x, midpoint_y), ot.get_init_index()])
+            prev_frame_objects.append([(x1, y1), (x2, y2), ot.get_init_index()])
         else:
-            cur_frame_midpoints.append([(midpoint_x, midpoint_y), -1])
+            cur_frame_objects.append([(x1, y1), (x2, y2), -1])
 
         # Draw labels and bounding boxes
         color = label_color(label)
@@ -106,15 +108,16 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_midpoints, \
 
     # Sorting cur_frame midpoints
     if (is_init_frame == False):
-        cur_frame_midpoints = ot.sort_cur_midpoints(prev_frame_midpoints, cur_frame_midpoints)
+        cur_frame_objects = ot.sort_cur_objects(prev_frame_objects, cur_frame_objects)
     # Printing midpoints of distinct objects
     font = cv2.FONT_HERSHEY_SIMPLEX
-    for point in cur_frame_midpoints:
-        cv2.putText(frame, str(point[1]), point[0], font, 0.5, (255, 255, 0), 2, cv2.LINE_AA)
+    for point in cur_frame_objects:
+        cv2.putText(frame, str(point[2]), point[0], font, 0.5, (255, 255, 0), 2, cv2.LINE_AA)
+        cv2.putText(frame, str(point[2]), point[1], font, 0.5, (255, 255, 0), 2, cv2.LINE_AA)
     
     if (is_init_frame == False):
-        prev_frame_midpoints = cur_frame_midpoints
-        cur_frame_midpoints = []
+        prev_frame_objects = cur_frame_objects
+        cur_frame_objects = []
         #print(mp.draw_map(predictions_for_map))
 
     # Show grid lines
@@ -127,7 +130,7 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_midpoints, \
     status = "ok"
     if cv2.waitKey(1) == ord('q'):
         status = "quit"
-    return status, prev_frame_midpoints, cur_frame_midpoints, predictions_for_map, False
+    return status, prev_frame_objects, cur_frame_objects, predictions_for_map, False
 
 map_grid = np.full((2, 2), 255, dtype=np.uint8)
 
@@ -157,8 +160,8 @@ if __name__ == "__main__":
     # Initialising model, window, and controller
     ctrl, window_x, window_y, model, mp, ot = initialise(game_window, game_width, game_height, model_path)
 
-    prev_frame_midpoints = []
-    cur_frame_midpoints = []
+    prev_frame_objects = []
+    cur_frame_objects = []
     is_init_frame = True
     
     #key_pressed = None
@@ -168,9 +171,9 @@ if __name__ == "__main__":
 
     while True:     
         frame, temp = get_screen(game_window, window_x, window_y)
-        status, prev_frame_midpoints, cur_frame_midpoints, predictions_for_map, temp_bool = \
-            run_detection(frame, model, labels_to_names, mp, ot, prev_frame_midpoints, \
-            cur_frame_midpoints, is_init_frame)
+        status, prev_frame_objects, cur_frame_objects, predictions_for_map, temp_bool = \
+            run_detection(frame, model, labels_to_names, mp, ot, prev_frame_objects, \
+            cur_frame_objects, is_init_frame)
         
         if (is_init_frame == False):
             cv2.imshow("Map", map_grid)            

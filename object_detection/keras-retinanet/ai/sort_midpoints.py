@@ -1,4 +1,4 @@
-class midpoint_sorter:
+class object_sorter:
     min_thresh_dist = 40
     max_thresh_dist = 100
     cur_indexes = set()
@@ -24,18 +24,18 @@ class midpoint_sorter:
         x_square = (cur_point[0] - prev_point[0]) ** 2
         return ((x_square + y_square) ** 0.5)
 
-    def sort_cur_midpoints(self, prev_midpoints, cur_midpoints):
+    def sort_cur_objects(self, prev_objects, cur_objects):
         i = 0
         self.cur_indexes = set()
         
-        while (i < len(cur_midpoints)):
+        while (i < len(cur_objects)):
             j = 0
-            while (j < len(prev_midpoints)):
-                temp_dist = self.get_dist(prev_midpoints[j][0], cur_midpoints[i][0])
+            while (j < len(prev_objects)):
+                temp_dist = self.get_dist(prev_objects[j][0], cur_objects[i][0])
                 #print(temp_dist)
                 if (temp_dist <= self.min_thresh_dist):
-                    cur_midpoints[i][1] = prev_midpoints[j][1]
-                    self.cur_indexes.add(prev_midpoints[j][1])
+                    cur_objects[i][2] = prev_objects[j][2]
+                    self.cur_indexes.add(prev_objects[j][2])
                     #print("broken")
                     break
                     # We can safely break because we assume that there is only one possible point that
@@ -44,12 +44,12 @@ class midpoint_sorter:
                 j += 1
             i += 1
 
-        for new_point in cur_midpoints:
-            if new_point[1] == -1:
-                new_point[1] = self.find_next_free_index()
-                self.cur_indexes.add(new_point[1])
+        for new_object in cur_objects:
+            if new_object[2] == -1:
+                new_object[2] = self.find_next_free_index()
+                self.cur_indexes.add(new_object[2])
 
-        return cur_midpoints
+        return cur_objects
 
 
 
