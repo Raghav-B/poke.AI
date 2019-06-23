@@ -16,6 +16,9 @@ class live_map:
     grid_x = 16 # Tiles in x axis + 1
     grid_y = 12 # Tiles in y axis + 1
 
+    map_cutout_x = 0
+    map_cutout_y = 0
+
     def __init__(self, w, h, pad, dft=4):
         self.window_width = w
         self.window_height = h
@@ -67,7 +70,12 @@ class live_map:
                 coords[3] = math.floor(q) - 1
             else:
                 coords[3] = math.ceil(q) - 1
-    
+
+            coords[0] += self.map_cutout_x
+            coords[1] += self.map_cutout_y
+            coords[2] += self.map_cutout_x
+            coords[3] += self.map_cutout_y
+
             tiles.append((label, coords))
         return tiles
 
@@ -91,11 +99,41 @@ class live_map:
                 x += 1
 
     # Returns true if a change has been detected, otherwise returns false.
-    def draw_map(self, bounding_box_list):
+    def draw_map(self, key_pressed, bounding_box_list):
+        self.cur_map_grid = self.prev_map_grid 
+        if (key_pressed == "up"):
+            #self.map_cutout_y += 1
+            self.grid_y += 1
+            append_arr = np.full((1, self.grid_x - 1), ['.'], dtype=str)
+            self.cur_map_grid = np.append(append_arr, self.cur_map_grid, axis=0)
+
+        elif (key_pressed == "right"):
+            self.map_cutout_x += 1
+            self.grid_x += 1
+            append_arr = np.full((self.grid_y - 1, 1), ['.'], dtype=str)
+            self.cur_map_grid = np.append(self.cur_map_grid, append_arr, axis=1)
+
+        elif (key_pressed == "down"):
+            self.map_cutout_y -= 1
+            self.grid_y += 1
+            append_arr = np.full((1, self.grid_x - 1), ['.'], dtype=str)
+            self.cur_map_grid = np.append(self.cur_map_grid, append_arr, axis=0)
+
+        elif (key_pressed == "left"):
+            #self.map_cutout_x -= 1
+            self.grid_x += 1
+            append_arr = np.full((self.grid_y - 1, 1), ['.'], dtype=str)
+            self.cur_map_grid = np.append(append_arr, self.cur_map_grid, axis=1)
+            
+        else: # If key is "x"
+            pass
+        
+        
+        
         tiles = self.convert_points_to_grid(bounding_box_list)
         print(tiles)
         symbol = None
-        self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1), ['.'], dtype=str)
+        
         has_map_changed = None
 
         for label, box in tiles:
@@ -113,16 +151,18 @@ class live_map:
                 symbol = 'X'    
             self.fill_area(box, symbol)
         
-        has_map_changed = np.array_equal(self.prev_map_grid, self.cur_map_grid)
+        has_map_changed = np.array_equiv(self.prev_map_grid, self.cur_map_grid)
         self.prev_map_grid = self.cur_map_grid
-        print(self.cur_map_grid)
+        #print(self.cur_map_grid)
         print("")
-        return has_map_changed
+        
 
-        #output_map = self.map_grid.view(np.uint8)
+        
         #plt.matshow(output_map)
         #plt.pause(0.001)
         #plt.show()
+
+        return has_map_changed, self.cur_map_grid
 
 
 """

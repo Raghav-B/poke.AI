@@ -12,6 +12,7 @@ import pyautogui as pag
 import time
 import threading
 import sys
+import matplotlib.pyplot as plt
 
 # Custom imports
 from sort_midpoints import midpoint_sorter
@@ -121,14 +122,24 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_midpoints, \
         status = "quit"
     return status, prev_frame_midpoints, cur_frame_midpoints, predictions_for_map, False
 
-def random_loop(ctrl):
-    global key_pressed
+map_grid = []
+
+def control_loop(ctrl, mp):
+    #global key_pressed
+    global predictions_for_map
+    global is_init_frame
+    global map_grid
+
     while True:
-        key_pressed = ctrl.random_movement()
-        time.sleep(5)
+        if (is_init_frame == False):
+            print("Sleeping for 5 seconds...")
+            time.sleep(5)
+            
+            key_pressed = ctrl.random_movement()
+            print(key_pressed)
+            has_map_changed, map_grid = mp.draw_map(key_pressed, predictions_for_map)
 
 if __name__ == "__main__":
-    key_pressed = 24
     # Setup variables here
     game_width = 720
     game_height = 480
@@ -143,7 +154,9 @@ if __name__ == "__main__":
     cur_frame_midpoints = []
     is_init_frame = True
     
-    control_thread = threading.Thread(target=random_loop, args=(ctrl,), daemon=True)
+    #key_pressed = None
+    predictions_for_map = []
+    control_thread = threading.Thread(target=control_loop, args=(ctrl, mp, ), daemon=True)
     control_thread.start()
 
     while True:     
@@ -153,11 +166,11 @@ if __name__ == "__main__":
             cur_frame_midpoints, is_init_frame)
         
         if (is_init_frame == False):
-            print(mp.draw_map(predictions_for_map))
+            output_map = map_grid.view(np.uint8)
+            plt.imshow(output_map)
+            plt.show()
         else:
             is_init_frame = temp_bool
-
-        print(key_pressed)
 
         if (status == "quit"):
             break

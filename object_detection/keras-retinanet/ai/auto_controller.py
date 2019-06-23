@@ -48,8 +48,8 @@ class controller:
         return "left"
 
     def interact(self):
-        pag.press("a")
-        return "a"
+        pag.press("x")
+        return "x"
 
     def random_movement(self):
         action = random.randint(0, 4)
