@@ -32,7 +32,7 @@ class live_map:
         self.prev_map_grid = np.full((self.grid_y - 1, self.grid_x - 1), 255, dtype=np.uint8)
 
     # bounding_box_list is of shape (label, box_dimensions)
-    def convert_points_to_grid(self, bounding_box_list):
+    def convert_points_to_grid(self, key_pressed, bounding_box_list):
         # Converts real-world coordinates to grid values used in-game
 
         tiles = []
@@ -71,10 +71,15 @@ class live_map:
             else:
                 coords[3] = math.ceil(q) - 1
 
-            coords[0] -= self.map_cutout_x
-            coords[1] -= self.map_cutout_y
-            coords[2] -= self.map_cutout_x
-            coords[3] -= self.map_cutout_y
+            if (key_pressed == "up" or key_pressed == "left"):
+                coords[0] -= self.map_cutout_x
+                coords[1] -= self.map_cutout_y
+                coords[2] -= self.map_cutout_x
+                coords[3] -= self.map_cutout_y
+            elif (key_pressed == "right" or key_pressed == "down"):
+                pass
+            else:
+                pass
 
             tiles.append((label, coords))
         return tiles
@@ -98,7 +103,7 @@ class live_map:
                 x += 1
 
     def add_to_object_list(self, key_pressed, bounding_box_list):
-        tiles = self.convert_points_to_grid(bounding_box_list)
+        tiles = self.convert_points_to_grid(key_pressed, bounding_box_list)
         
         self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1), 255, dtype=np.uint8)
         if (key_pressed == "up"):
@@ -158,12 +163,15 @@ class live_map:
 
         temp_object_list = []
         for new_label, new_box in tiles:
-            
             is_found = False
 
             for label, box in self.object_list:
-                if (new_box[0] == box[0] and new_box[1] == box[1]):
-                    is_found == True
+                if ((new_box[0] == box[0] and new_box[1] == box[1]) or \
+                    (new_box[2] == box[2] and new_box[3] == box[3])):
+                    if (abs(new_box[0] - new_box[2]) > abs(box[0] - box[2]) or \
+                        abs(new_box[1] - new_box[3]) > abs(box[1] - box[3])):
+                        box[:] = new_box[:]
+                    is_found = True
                     break
             
             if (is_found == False):

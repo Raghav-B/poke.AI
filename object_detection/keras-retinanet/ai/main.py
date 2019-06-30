@@ -131,16 +131,16 @@ if __name__ == "__main__":
     while True:     
         if (four_frame_count == 4):
             has_map_changed, map_grid = mp.draw_map(key_pressed, predictions_for_map)
-            #key_pressed = ctrl.random_movement()
-            key = cv2.waitKey(1)
-            if (key == 0):
-                key_pressed = "up"
-            elif (key == 3):
-                key_pressed = "right"
-            elif (key == 1):
-                key_pressed = "down"
-            elif (key == 2):
-                key_pressed = "left"
+            key_pressed = ctrl.random_movement()
+            #key = cv2.waitKey(1)
+            #if (key == 0):
+            #    key_pressed = "up"
+            #elif (key == 3):
+            #    key_pressed = "right"
+            #elif (key == 1):
+            #    key_pressed = "down"
+            #elif (key == 2):
+            #    key_pressed = "left"
 
             print(key_pressed)
             #ctrl.dummy()
