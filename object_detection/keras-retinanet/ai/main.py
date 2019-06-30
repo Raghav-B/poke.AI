@@ -45,7 +45,7 @@ def initialise(game_window, game_width, game_height, model_path):
     # Get padding for square conversion
     temp3, padding = get_screen(game_window, window_x, window_y)
     # Initialising mapper object
-    mp = live_map(game_width, game_height, padding)
+    mp = live_map(game_width, game_height, padding, 5446, 0x55b2dc683720, 0x55b2dc683722)
     # Initialising object sorter
     return ctrl, window_x, window_y, model, mp
 
@@ -81,8 +81,8 @@ def run_detection(frame, model, labels_to_names, mp):
         if score < (score_thresh / 100):
             break
         
-        if (label == 2):
-            continue
+        #if (label == 2):
+            #continue
         predictions_for_map.append((label, box))
 
         # Draw labels and bounding boxes
@@ -131,17 +131,10 @@ if __name__ == "__main__":
     while True:     
         if (four_frame_count == 4):
             has_map_changed, map_grid = mp.draw_map(key_pressed, predictions_for_map)
+            if (has_map_changed == False):
+                print("collision!")
+            
             key_pressed = ctrl.random_movement()
-            #key = cv2.waitKey(1)
-            #if (key == 0):
-            #    key_pressed = "up"
-            #elif (key == 3):
-            #    key_pressed = "right"
-            #elif (key == 1):
-            #    key_pressed = "down"
-            #elif (key == 2):
-            #    key_pressed = "left"
-
             print(key_pressed)
             #ctrl.dummy()
             four_frame_count = 0

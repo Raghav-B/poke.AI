@@ -59,7 +59,7 @@ class controller:
         return "x"
 
     def random_movement(self):
-        action = random.randint(2, 2)
+        action = random.randint(0, 4)
         key_pressed = None
         if action == 0:
             key_pressed = self.move_up()

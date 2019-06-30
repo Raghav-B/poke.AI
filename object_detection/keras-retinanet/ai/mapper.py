@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
+from ram_searcher import ram_searcher
+
 class live_map:
     # Variables to initialize
     window_width = 0
@@ -23,13 +25,21 @@ class live_map:
     map_cutout_x = 0
     map_cutout_y = 0
 
-    def __init__(self, w, h, pad, dft=4):
+    ram_search = None
+    prev_pos = None
+    cur_pos = None
+
+    def __init__(self, w, h, pad, pid, xpa, ypa, dft=4):
         self.window_width = w
         self.window_height = h
         self.padding = pad
         self.tile_size = int(w / (self.grid_x - 1))
         self.definite_frames_thresh = dft
         self.prev_map_grid = np.full((self.grid_y - 1, self.grid_x - 1), 255, dtype=np.uint8)
+        self.prev_map_grid[self.map_cutout_y + 5][self.map_cutout_x + 7] = 24
+        
+        self.ram_search = ram_searcher(pid, xpa, ypa)
+        self.prev_pos = [self.ram_search.get_x_pos(), self.ram_search.get_y_pos()]
 
     # bounding_box_list is of shape (label, box_dimensions)
     def convert_points_to_grid(self, key_pressed, bounding_box_list):
@@ -143,8 +153,9 @@ class live_map:
                 self.grid_x += 1
                 append_arr = np.full((self.grid_y - 1, 1), 255, dtype=np.uint8)
                 self.cur_map_grid = np.append(append_arr, self.cur_map_grid, axis=1)
-            else:
                 self.map_cutout_x = 0
+            else:
+                self.map_cutout_x -= 1
 
         else: # If key is "x"
             pass
@@ -167,8 +178,8 @@ class live_map:
             else:
                 pass
 
-        print(self.object_list)
-        print(tiles)
+        #print(self.object_list)
+        #print(tiles)
 
         temp_object_list = []
         for new_label, new_box in tiles:
@@ -191,10 +202,30 @@ class live_map:
 
     # Returns true if a change has been detected, otherwise returns false.
     def draw_map(self, key_pressed, bounding_box_list):
-        self.add_to_object_list(key_pressed, bounding_box_list)
+        self.cur_pos = [self.ram_search.get_x_pos(), self.ram_search.get_y_pos()]
+        has_map_changed = True
 
+        if (key_pressed == "up"):
+            if not(self.cur_pos[1] < self.prev_pos[1]):
+                has_map_changed = False
+        elif (key_pressed == "right"):
+            if not(self.cur_pos[0] > self.prev_pos[0]):
+                has_map_changed = False
+        elif (key_pressed == "down"):
+            if not(self.cur_pos[1] > self.prev_pos[1]):
+                has_map_changed = False
+        elif (key_pressed == "left"):
+            if not(self.cur_pos[0] < self.prev_pos[0]):
+                has_map_changed = False
+        else:
+            pass
+
+        #if (self.cur_pos[:] == self.prev_pos[:]):
+        #    print("collision!")
+        
+        self.add_to_object_list(key_pressed, bounding_box_list)
+        
         symbol = None
-        has_map_changed = None
 
         #print(len(self.object_list))
         for label, box in self.object_list:
@@ -211,9 +242,10 @@ class live_map:
             elif (label == 5): # exit
                 symbol = 128    
             self.fill_area(box, symbol)
+        self.cur_map_grid[self.map_cutout_y + 5][self.map_cutout_x + 7] = 24
 
-        has_map_changed = np.array_equiv(self.prev_map_grid, self.cur_map_grid)
         self.prev_map_grid = self.cur_map_grid
+        self.prev_pos = self.cur_pos
         #print(str(self.grid_x), str(self.grid_y))
         print("")
 
