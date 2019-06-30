@@ -102,34 +102,12 @@ def run_detection(frame, model, labels_to_names, mp):
     #for i in range(0, 10): # drawing horizontal lines
     #    cv2.line(frame, (0, padding + int(tile_width / 2) + (i * tile_width)), (game_width, padding + int(tile_width / 2) + (i * tile_width)), (0,0,0), 1)
     
-    print("Detection complete")
+    #print("Detection complete")
     cv2.imshow("Screen", frame)
     status = "ok"
     if cv2.waitKey(1) == ord('q'):
         status = "quit"
     return status, predictions_for_map, False
-
-map_grid = np.full((2, 2), 255, dtype=np.uint8)
-four_frame_count = 0
-
-def control_loop(ctrl, mp):
-    #global key_pressed
-    global predictions_for_map
-    global is_init_frame
-    global map_grid
-    global four_frame_count
-    
-    key_pressed = None
-
-    while True:
-        if (is_init_frame == False and four_frame_count == 4):
-            has_map_changed, map_grid = mp.draw_map(key_pressed, predictions_for_map)
-            
-            print("Sending next command")
-            key_pressed = ctrl.random_movement()
-            print(key_pressed)
-
-            four_frame_count = 0
 
 if __name__ == "__main__":
     # Setup variables here
@@ -145,24 +123,27 @@ if __name__ == "__main__":
     is_init_frame = True
     predictions_for_map = []
     temp_bool = None
+    key_pressed = None
     
-    control_thread = threading.Thread(target=control_loop, args=(ctrl, mp, ), daemon=True)
-    control_thread.start()
+    map_grid = np.full((2, 2), 255, dtype=np.uint8)
+    four_frame_count = 0
 
     while True:     
         if (four_frame_count == 4):
-            pass
+            has_map_changed, map_grid = mp.draw_map(key_pressed, predictions_for_map)
+            #key_pressed = ctrl.random_movement()
+            ctrl.dummy()
+            four_frame_count = 0
         else:
-            #framerate_start = time.time()
+            framerate_start = time.time()
             frame, temp = get_screen(game_window, window_x, window_y)
             status, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
             four_frame_count += 1
-            #framerate = time.time() - framerate_start
-            #print(framerate)
+            framerate = time.time() - framerate_start
+            print(framerate)
 
         if (is_init_frame == False):
             cv2.imshow("Map", map_grid)
-            #pass
         else:
             is_init_frame = temp_bool      
 

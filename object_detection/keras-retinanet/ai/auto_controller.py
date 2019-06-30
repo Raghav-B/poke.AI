@@ -4,7 +4,7 @@ import random
 
 corner_x = 0
 corner_y = 0
-key_hold_time = 0.27
+key_hold_time = 0.25
 
 # Storing character facing direction.
 cur_dir = 0 #0=up, 1=right, 2=down, 3=left
@@ -74,3 +74,6 @@ class controller:
         elif action == 4:
             key_pressed = self.interact()
         return key_pressed
+
+    def dummy(self):
+        pag.press("")
