@@ -52,7 +52,7 @@ class controller:
         return "x"
 
     def random_movement(self):
-        action = random.randint(0, 4)
+        action = random.randint(4, 4)
         key_pressed = None
         if action == 0:
             key_pressed = self.move_up()
@@ -65,3 +65,6 @@ class controller:
         elif action == 4:
             key_pressed = self.interact()
         return key_pressed
+
+    def dummy(self):
+        pag.press("")

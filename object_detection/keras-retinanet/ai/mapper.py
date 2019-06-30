@@ -99,7 +99,7 @@ class live_map:
                 x += 1
 
     # Returns true if a change has been detected, otherwise returns false.
-    def draw_map(self, key_pressed, bounding_box_list):
+    def draw_map(self, bounding_box_list):
         self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1), 255, dtype=np.uint8)
         #self.cur_map_grid = self.prev_map_grid 
         #if (key_pressed == "up"):

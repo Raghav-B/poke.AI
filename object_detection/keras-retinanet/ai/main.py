@@ -34,6 +34,7 @@ def initialise(game_window, game_width, game_height, model_path):
     cv2.namedWindow("Map", cv2.WINDOW_NORMAL)
     cv2.resizeWindow("Map", 720, 480)
     cv2.namedWindow("Screen")
+    cv2.moveWindow("Screen", 3000, 0)
     cv2.createTrackbar("ScoreThresh", "Screen", 70, 99, nothing)
 
     window_x, window_y, temp1, temp2 = pag.locateOnScreen("find_game_window.png")
@@ -82,8 +83,8 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_objects, \
         if score < (score_thresh / 100):
             break
         
-        #if (label == 2):
-        #    continue
+        if (label == 2):
+            continue
         predictions_for_map.append((label, box))
 
         #midpoint_x = int((box[2] + box[0]) / 2)
@@ -140,14 +141,20 @@ def control_loop(ctrl, mp):
     global is_init_frame
     global map_grid
 
+    #key_pressed = None
+
     while True:
         if (is_init_frame == False):
             #print("Sleeping for 5 seconds...")
             #time.sleep(5)
             
-            key_pressed = ctrl.random_movement()
+            #key_pressed = ctrl.random_movement()
+            #nothing(None)
+            ctrl.dummy()
+
+            
             #print(key_pressed)
-            has_map_changed, map_grid = mp.draw_map(key_pressed, predictions_for_map)
+            has_map_changed, map_grid = mp.draw_map(predictions_for_map)
 
 if __name__ == "__main__":
     # Setup variables here
