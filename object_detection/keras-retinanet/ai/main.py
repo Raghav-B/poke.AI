@@ -142,11 +142,11 @@ def control_loop(ctrl, mp):
 
     while True:
         if (is_init_frame == False):
-            print("Sleeping for 5 seconds...")
+            #print("Sleeping for 5 seconds...")
             #time.sleep(5)
             
             key_pressed = ctrl.random_movement()
-            print(key_pressed)
+            #print(key_pressed)
             has_map_changed, map_grid = mp.draw_map(key_pressed, predictions_for_map)
 
 if __name__ == "__main__":
@@ -170,11 +170,13 @@ if __name__ == "__main__":
     control_thread.start()
 
     while True:     
+        framerate = time.time()
         frame, temp = get_screen(game_window, window_x, window_y)
         status, prev_frame_objects, cur_frame_objects, predictions_for_map, temp_bool = \
             run_detection(frame, model, labels_to_names, mp, ot, prev_frame_objects, \
             cur_frame_objects, is_init_frame)
-        
+        print(time.time() - framerate)
+
         if (is_init_frame == False):
             cv2.imshow("Map", map_grid)            
         else:
