@@ -71,13 +71,18 @@ class live_map:
             else:
                 coords[3] = math.ceil(q) - 1
 
-            if (key_pressed == "up" or key_pressed == "left"):
-                coords[0] -= self.map_cutout_x
+            if (key_pressed == "up"):
                 coords[1] -= self.map_cutout_y
-                coords[2] -= self.map_cutout_x
                 coords[3] -= self.map_cutout_y
-            elif (key_pressed == "right" or key_pressed == "down"):
-                pass
+            elif (key_pressed == "left"):
+                coords[0] -= self.map_cutout_x
+                coords[2] -= self.map_cutout_x
+            elif (key_pressed == "right"):
+                coords[0] += self.map_cutout_x
+                coords[2] += self.map_cutout_x
+            elif (key_pressed == "down"):
+                coords[1] += self.map_cutout_y
+                coords[3] += self.map_cutout_y
             else:
                 pass
 
@@ -149,8 +154,12 @@ class live_map:
                 box[1] += 1
                 box[3] += 1
             elif (key_pressed == "right"):
+                #box[0] -= 1
+                #box[2] -= 1
                 pass
             elif (key_pressed == "down"):
+                #box[1] -= 1
+                #box[3] -= 1
                 pass
             elif (key_pressed == "left"):
                 box[0] += 1
