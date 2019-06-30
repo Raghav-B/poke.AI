@@ -1,7 +1,7 @@
 <annotation>
-	<folder>training_gameplay</folder>
-	<filename>354.jpg</filename>
-	<path>/home/raghavbhardwaj/Desktop/pokemon_ai/object_detection/training_gameplay/354.jpg</path>
+	<folder>validation_gameplay</folder>
+	<filename>3.jpg</filename>
+	<path>/home/raghavbhardwaj/Desktop/pokemon_ai/object_detection/validation_gameplay/3.jpg</path>
 	<source>
 		<database>Unknown</database>
 	</source>
@@ -17,10 +17,10 @@
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>336</xmin>
-			<ymin>268</ymin>
+			<xmin>337</xmin>
+			<ymin>274</ymin>
 			<xmax>384</xmax>
-			<ymax>326</ymax>
+			<ymax>325</ymax>
 		</bndbox>
 	</object>
 	<object>
@@ -30,33 +30,21 @@
 		<difficult>0</difficult>
 		<bndbox>
 			<xmin>337</xmin>
-			<ymin>319</ymin>
-			<xmax>385</xmax>
+			<ymin>322</ymin>
+			<xmax>384</xmax>
 			<ymax>384</ymax>
 		</bndbox>
 	</object>
 	<object>
-		<name>pokemart</name>
-		<pose>Unspecified</pose>
-		<truncated>0</truncated>
-		<difficult>0</difficult>
-		<bndbox>
-			<xmin>334</xmin>
-			<ymin>120</ymin>
-			<xmax>532</xmax>
-			<ymax>289</ymax>
-		</bndbox>
-	</object>
-	<object>
-		<name>house</name>
+		<name>gym</name>
 		<pose>Unspecified</pose>
 		<truncated>1</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>1</xmin>
-			<ymin>141</ymin>
-			<xmax>99</xmax>
-			<ymax>342</ymax>
+			<xmin>531</xmin>
+			<ymin>117</ymin>
+			<xmax>720</xmax>
+			<ymax>194</ymax>
 		</bndbox>
 	</object>
 </annotation>

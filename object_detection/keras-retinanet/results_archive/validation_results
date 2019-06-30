@@ -1,0 +1,201 @@
+*** 720p ***
+01
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9845
+14 instances of class house with average precision: 0.7857
+4 instances of class gym with average precision: 0.5000
+6 instances of class exit with average precision: 0.8333
+mAP using the weighted average of precisions among classes: 0.9171
+mAP: 0.6284
+
+02
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9864
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 0.7500
+6 instances of class exit with average precision: 0.8333
+mAP using the weighted average of precisions among classes: 0.9344
+mAP: 0.6823
+
+04
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9866
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 0.7500
+6 instances of class exit with average precision: 0.8333
+mAP using the weighted average of precisions among classes: 0.9346
+mAP: 0.6823
+
+06
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9880
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 0.7500
+6 instances of class exit with average precision: 0.8333
+mAP using the weighted average of precisions among classes: 0.9356
+mAP: 0.6825
+
+08
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9873
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 0.7500
+6 instances of class exit with average precision: 0.8333
+mAP using the weighted average of precisions among classes: 0.9350
+mAP: 0.6824
+
+09
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9877
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 1.0000
+6 instances of class exit with average precision: 0.8333
+mAP using the weighted average of precisions among classes: 0.9433
+mAP: 0.7241
+
+***400p***
+01
+3 instances of class pokecen with average precision: 0.3333
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.7568
+14 instances of class house with average precision: 0.6429
+4 instances of class gym with average precision: 0.0000
+6 instances of class exit with average precision: 0.8333
+mAP using the weighted average of precisions among classes: 0.7021
+mAP: 0.4277
+
+02
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9501
+14 instances of class house with average precision: 0.7857
+4 instances of class gym with average precision: 0.7500
+6 instances of class exit with average precision: 1.0000
+mAP using the weighted average of precisions among classes: 0.9063
+mAP: 0.6921
+
+03
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9818
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 1.0000
+6 instances of class exit with average precision: 0.8333
+mAP using the weighted average of precisions among classes: 0.9387
+mAP: 0.7232
+
+04
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9817
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 0.7500
+6 instances of class exit with average precision: 0.8333
+mAP using the weighted average of precisions among classes: 0.9308
+mAP: 0.6815
+
+05
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9816
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 1.0000
+6 instances of class exit with average precision: 0.8333
+mAP using the weighted average of precisions among classes: 0.9386
+mAP: 0.7231
+
+06
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9825
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 1.0000
+6 instances of class exit with average precision: 1.0000
+mAP using the weighted average of precisions among classes: 0.9471
+mAP: 0.7511
+
+07
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9815
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 1.0000
+6 instances of class exit with average precision: 1.0000
+mAP using the weighted average of precisions among classes: 0.9463
+mAP: 0.7509
+
+08
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9813
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 1.0000
+6 instances of class exit with average precision: 1.0000
+mAP using the weighted average of precisions among classes: 0.9462
+mAP: 0.7508
+
+09
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9827
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 1.0000
+6 instances of class exit with average precision: 1.0000
+mAP using the weighted average of precisions among classes: 0.9473
+mAP: 0.7511
+
+10
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9820
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 1.0000
+6 instances of class exit with average precision: 1.0000
+mAP using the weighted average of precisions among classes: 0.9467
+mAP: 0.7510
+
+11
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9828
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 1.0000
+6 instances of class exit with average precision: 1.0000
+mAP using the weighted average of precisions among classes: 0.9474
+mAP: 0.7511
+
+12
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9817
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 1.0000
+6 instances of class exit with average precision: 1.0000
+mAP using the weighted average of precisions among classes: 0.9465
+mAP: 0.7509
+
+13
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9832
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 1.0000
+6 instances of class exit with average precision: 1.0000
+mAP using the weighted average of precisions among classes: 0.9477
+mAP: 0.7512
+
+14
+3 instances of class pokecen with average precision: 0.6667
+2 instances of class pokemart with average precision: 0.0000
+98 instances of class npc with average precision: 0.9831
+14 instances of class house with average precision: 0.8571
+4 instances of class gym with average precision: 1.0000
+6 instances of class exit with average precision: 1.0000
+mAP using the weighted average of precisions among classes: 0.9476
+mAP: 0.7512

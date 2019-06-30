@@ -1,7 +1,7 @@
 <annotation>
-	<folder>training_gameplay</folder>
-	<filename>353.jpg</filename>
-	<path>/home/raghavbhardwaj/Desktop/pokemon_ai/object_detection/training_gameplay/353.jpg</path>
+	<folder>validation_gameplay</folder>
+	<filename>32.jpg</filename>
+	<path>/home/raghavbhardwaj/Desktop/pokemon_ai/object_detection/validation_gameplay/32.jpg</path>
 	<source>
 		<database>Unknown</database>
 	</source>
@@ -12,51 +12,51 @@
 	</size>
 	<segmented>0</segmented>
 	<object>
-		<name>pokemart</name>
+		<name>house</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>332</xmin>
+			<xmin>288</xmin>
 			<ymin>119</ymin>
-			<xmax>530</xmax>
-			<ymax>288</ymax>
-		</bndbox>
-	</object>
-	<object>
-		<name>npc</name>
-		<pose>Unspecified</pose>
-		<truncated>0</truncated>
-		<difficult>0</difficult>
-		<bndbox>
-			<xmin>335</xmin>
-			<ymin>273</ymin>
-			<xmax>383</xmax>
-			<ymax>328</ymax>
-		</bndbox>
-	</object>
-	<object>
-		<name>npc</name>
-		<pose>Unspecified</pose>
-		<truncated>0</truncated>
-		<difficult>0</difficult>
-		<bndbox>
-			<xmin>333</xmin>
-			<ymin>318</ymin>
-			<xmax>383</xmax>
-			<ymax>384</ymax>
+			<xmax>435</xmax>
+			<ymax>314</ymax>
 		</bndbox>
 	</object>
 	<object>
 		<name>house</name>
 		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>237</xmin>
+			<ymin>453</ymin>
+			<xmax>580</xmax>
+			<ymax>600</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>npc</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>337</xmin>
+			<ymin>318</ymin>
+			<xmax>383</xmax>
+			<ymax>386</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>npc</name>
+		<pose>Unspecified</pose>
 		<truncated>1</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>1</xmin>
-			<ymin>141</ymin>
-			<xmax>98</xmax>
-			<ymax>344</ymax>
+			<xmin>669</xmin>
+			<ymin>483</ymin>
+			<xmax>720</xmax>
+			<ymax>550</ymax>
 		</bndbox>
 	</object>
 </annotation>

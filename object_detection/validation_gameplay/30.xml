@@ -1,7 +1,7 @@
 <annotation>
-	<folder>training_gameplay</folder>
-	<filename>339.jpg</filename>
-	<path>/home/raghavbhardwaj/Desktop/pokemon_ai/object_detection/training_gameplay/339.jpg</path>
+	<folder>validation_gameplay</folder>
+	<filename>30.jpg</filename>
+	<path>/home/raghavbhardwaj/Desktop/pokemon_ai/object_detection/validation_gameplay/30.jpg</path>
 	<source>
 		<database>Unknown</database>
 	</source>
@@ -12,63 +12,63 @@
 	</size>
 	<segmented>0</segmented>
 	<object>
-		<name>house</name>
+		<name>npc</name>
 		<pose>Unspecified</pose>
-		<truncated>1</truncated>
+		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>1</xmin>
-			<ymin>481</ymin>
-			<xmax>269</xmax>
+			<xmin>338</xmin>
+			<ymin>316</ymin>
+			<xmax>382</xmax>
+			<ymax>386</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>npc</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>265</xmin>
+			<ymin>414</ymin>
+			<xmax>306</xmax>
+			<ymax>481</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>house</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>498</xmin>
+			<ymin>119</ymin>
+			<xmax>719</xmax>
+			<ymax>290</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>house</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>356</xmin>
+			<ymin>477</ymin>
+			<xmax>600</xmax>
 			<ymax>601</ymax>
 		</bndbox>
 	</object>
 	<object>
-		<name>npc</name>
+		<name>gym</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>357</xmin>
-			<ymin>508</ymin>
-			<xmax>415</xmax>
-			<ymax>576</ymax>
-		</bndbox>
-	</object>
-	<object>
-		<name>npc</name>
-		<pose>Unspecified</pose>
-		<truncated>0</truncated>
-		<difficult>0</difficult>
-		<bndbox>
-			<xmin>558</xmin>
-			<ymin>373</ymin>
-			<xmax>603</xmax>
-			<ymax>434</ymax>
-		</bndbox>
-	</object>
-	<object>
-		<name>npc</name>
-		<pose>Unspecified</pose>
-		<truncated>0</truncated>
-		<difficult>0</difficult>
-		<bndbox>
-			<xmin>340</xmin>
-			<ymin>318</ymin>
-			<xmax>386</xmax>
-			<ymax>384</ymax>
-		</bndbox>
-	</object>
-	<object>
-		<name>house</name>
-		<pose>Unspecified</pose>
-		<truncated>0</truncated>
-		<difficult>0</difficult>
-		<bndbox>
-			<xmin>409</xmin>
-			<ymin>119</ymin>
-			<xmax>656</xmax>
-			<ymax>342</ymax>
+			<xmin>163</xmin>
+			<ymin>120</ymin>
+			<xmax>455</xmax>
+			<ymax>291</ymax>
 		</bndbox>
 	</object>
 </annotation>

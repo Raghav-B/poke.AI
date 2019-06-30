@@ -3,7 +3,7 @@ import glob
 import pandas as pd
 import xml.etree.ElementTree as ET
 
-image_path = 'training_gameplay/'
+image_path = 'validation_gameplay/'
 #image_path = 'test/'
 
 def xml_to_csv(path):
@@ -28,7 +28,7 @@ def xml_to_csv(path):
 
 def main():
     xml_df = xml_to_csv(image_path)
-    xml_df.to_csv('training_csvs/train.csv', index=None)
+    xml_df.to_csv('training_csvs/validation.csv', index=None)
     #xml_df.to_csv('test/test.csv', index=None)
     print('Successfully converted xml to csv.')
 

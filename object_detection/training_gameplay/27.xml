@@ -47,4 +47,16 @@
 			<ymax>291</ymax>
 		</bndbox>
 	</object>
+	<object>
+		<name>house</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>287</xmin>
+			<ymin>142</ymin>
+			<xmax>483</xmax>
+			<ymax>340</ymax>
+		</bndbox>
+	</object>
 </annotation>

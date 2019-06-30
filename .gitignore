@@ -5,8 +5,8 @@
 **/split_training_maps
 **/test_outputs
 **/logs
-**/results_archive
 **/videos
 **/training_maps
 **/test_inputs
+**/large_training
 

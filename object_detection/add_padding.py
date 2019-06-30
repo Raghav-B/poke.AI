@@ -1,7 +1,7 @@
 import cv2
 import glob
 
-imgs_to_pad = glob.glob("training_gameplay/*.jpg")
+imgs_to_pad = glob.glob("large_training/*.jpg")
 cur_index = 0
 
 for img_path in imgs_to_pad:

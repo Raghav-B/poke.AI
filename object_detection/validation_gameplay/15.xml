@@ -1,7 +1,7 @@
 <annotation>
-	<folder>training_gameplay</folder>
-	<filename>263.jpg</filename>
-	<path>/home/raghavbhardwaj/Desktop/pokemon_ai/object_detection/training_gameplay/263.jpg</path>
+	<folder>validation_gameplay</folder>
+	<filename>15.jpg</filename>
+	<path>/home/raghavbhardwaj/Desktop/pokemon_ai/object_detection/validation_gameplay/15.jpg</path>
 	<source>
 		<database>Unknown</database>
 	</source>
@@ -12,27 +12,39 @@
 	</size>
 	<segmented>0</segmented>
 	<object>
+		<name>house</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>333</xmin>
+			<ymin>120</ymin>
+			<xmax>627</xmax>
+			<ymax>272</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>pokemart</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1</xmin>
+			<ymin>120</ymin>
+			<xmax>99</xmax>
+			<ymax>225</ymax>
+		</bndbox>
+	</object>
+	<object>
 		<name>npc</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>48</xmin>
-			<ymin>366</ymin>
-			<xmax>96</xmax>
-			<ymax>432</ymax>
-		</bndbox>
-	</object>
-	<object>
-		<name>pokecen</name>
-		<pose>Unspecified</pose>
-		<truncated>0</truncated>
-		<difficult>0</difficult>
-		<bndbox>
-			<xmin>139</xmin>
-			<ymin>430</ymin>
-			<xmax>341</xmax>
-			<ymax>600</ymax>
+			<xmin>195</xmin>
+			<ymin>201</ymin>
+			<xmax>236</xmax>
+			<ymax>258</ymax>
 		</bndbox>
 	</object>
 	<object>
@@ -41,9 +53,9 @@
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>338</xmin>
+			<xmin>339</xmin>
 			<ymin>321</ymin>
-			<xmax>385</xmax>
+			<xmax>384</xmax>
 			<ymax>384</ymax>
 		</bndbox>
 	</object>
@@ -53,10 +65,10 @@
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>475</xmin>
-			<ymin>324</ymin>
-			<xmax>531</xmax>
-			<ymax>391</ymax>
+			<xmin>339</xmin>
+			<ymin>464</ymin>
+			<xmax>377</xmax>
+			<ymax>510</ymax>
 		</bndbox>
 	</object>
 	<object>
@@ -65,22 +77,10 @@
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>629</xmin>
-			<ymin>529</ymin>
-			<xmax>667</xmax>
-			<ymax>577</ymax>
-		</bndbox>
-	</object>
-	<object>
-		<name>house</name>
-		<pose>Unspecified</pose>
-		<truncated>1</truncated>
-		<difficult>0</difficult>
-		<bndbox>
-			<xmin>574</xmin>
-			<ymin>191</ymin>
-			<xmax>720</xmax>
-			<ymax>431</ymax>
+			<xmin>390</xmin>
+			<ymin>462</ymin>
+			<xmax>432</xmax>
+			<ymax>511</ymax>
 		</bndbox>
 	</object>
 </annotation>
