@@ -71,7 +71,7 @@ def run_detection(frame, model, labels_to_names, mp):
 
     # Process image and run inference
     image = preprocess_image(frame)
-    image, scale = resize_image(image, min_side = 720)
+    image, scale = resize_image(image, min_side = 400)
     boxes, scores, labels = model.predict_on_batch(np.expand_dims(image, axis=0))
     boxes /= scale
 
@@ -114,7 +114,7 @@ if __name__ == "__main__":
     game_width = 720
     game_height = 480
     game_window = np.zeros((game_height, game_width, 4), "uint8")
-    model_path = "../inference_graphs/resnet101_csv_09.h5"
+    model_path = "../inference_graphs/400p/resnet101_csv_13.h5"
     labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"}
 
     # Initialising model, window, and controller
@@ -150,6 +150,5 @@ if __name__ == "__main__":
         if (status == "quit"):
             break
 
-    plt.show()
     cv2.destroyAllWindows()
     sys.exit()
