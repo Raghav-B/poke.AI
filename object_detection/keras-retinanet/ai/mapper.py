@@ -71,10 +71,10 @@ class live_map:
             else:
                 coords[3] = math.ceil(q) - 1
 
-            coords[0] += self.map_cutout_x
-            coords[1] += self.map_cutout_y
-            coords[2] += self.map_cutout_x
-            coords[3] += self.map_cutout_y
+            coords[0] -= self.map_cutout_x
+            coords[1] -= self.map_cutout_y
+            coords[2] -= self.map_cutout_x
+            coords[3] -= self.map_cutout_y
 
             tiles.append((label, coords))
         return tiles
@@ -153,8 +153,8 @@ class live_map:
             else:
                 pass
 
-        #print(self.object_list)
-        #print(tiles)
+        print(self.object_list)
+        print(tiles)
 
         temp_object_list = []
         for new_label, new_box in tiles:
@@ -198,7 +198,7 @@ class live_map:
         has_map_changed = np.array_equiv(self.prev_map_grid, self.cur_map_grid)
         self.prev_map_grid = self.cur_map_grid
         #print(str(self.grid_x), str(self.grid_y))
-        #print("")
+        print("")
 
         return has_map_changed, self.cur_map_grid
     

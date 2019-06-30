@@ -132,7 +132,18 @@ if __name__ == "__main__":
         if (four_frame_count == 4):
             has_map_changed, map_grid = mp.draw_map(key_pressed, predictions_for_map)
             #key_pressed = ctrl.random_movement()
-            ctrl.dummy()
+            key = cv2.waitKey(1)
+            if (key == 0):
+                key_pressed = "up"
+            elif (key == 3):
+                key_pressed = "right"
+            elif (key == 1):
+                key_pressed = "down"
+            elif (key == 2):
+                key_pressed = "left"
+
+            print(key_pressed)
+            #ctrl.dummy()
             four_frame_count = 0
         else:
             framerate_start = time.time()
@@ -140,7 +151,7 @@ if __name__ == "__main__":
             status, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
             four_frame_count += 1
             framerate = time.time() - framerate_start
-            print(framerate)
+            #print(framerate)
 
         if (is_init_frame == False):
             cv2.imshow("Map", map_grid)
