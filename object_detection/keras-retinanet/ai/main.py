@@ -15,7 +15,7 @@ import sys
 import matplotlib.pyplot as plt
 
 # Custom imports
-from sort_midpoints import object_sorter # TODO: Chance filename
+from sort_objects import object_sorter
 from mapper import live_map
 from auto_controller import controller
 
@@ -34,6 +34,7 @@ def initialise(game_window, game_width, game_height, model_path):
     cv2.namedWindow("Map", cv2.WINDOW_NORMAL)
     cv2.resizeWindow("Map", 720, 480)
     cv2.namedWindow("Screen")
+    cv2.moveWindow("Screen", 3000, 0)
     cv2.createTrackbar("ScoreThresh", "Screen", 70, 99, nothing)
 
     window_x, window_y, temp1, temp2 = pag.locateOnScreen("find_game_window.png")
@@ -82,12 +83,10 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_objects, \
         if score < (score_thresh / 100):
             break
         
-        #if (label == 2):
-        #    continue
+        if (label == 2):
+            continue
         predictions_for_map.append((label, box))
 
-        #midpoint_x = int((box[2] + box[0]) / 2)
-        #midpoint_y = int((box[3] + box[1]) / 2)
         x1 = box[0]
         y1 = box[1]
         x2 = box[2]
@@ -125,7 +124,8 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_objects, \
     #    cv2.line(frame, (i * tile_width, padding), (i * tile_width, padding + game_height), (0,0,0), 1)
     #for i in range(0, 10): # drawing horizontal lines
     #    cv2.line(frame, (0, padding + int(tile_width / 2) + (i * tile_width)), (game_width, padding + int(tile_width / 2) + (i * tile_width)), (0,0,0), 1)
-
+    
+    print("Detection complete")
     cv2.imshow("Screen", frame)
     status = "ok"
     if cv2.waitKey(1) == ord('q'):
@@ -133,6 +133,7 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_objects, \
     return status, prev_frame_objects, cur_frame_objects, predictions_for_map, False
 
 map_grid = np.full((2, 2), 255, dtype=np.uint8)
+four_frame_count = 0
 
 def control_loop(ctrl, mp):
     #global key_pressed
@@ -142,12 +143,14 @@ def control_loop(ctrl, mp):
 
     while True:
         if (is_init_frame == False):
-            print("Sleeping for 5 seconds...")
-            #time.sleep(5)
-            
+            print("Sending next command")
+
             key_pressed = ctrl.random_movement()
             print(key_pressed)
+
             has_map_changed, map_grid = mp.draw_map(key_pressed, predictions_for_map)
+            #cv2.imshow("Map", map_grid)
+            #cv2.waitKey(1)
 
 if __name__ == "__main__":
     # Setup variables here
@@ -170,15 +173,19 @@ if __name__ == "__main__":
     control_thread.start()
 
     while True:     
+        framerate_start = time.time()
         frame, temp = get_screen(game_window, window_x, window_y)
         status, prev_frame_objects, cur_frame_objects, predictions_for_map, temp_bool = \
             run_detection(frame, model, labels_to_names, mp, ot, prev_frame_objects, \
             cur_frame_objects, is_init_frame)
+        four_frame_count += 1
+        framerate = time.time() - framerate_start
+        print(framerate)
         
         if (is_init_frame == False):
-            cv2.imshow("Map", map_grid)            
+            cv2.imshow("Map", map_grid)
         else:
-            is_init_frame = temp_bool
+            is_init_frame = temp_bool      
 
         if (status == "quit"):
             break

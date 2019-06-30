@@ -26,7 +26,7 @@ class object_sorter:
 
     def sort_cur_objects(self, prev_objects, cur_objects):
         i = 0
-        self.cur_indexes = set()
+        #self.cur_indexes = set()
         
         while (i < len(cur_objects)):
             j = 0

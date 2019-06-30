@@ -4,10 +4,10 @@ import random
 
 corner_x = 0
 corner_y = 0
-key_hold_time = 0.25
+key_hold_time = 0.27
 
 # Storing character facing direction.
-cur_dir = 0 #0=down, 1=left, 2=up, 3=right
+cur_dir = 0 #0=up, 1=right, 2=down, 3=left
 
 class controller:
     def __init__(self, x, y):
@@ -24,6 +24,7 @@ class controller:
         while time.time() - start_time < key_hold_time:
             pag.keyDown("up")
         pag.keyUp("up")
+        cur_dir = 0
         return "up"
 
     def move_right(self):
@@ -31,6 +32,7 @@ class controller:
         while time.time() - start_time < key_hold_time:
             pag.keyDown("right")
         pag.keyUp("right")
+        cur_dir = 1
         return "right"
 
     def move_down(self):
@@ -38,6 +40,7 @@ class controller:
         while time.time() - start_time < key_hold_time:
             pag.keyDown("down")
         pag.keyUp("down")
+        cur_dir = 2
         return "down"
 
     def move_left(self):
@@ -45,10 +48,14 @@ class controller:
         while time.time() - start_time < key_hold_time:
             pag.keyDown("left")
         pag.keyUp("left")
+        cur_dir = 3
         return "left"
 
     def interact(self):
-        pag.press("x")
+        start_time = time.time()
+        while time.time() - start_time < key_hold_time:
+            pag.keyDown("x")
+        pag.keyUp("x")
         return "x"
 
     def random_movement(self):
