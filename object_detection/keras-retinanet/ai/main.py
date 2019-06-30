@@ -47,8 +47,7 @@ def initialise(game_window, game_width, game_height, model_path):
     # Initialising mapper object
     mp = live_map(game_width, game_height, padding)
     # Initialising object sorter
-    ot = object_sorter()
-    return ctrl, window_x, window_y, model, mp, ot
+    return ctrl, window_x, window_y, model, mp
 
 def get_screen(game_window, window_x, window_y):
     # Getting game screen as input
@@ -86,19 +85,6 @@ def run_detection(frame, model, labels_to_names, mp):
             continue
         predictions_for_map.append((label, box))
 
-        #x1 = box[0]
-        #y1 = box[1]
-        #x2 = box[2]
-        #y2 = box[3]
-
-        #if (is_init_frame == True):
-            # Indexing previous frame
-            #prev_frame_objects.append([(x1, y1), (x2, y2), ot.get_init_index()])
-            #pass
-        #else:
-            #cur_frame_objects.append([(x1, y1), (x2, y2), -1])
-            #pass
-
         # Draw labels and bounding boxes
         color = label_color(label)
         b = box.astype(int)
@@ -106,19 +92,9 @@ def run_detection(frame, model, labels_to_names, mp):
         caption = "{} {:.2f}".format(labels_to_names[label], score)
         draw_caption(frame, b, caption)
 
-    # Sorting cur_frame midpoints
-    #if (is_init_frame == False):
-        #cur_frame_objects = ot.sort_cur_objects(prev_frame_objects, cur_frame_objects)
-    # Printing midpoints of distinct objects
     #font = cv2.FONT_HERSHEY_SIMPLEX
     #for point in cur_frame_objects:
         #cv2.putText(frame, str(point[2]), point[0], font, 0.5, (255, 255, 0), 2, cv2.LINE_AA)
-        #cv2.putText(frame, str(point[2]), point[1], font, 0.5, (255, 255, 0), 2, cv2.LINE_AA)
-    
-    #if (is_init_frame == False):
-        #prev_frame_objects = cur_frame_objects
-        #cur_frame_objects = []
-        #print(mp.draw_map(predictions_for_map))
 
     # Show grid lines
     #for i in range(0, 16): # drawing vertical lines
@@ -131,7 +107,7 @@ def run_detection(frame, model, labels_to_names, mp):
     status = "ok"
     if cv2.waitKey(1) == ord('q'):
         status = "quit"
-    return status, prev_frame_objects, cur_frame_objects, predictions_for_map, False
+    return status, predictions_for_map, False
 
 map_grid = np.full((2, 2), 255, dtype=np.uint8)
 four_frame_count = 0
@@ -142,15 +118,17 @@ def control_loop(ctrl, mp):
     global is_init_frame
     global map_grid
     global four_frame_count
+    
+    key_pressed = None
 
     while True:
         if (is_init_frame == False and four_frame_count == 4):
+            has_map_changed, map_grid = mp.draw_map(key_pressed, predictions_for_map)
+            
             print("Sending next command")
-
             key_pressed = ctrl.random_movement()
             print(key_pressed)
 
-            has_map_changed, map_grid = mp.draw_map(key_pressed, predictions_for_map)
             four_frame_count = 0
 
 if __name__ == "__main__":
@@ -162,15 +140,12 @@ if __name__ == "__main__":
     labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"}
 
     # Initialising model, window, and controller
-    ctrl, window_x, window_y, model, mp, ot = initialise(game_window, game_width, game_height, model_path)
+    ctrl, window_x, window_y, model, mp = initialise(game_window, game_width, game_height, model_path)
 
-    prev_frame_objects = []
-    cur_frame_objects = []
     is_init_frame = True
-    
-    #key_pressed = None
     predictions_for_map = []
     temp_bool = None
+    
     control_thread = threading.Thread(target=control_loop, args=(ctrl, mp, ), daemon=True)
     control_thread.start()
 
@@ -180,14 +155,14 @@ if __name__ == "__main__":
         else:
             #framerate_start = time.time()
             frame, temp = get_screen(game_window, window_x, window_y)
-            status, prev_frame_objects, cur_frame_objects, predictions_for_map, temp_bool = \
-                run_detection(frame, model, labels_to_names, mp)
+            status, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
             four_frame_count += 1
             #framerate = time.time() - framerate_start
             #print(framerate)
 
         if (is_init_frame == False):
             cv2.imshow("Map", map_grid)
+            #pass
         else:
             is_init_frame = temp_bool      
 

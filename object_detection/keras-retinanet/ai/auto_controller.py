@@ -64,8 +64,10 @@ class controller:
         if action == 0:
             key_pressed = self.move_up()
         elif action == 1:
+            pass
             key_pressed = self.move_right()
         elif action == 2:
+            pass
             key_pressed = self.move_down()
         elif action == 3:
             key_pressed = self.move_left()
