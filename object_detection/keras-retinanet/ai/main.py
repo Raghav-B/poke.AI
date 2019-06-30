@@ -78,6 +78,7 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_objects, \
     boxes /= scale
 
     # Visualize detections from inferencing
+    start_time = time.time()
     predictions_for_map = []
     for box, score, label in zip(boxes[0], scores[0], labels[0]):
         if score < (score_thresh / 100):
@@ -85,6 +86,7 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_objects, \
         
         if (label == 2):
             continue
+        
         predictions_for_map.append((label, box))
 
         x1 = box[0]
@@ -104,15 +106,18 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_objects, \
         draw_box(frame, b, color=color)
         caption = "{} {:.2f}".format(labels_to_names[label], score)
         draw_caption(frame, b, caption)
+    
+    print(time.time() - start_time)
+
 
     # Sorting cur_frame midpoints
     if (is_init_frame == False):
         cur_frame_objects = ot.sort_cur_objects(prev_frame_objects, cur_frame_objects)
     # Printing midpoints of distinct objects
-    font = cv2.FONT_HERSHEY_SIMPLEX
-    for point in cur_frame_objects:
-        cv2.putText(frame, str(point[2]), point[0], font, 0.5, (255, 255, 0), 2, cv2.LINE_AA)
-        cv2.putText(frame, str(point[2]), point[1], font, 0.5, (255, 255, 0), 2, cv2.LINE_AA)
+    #font = cv2.FONT_HERSHEY_SIMPLEX
+    #for point in cur_frame_objects:
+        #cv2.putText(frame, str(point[2]), point[0], font, 0.5, (255, 255, 0), 2, cv2.LINE_AA)
+        #cv2.putText(frame, str(point[2]), point[1], font, 0.5, (255, 255, 0), 2, cv2.LINE_AA)
     
     if (is_init_frame == False):
         prev_frame_objects = cur_frame_objects
@@ -125,7 +130,7 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_objects, \
     #for i in range(0, 10): # drawing horizontal lines
     #    cv2.line(frame, (0, padding + int(tile_width / 2) + (i * tile_width)), (game_width, padding + int(tile_width / 2) + (i * tile_width)), (0,0,0), 1)
     
-    print("Detection complete")
+    #print("Detection complete")
     cv2.imshow("Screen", frame)
     status = "ok"
     if cv2.waitKey(1) == ord('q'):
@@ -133,7 +138,6 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_objects, \
     return status, prev_frame_objects, cur_frame_objects, predictions_for_map, False
 
 map_grid = np.full((2, 2), 255, dtype=np.uint8)
-four_frame_count = 0
 
 def control_loop(ctrl, mp):
     #global key_pressed
@@ -141,14 +145,16 @@ def control_loop(ctrl, mp):
     global is_init_frame
     global map_grid
 
+    key_pressed = None
+
     while True:
         if (is_init_frame == False):
-            print("Sending next command")
-
-            key_pressed = ctrl.random_movement()
-            print(key_pressed)
-
             has_map_changed, map_grid = mp.draw_map(key_pressed, predictions_for_map)
+
+            #print("Sending next command")
+
+            #key_pressed = ctrl.random_movement()
+            #print(key_pressed)
             #cv2.imshow("Map", map_grid)
             #cv2.waitKey(1)
 
@@ -167,29 +173,28 @@ if __name__ == "__main__":
     cur_frame_objects = []
     is_init_frame = True
     
-    #key_pressed = None
+    temp_bool = None
     predictions_for_map = []
     control_thread = threading.Thread(target=control_loop, args=(ctrl, mp, ), daemon=True)
     control_thread.start()
 
     while True:     
+        #if (is_init_frame == False):
+            #cv2.imshow("Map", map_grid)
+
         framerate_start = time.time()
         frame, temp = get_screen(game_window, window_x, window_y)
         status, prev_frame_objects, cur_frame_objects, predictions_for_map, temp_bool = \
             run_detection(frame, model, labels_to_names, mp, ot, prev_frame_objects, \
             cur_frame_objects, is_init_frame)
-        four_frame_count += 1
         framerate = time.time() - framerate_start
-        print(framerate)
+        #print(framerate)
         
-        if (is_init_frame == False):
-            cv2.imshow("Map", map_grid)
-        else:
+        if (is_init_frame == True):
             is_init_frame = temp_bool      
 
         if (status == "quit"):
             break
 
-    plt.show()
     cv2.destroyAllWindows()
     sys.exit()

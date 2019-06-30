@@ -151,7 +151,7 @@ class live_map:
         has_map_changed = np.array_equiv(self.prev_map_grid, self.cur_map_grid)
         self.prev_map_grid = self.cur_map_grid
         #print(self.cur_map_grid)
-        print("")
+        #print("")
         
 
         
