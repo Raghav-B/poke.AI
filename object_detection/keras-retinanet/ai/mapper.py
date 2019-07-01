@@ -26,6 +26,7 @@ class live_map:
         self.tile_size = int(w / (self.grid_x - 1))
         self.definite_frames_thresh = dft
         self.prev_map_grid = np.full((self.grid_y - 1, self.grid_x - 1), 255, dtype=np.uint8)
+        self.prev_map_grid[self.map_cutout_y + 5][self.map_cutout_x + 7] = 24
 
     # bounding_box_list is of shape (box_dimensions, score, label)
     def convert_points_to_grid(self, bounding_box_list):
@@ -147,6 +148,7 @@ class live_map:
             elif (label == 5): # exit
                 symbol = 128    
             self.fill_area(box, symbol)
+        self.cur_map_grid[self.map_cutout_y + 5][self.map_cutout_x + 7] = 24
         
         has_map_changed = np.array_equiv(self.prev_map_grid, self.cur_map_grid)
         self.prev_map_grid = self.cur_map_grid

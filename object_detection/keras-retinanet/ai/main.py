@@ -34,7 +34,7 @@ def initialise(game_window, game_width, game_height, model_path):
     cv2.namedWindow("Map", cv2.WINDOW_NORMAL)
     cv2.resizeWindow("Map", 720, 480)
     cv2.namedWindow("Screen")
-    cv2.moveWindow("Screen", 3000, 0)
+    cv2.moveWindow("Screen", 1500, 0)
     cv2.createTrackbar("ScoreThresh", "Screen", 70, 99, nothing)
 
     window_x, window_y, temp1, temp2 = pag.locateOnScreen("find_game_window.png")
@@ -73,12 +73,11 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_objects, \
 
     # Process image and run inference
     image = preprocess_image(frame)
-    image, scale = resize_image(image, min_side = 720)
+    image, scale = resize_image(image, min_side = 400)
     boxes, scores, labels = model.predict_on_batch(np.expand_dims(image, axis=0))
     boxes /= scale
 
     # Visualize detections from inferencing
-    start_time = time.time()
     predictions_for_map = []
     for box, score, label in zip(boxes[0], scores[0], labels[0]):
         if score < (score_thresh / 100):
@@ -106,9 +105,6 @@ def run_detection(frame, model, labels_to_names, mp, ot, prev_frame_objects, \
         draw_box(frame, b, color=color)
         caption = "{} {:.2f}".format(labels_to_names[label], score)
         draw_caption(frame, b, caption)
-    
-    print(time.time() - start_time)
-
 
     # Sorting cur_frame midpoints
     if (is_init_frame == False):
@@ -150,7 +146,7 @@ def control_loop(ctrl, mp):
     while True:
         if (is_init_frame == False):
             has_map_changed, map_grid = mp.draw_map(key_pressed, predictions_for_map)
-
+            ctrl.dummy()
             #print("Sending next command")
 
             #key_pressed = ctrl.random_movement()
@@ -163,7 +159,7 @@ if __name__ == "__main__":
     game_width = 720
     game_height = 480
     game_window = np.zeros((game_height, game_width, 4), "uint8")
-    model_path = "../inference_graphs/resnet101_csv_09.h5"
+    model_path = "../inference_graphs/400p/resnet101_csv_13.h5"
     labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"}
 
     # Initialising model, window, and controller
@@ -179,8 +175,8 @@ if __name__ == "__main__":
     control_thread.start()
 
     while True:     
-        #if (is_init_frame == False):
-            #cv2.imshow("Map", map_grid)
+        if (is_init_frame == False):
+            cv2.imshow("Map", map_grid)
 
         framerate_start = time.time()
         frame, temp = get_screen(game_window, window_x, window_y)

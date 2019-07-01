@@ -72,3 +72,6 @@ class controller:
         elif action == 4:
             key_pressed = self.interact()
         return key_pressed
+
+    def dummy(self):
+        pag.press("")
