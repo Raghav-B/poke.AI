@@ -111,10 +111,10 @@ def run_detection(frame, model, labels_to_names, mp):
         status = "quit"
     return status, predictions_for_map, False
 
-actions = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,4,4,4,2,4,4,4,4,4,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
-actions = [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,4,4,4,0,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-actions = [3,3,3,3,3,3,3,3,3,3,3,3,3,4,4,4,4,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,1]
-actions = [1,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,4,4,4,4,3,3,3,3,3,3,3,3]
+#actions = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,4,4,4,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
+#actions = [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,4,4,4,0,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+#actions = [3,3,3,3,3,3,3,3,3,3,3,3,3,4,4,4,4,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,1]
+#actions = [1,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,4,4,4,4,3,3,3,3,3,3,3,3]
 
 if __name__ == "__main__":
     # Setup variables here
@@ -140,8 +140,8 @@ if __name__ == "__main__":
         if (four_frame_count == 0):
             time.sleep(0.5)
             action_index += 1
-            if (action_index >= len(actions)):
-                break
+            #if (action_index >= len(actions)):
+                #break
 
             if (is_init_frame == True):
                 ctrl.dummy()
@@ -157,7 +157,7 @@ if __name__ == "__main__":
                 cv2.imshow("Map", map_grid)
 
             else:
-                key_pressed = ctrl.random_movement(action=actions[action_index])
+                key_pressed = ctrl.random_movement()#action=actions[action_index])
             print(key_pressed)
             four_frame_count += 1
             #ctrl.dummy()
