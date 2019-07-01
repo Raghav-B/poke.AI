@@ -13,7 +13,6 @@ import pyautogui as pag
 import time
 import threading
 import sys
-import matplotlib.pyplot as plt
 
 # Custom imports
 from mapper import live_map
@@ -40,8 +39,9 @@ def initialise(game_window, game_width, game_height, model_path):
     # Setting up windows
     cv2.namedWindow("Map", cv2.WINDOW_NORMAL)
     cv2.resizeWindow("Map", 720, 480)
+    cv2.moveWindow("Map", 1810, 600)
     cv2.namedWindow("Screen")
-    cv2.moveWindow("Screen", 1000, 0)
+    cv2.moveWindow("Screen", 1050, 80)
     cv2.createTrackbar("ScoreThresh", "Screen", 70, 99, nothing)
 
     # Finding game window using included .png
@@ -99,13 +99,6 @@ def run_detection(frame, model, labels_to_names, mp):
         # We can break here because the bounding boxes are in descending order in terms of confidence
         if score < (score_thresh / 100):
             break
-        
-        # Skipping NPC detections
-        if (label == 2):
-            continue
-
-        # Appending to output array
-        predictions_for_map.append((label, box))
 
         # Drawing labels and bounding boxes on input frame
         color = label_color(label)
@@ -113,6 +106,13 @@ def run_detection(frame, model, labels_to_names, mp):
         draw_box(frame, b, color=color)
         caption = "{} {:.2f}".format(labels_to_names[label], score)
         draw_caption(frame, b, caption)
+
+        # Skipping NPC detections
+        if (label == 2):
+            continue
+
+        # Appending to output array
+        predictions_for_map.append((label, box))
     
     # Show output frame with detections
     cv2.imshow("Screen", frame)
@@ -142,7 +142,9 @@ if __name__ == "__main__":
     map_grid = np.full((2, 2), 255, dtype=np.uint8)
     four_frame_count = 0
 
-    actions = [] # Use to set pre-defined actions to send to controller (default is random)
+    # Use to set pre-defined actions to send to controller (default is random)
+    actions = [0,0,0,0,0,3,3,3,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,0,0,0,0,0,0,0,0,\
+        3,3,3,3,3,3,2,3,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1]
     action_index = -1 # Initialise this from -1
     
     # It takes about 5 frames for our player characte to perform a movement in any direction. Thus,
@@ -157,6 +159,7 @@ if __name__ == "__main__":
             #action_index += 1
             #if (action_index >= len(actions)):
                 #break
+                #action_index = 0
 
             # Initial startup frame to put detection and key presses in sync
             if (is_init_frame == True):
@@ -170,6 +173,7 @@ if __name__ == "__main__":
             # All other frames
             else:
                 key_pressed = ctrl.random_movement()#action=actions[action_index]) # Use action parameter for pre-defined input
+                #ctrl.dummy()
             
             print(key_pressed) # For debugging purposes TODO: Display pressed_key in "Screen" window
             four_frame_count += 1
@@ -194,6 +198,8 @@ if __name__ == "__main__":
             # Take note that there is a one frame delay because of something in OpenCV itself. If you print
             # the map_grid, you'll see that the mapping is actually performed realtime
             map_grid = mp.draw_map(key_pressed, predictions_for_map)
+            #print(map_grid)
+            print("")
             cv2.imshow("Map", map_grid)
             
             # Reset 5 frame cycle

@@ -29,7 +29,8 @@ class live_map:
     map_max_offset_y = 10
     # List of all detected in terms of their global coordinates
     object_list = []
-    #boundary_points = [] # Unused for now, for wall detection
+    # List of tiles that are actually walls/boundaries
+    boundary_points = []
 
     # Variables for ram_searcher.py
     ram_search = None
@@ -187,18 +188,6 @@ class live_map:
 
         # Get newly detected objects in terms of tiles
         tiles = self.convert_points_to_grid(key_pressed, bounding_box_list)
-        
-        # UNUSED FOR NOW
-        """
-        for point in self.boundary_points:
-            #if (self.prev_map_grid[point[1]][point[0]] == 255):
-            coords = [0, 0, 0, 0]
-            coords[0] = point[0] + (self.map_offset_x - self.map_min_offset_x)
-            coords[1] = point[1] + (self.map_offset_y - self.map_min_offset_y)
-            coords[2] = point[0] + (self.map_offset_x - self.map_min_offset_x)
-            coords[3] = point[1] + (self.map_offset_y - self.map_min_offset_y)
-            tiles.append((6, coords))
-        """
 
         # Adjusting global coordinates if map is being appended in any of the 4 directions
         # In other words, if player character is stepping into unmapped territory. This is
@@ -260,43 +249,52 @@ class live_map:
         has_map_changed = True # Flag for wall/collision detection
 
         # These conditionals handle the wall/collision detection by comparing the previous player position with the new
-        # player position based on the most recent key press. # SOME PARTS UNUSED FOR NOW
+        # player position based on the most recent key press
         if (key_pressed == "up"):
             if (self.cur_pos[1] == self.prev_pos[1]):
                 has_map_changed = False
-                #if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 4][(self.map_offset_x - self.map_min_offset_x) + 7] == 255):
-                #    self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 4))
+                if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 4][(self.map_offset_x - self.map_min_offset_x) + 7] == 255):
+                    self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 4))
         elif (key_pressed == "right"):
             if (self.cur_pos[0] == self.prev_pos[0]):
                 has_map_changed = False
-                #if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 8] == 255):
-                #    self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 8, (self.map_offset_y - self.map_min_offset_y) + 5))
+                if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 8] == 255):
+                    self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 8, (self.map_offset_y - self.map_min_offset_y) + 5))
         elif (key_pressed == "down"):
             if (self.cur_pos[1] == self.prev_pos[1]):
                 has_map_changed = False
-                #if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 6][(self.map_offset_x - self.map_min_offset_x) + 7] == 255):
-                #    self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 6))
+                if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 6][(self.map_offset_x - self.map_min_offset_x) + 7] == 255):
+                    self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 6))
         elif (key_pressed == "left"):
             if (self.cur_pos[0] == self.prev_pos[0]):
                 has_map_changed = False
-                #if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 6] == 255):
-                #    self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 6, (self.map_offset_y - self.map_min_offset_y) + 5))
+                if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 6] == 255):
+                    self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 6, (self.map_offset_y - self.map_min_offset_y) + 5))
         else:
             pass
-
-        # UNUSED FOR NOW
-        #for point in self.boundary_points:
-            #if (self.prev_map_grid[point[1]][point[0]] == 255):
-            #self.cur_map_grid[point[1]][point[0]] = 200
 
         # If collision has been detected, we return from this function otherwise the map will be
         # incorrectly drawn and this will mess everything up
         if (has_map_changed == False):
-            print("collision!")
+            print("COLLISION!")
+            
+            for point in self.boundary_points:
+                coords = [point[0], point[1], point[0], point[1]]
+                #coords[0] = point[0] #+ (self.map_offset_x - self.map_min_offset_x)
+                #coords[1] = point[1] #+ (self.map_offset_y - self.map_min_offset_y)
+                #coords[2] = point[0] #+ (self.map_offset_x - self.map_min_offset_x)
+                #coords[3] = point[1] #+ (self.map_offset_y - self.map_min_offset_y)
+                if not ((6, coords) in self.object_list):
+                    self.object_list.append((6, coords))
+
+                self.fill_area(coords, 200)
+
+            #print(self.object_list)
             return self.cur_map_grid
         
         # Use bounding box list to add to our list of global objects
         self.add_to_object_list(key_pressed, bounding_box_list)
+        #print(self.object_list)
 
         # This block handles drawing of tiles in the map with different colours on the grayscale spectrum
         symbol = None
@@ -313,9 +311,8 @@ class live_map:
                 symbol = 48
             elif (label == 5): # exit
                 symbol = 128   
-            # UNUSED FOR NOW
-            #elif (label == 6): # wall
-            #    symbol = 200
+            elif (label == 6): # wall/boundary
+                symbol = 200
             self.fill_area(box, symbol)
         # Draw player character position for localization purpose
         self.cur_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 7] = 24
