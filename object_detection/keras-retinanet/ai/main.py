@@ -45,7 +45,7 @@ def initialise(game_window, game_width, game_height, model_path):
     # Get padding for square conversion
     temp3, padding = get_screen(game_window, window_x, window_y)
     # Initialising mapper object
-    mp = live_map(game_width, game_height, padding, 5446, 0x55b2dc683720, 0x55b2dc683722)
+    mp = live_map(game_width, game_height, padding, 4681, 0x55c106d0bf5c, 0x55c106d0bf5e)
     # Initialising object sorter
     return ctrl, window_x, window_y, model, mp
 
