@@ -138,7 +138,7 @@ if __name__ == "__main__":
     action_index = -1
     while True:  
         if (four_frame_count == 0):
-            time.sleep(0.5)
+            #time.sleep(0.5)
             action_index += 1
             #if (action_index >= len(actions)):
                 #break

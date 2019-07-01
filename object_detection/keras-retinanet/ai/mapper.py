@@ -184,6 +184,16 @@ class live_map:
             pass
 
         tiles = self.convert_points_to_grid(is_appending, key_pressed, bounding_box_list)
+        """
+        for point in self.boundary_points:
+            #if (self.prev_map_grid[point[1]][point[0]] == 255):
+            coords = [0, 0, 0, 0]
+            coords[0] = point[0] + (self.map_offset_x - self.map_min_offset_x)
+            coords[1] = point[1] + (self.map_offset_y - self.map_min_offset_y)
+            coords[2] = point[0] + (self.map_offset_x - self.map_min_offset_x)
+            coords[3] = point[1] + (self.map_offset_y - self.map_min_offset_y)
+            tiles.append((6, coords))
+        """
 
         # Adjusting global coordinates if map is being appended in any of the 4 directions
         if (is_appending == True):
@@ -248,26 +258,33 @@ class live_map:
         if (key_pressed == "up"):
             if (self.cur_pos[1] == self.prev_pos[1]):
                 has_map_changed = False
-                self.boundary_points.append((self.map_offset_x + 7, self.map_offset_y + 4))
+                #if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 4][(self.map_offset_x - self.map_min_offset_x) + 7] == 255):
+                #    self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 4))
         elif (key_pressed == "right"):
             if (self.cur_pos[0] == self.prev_pos[0]):
                 has_map_changed = False
-                self.boundary_points.append((self.map_offset_x + 8, self.map_offset_y + 5))
+                #if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 8] == 255):
+                #    self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 8, (self.map_offset_y - self.map_min_offset_y) + 5))
         elif (key_pressed == "down"):
             if (self.cur_pos[1] == self.prev_pos[1]):
                 has_map_changed = False
-                self.boundary_points.append((self.map_offset_x + 7, self.map_offset_y + 6))
+                #if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 6][(self.map_offset_x - self.map_min_offset_x) + 7] == 255):
+                #    self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 6))
         elif (key_pressed == "left"):
             if (self.cur_pos[0] == self.prev_pos[0]):
                 has_map_changed = False
-                self.boundary_points.append((self.map_offset_x + 6, self.map_offset_y + 5))
+                #if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 6] == 255):
+                #    self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 6, (self.map_offset_y - self.map_min_offset_y) + 5))
         else:
             pass
-            
+
+        #for point in self.boundary_points:
+            #if (self.prev_map_grid[point[1]][point[0]] == 255):
+            #self.cur_map_grid[point[1]][point[0]] = 200
+
         if (has_map_changed == False):
             print("collision!")
-            for point in self.boundary_points:
-                self.cur_map_grid[point[1]][point[0]] = 200
+            #self.prev_map_grid = self.cur_map_grid
             return self.cur_map_grid
         
         self.add_to_object_list(key_pressed, bounding_box_list)
@@ -287,7 +304,9 @@ class live_map:
             elif (label == 4): # gym
                 symbol = 48
             elif (label == 5): # exit
-                symbol = 128    
+                symbol = 128   
+            #elif (label == 6): # wall
+            #    symbol = 200
             self.fill_area(box, symbol)
         self.cur_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 7] = 24
 

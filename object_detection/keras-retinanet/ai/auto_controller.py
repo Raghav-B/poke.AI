@@ -60,7 +60,7 @@ class controller:
 
     def random_movement(self, action=-1):
         if action == -1:
-            action = random.randint(0, 4)
+            action = random.randint(0, 3)
         key_pressed = None
         if action == 0:
             key_pressed = self.move_up()
