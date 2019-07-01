@@ -34,7 +34,7 @@ def initialise(game_window, game_width, game_height, model_path):
     cv2.namedWindow("Map", cv2.WINDOW_NORMAL)
     cv2.resizeWindow("Map", 720, 480)
     cv2.namedWindow("Screen")
-    cv2.moveWindow("Screen", 3000, 0)
+    cv2.moveWindow("Screen", 1000, 0)
     cv2.createTrackbar("ScoreThresh", "Screen", 70, 99, nothing)
 
     window_x, window_y, temp1, temp2 = pag.locateOnScreen("find_game_window.png")
@@ -81,8 +81,8 @@ def run_detection(frame, model, labels_to_names, mp):
         if score < (score_thresh / 100):
             break
         
-        #if (label == 2):
-            #continue
+        if (label == 2):
+            continue
         predictions_for_map.append((label, box))
 
         # Draw labels and bounding boxes
@@ -130,9 +130,7 @@ if __name__ == "__main__":
 
     while True:     
         if (four_frame_count == 4):
-            has_map_changed, map_grid = mp.draw_map(key_pressed, predictions_for_map)
-            if (has_map_changed == False):
-                print("collision!")
+            map_grid = mp.draw_map(key_pressed, predictions_for_map)
             
             key_pressed = ctrl.random_movement()
             print(key_pressed)

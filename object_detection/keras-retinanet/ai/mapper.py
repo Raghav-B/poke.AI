@@ -19,6 +19,7 @@ class live_map:
     grid_y = 12 # Tiles in y axis + 1
 
     object_list = []
+    boundary_points = []
 
     map_cutout_width = 16
     map_cutout_height = 12
@@ -123,7 +124,7 @@ class live_map:
         self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1), 255, dtype=np.uint8)
         if (key_pressed == "up"):
             if (self.map_cutout_y - 1 < 0):
-                self.grid_y += 1
+                self.grid_y += 1 
                 append_arr = np.full((1, self.grid_x - 1), 255, dtype=np.uint8)
                 self.cur_map_grid = np.append(append_arr, self.cur_map_grid, axis=0)
                 self.map_cutout_y = 0
@@ -203,25 +204,34 @@ class live_map:
     # Returns true if a change has been detected, otherwise returns false.
     def draw_map(self, key_pressed, bounding_box_list):
         self.cur_pos = [self.ram_search.get_x_pos(), self.ram_search.get_y_pos()]
+        print(self.prev_pos)
+        print(self.cur_pos)
         has_map_changed = True
 
         if (key_pressed == "up"):
-            if not(self.cur_pos[1] < self.prev_pos[1]):
+            if (self.cur_pos[1] == self.prev_pos[1]):
                 has_map_changed = False
+                self.boundary_points.append((self.map_cutout_x + 7, self.map_cutout_y + 4))
         elif (key_pressed == "right"):
-            if not(self.cur_pos[0] > self.prev_pos[0]):
+            if (self.cur_pos[0] == self.prev_pos[0]):
                 has_map_changed = False
+                self.boundary_points.append((self.map_cutout_x + 8, self.map_cutout_y + 5))
         elif (key_pressed == "down"):
-            if not(self.cur_pos[1] > self.prev_pos[1]):
+            if (self.cur_pos[1] == self.prev_pos[1]):
                 has_map_changed = False
+                self.boundary_points.append((self.map_cutout_x + 7, self.map_cutout_y + 6))
         elif (key_pressed == "left"):
-            if not(self.cur_pos[0] < self.prev_pos[0]):
+            if (self.cur_pos[0] == self.prev_pos[0]):
                 has_map_changed = False
+                self.boundary_points.append((self.map_cutout_x + 6, self.map_cutout_y + 5))
         else:
             pass
-
-        #if (self.cur_pos[:] == self.prev_pos[:]):
-        #    print("collision!")
+            
+        if (has_map_changed == False):
+            print("collision!")
+            for point in self.boundary_points:
+                self.cur_map_grid[point[1]][point[0]] = 200
+            return self.cur_map_grid
         
         self.add_to_object_list(key_pressed, bounding_box_list)
         
@@ -247,9 +257,9 @@ class live_map:
         self.prev_map_grid = self.cur_map_grid
         self.prev_pos = self.cur_pos
         #print(str(self.grid_x), str(self.grid_y))
-        print("")
+        #print("")
 
-        return has_map_changed, self.cur_map_grid
+        return self.cur_map_grid
     
     def dummy(self):
         pass
