@@ -7,6 +7,7 @@ import tensorflow as tf
 
 import cv2
 import numpy as np
+np.set_printoptions(linewidth=500)
 from fastgrab._linux_x11 import screenshot
 import pyautogui as pag
 import time
@@ -47,6 +48,7 @@ def initialise(game_window, game_width, game_height, model_path):
     # Initialising mapper object
     mp = live_map(game_width, game_height, padding, 4681, 0x55c106d0bf5c, 0x55c106d0bf5e)
     # Initialising object sorter
+
     return ctrl, window_x, window_y, model, mp
 
 def get_screen(game_window, window_x, window_y):
@@ -109,6 +111,11 @@ def run_detection(frame, model, labels_to_names, mp):
         status = "quit"
     return status, predictions_for_map, False
 
+actions = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,4,4,4,2,4,4,4,4,4,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
+actions = [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,4,4,4,0,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+actions = [3,3,3,3,3,3,3,3,3,3,3,3,3,4,4,4,4,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,1]
+actions = [1,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,4,4,4,4,3,3,3,3,3,3,3,3]
+
 if __name__ == "__main__":
     # Setup variables here
     game_width = 720
@@ -128,15 +135,33 @@ if __name__ == "__main__":
     map_grid = np.full((2, 2), 255, dtype=np.uint8)
     four_frame_count = 0
 
-    while True:     
-        if (four_frame_count == 4):
-            map_grid = mp.draw_map(key_pressed, predictions_for_map)
-            
-            key_pressed = ctrl.random_movement()
+    action_index = -1
+    while True:  
+        if (four_frame_count == 0):
+            time.sleep(0.5)
+            action_index += 1
+            if (action_index >= len(actions)):
+                break
+
+            if (is_init_frame == True):
+                ctrl.dummy()
+                key_pressed = None
+                framerate_start = time.time()
+                frame, temp = get_screen(game_window, window_x, window_y)
+                status, predictions_for_map, temp_init = run_detection(frame, model, labels_to_names, mp)
+                four_frame_count += 1
+                framerate = time.time() - framerate_start
+                #print(framerate)
+                map_grid = mp.draw_init_map(key_pressed, predictions_for_map)
+                print(map_grid)
+                cv2.imshow("Map", map_grid)
+
+            else:
+                key_pressed = ctrl.random_movement(action=actions[action_index])
             print(key_pressed)
+            four_frame_count += 1
             #ctrl.dummy()
-            four_frame_count = 0
-        else:
+        elif (four_frame_count < 4):
             framerate_start = time.time()
             frame, temp = get_screen(game_window, window_x, window_y)
             status, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
@@ -144,13 +169,28 @@ if __name__ == "__main__":
             framerate = time.time() - framerate_start
             #print(framerate)
 
-        if (is_init_frame == False):
+            if (status == "quit"):
+                break
+
+        elif (four_frame_count == 4):
+            framerate_start = time.time()
+            frame, temp = get_screen(game_window, window_x, window_y)
+            status, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
+            framerate = time.time() - framerate_start
+            #print(framerate)
+
+            map_grid = mp.draw_map(key_pressed, predictions_for_map)
+            print(map_grid)
             cv2.imshow("Map", map_grid)
+            four_frame_count = 0
+        
+        
+
+        if (is_init_frame == False):
+            pass
+            #cv2.imshow("Map", map_grid)
         else:
             is_init_frame = temp_bool      
-
-        if (status == "quit"):
-            break
 
     cv2.destroyAllWindows()
     sys.exit()

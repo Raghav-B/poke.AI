@@ -132,7 +132,7 @@ class live_map:
                 self.map_cutout_y -= 1
         
         elif (key_pressed == "right"):
-            if (self.map_cutout_x + self.map_cutout_width > self.grid_x):
+            if (self.map_cutout_x + self.map_cutout_width + 1 > self.grid_x):
                 self.grid_x += 1
                 append_arr = np.full((self.grid_y - 1, 1), 255, dtype=np.uint8)
                 self.cur_map_grid = np.append(self.cur_map_grid, append_arr, axis=1)
@@ -141,7 +141,7 @@ class live_map:
                 self.map_cutout_x += 1
             
         elif (key_pressed == "down"):
-            if (self.map_cutout_y + self.map_cutout_height > self.grid_y):
+            if (self.map_cutout_y + self.map_cutout_height + 1 > self.grid_y):
                 self.grid_y += 1
                 append_arr = np.full((1, self.grid_x - 1), 255, dtype=np.uint8)
                 self.cur_map_grid = np.append(self.cur_map_grid, append_arr, axis=0)
@@ -179,8 +179,8 @@ class live_map:
             else:
                 pass
 
-        #print(self.object_list)
-        #print(tiles)
+        print(self.object_list)
+        print(tiles)
 
         temp_object_list = []
         for new_label, new_box in tiles:
@@ -234,9 +234,9 @@ class live_map:
             return self.cur_map_grid
         
         self.add_to_object_list(key_pressed, bounding_box_list)
-        
-        symbol = None
+        #print(self.object_list)
 
+        symbol = None
         #print(len(self.object_list))
         for label, box in self.object_list:
             if (label == 0): # pokecen
@@ -261,5 +261,50 @@ class live_map:
 
         return self.cur_map_grid
     
+    def draw_init_map(self, key_pressed, bounding_box_list):
+        tiles = self.convert_points_to_grid(key_pressed, bounding_box_list)
+        symbol = None
+        self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1), 255, dtype=np.uint8)
+        #print(len(self.object_list))
+        for label, box in tiles:
+            if (label == 0): # pokecen
+                symbol = 16
+            elif (label == 1): # pokemart
+                symbol = 32
+            elif (label == 2): # npc
+                symbol = 0
+            elif (label == 3): # house
+                symbol = 64
+            elif (label == 4): # gym
+                symbol = 48
+            elif (label == 5): # exit
+                symbol = 128    
+            self.fill_area(box, symbol)
+            self.object_list.append((label, box))
+        self.cur_map_grid[self.map_cutout_y + 5][self.map_cutout_x + 7] = 24
+
+        print(self.object_list)
+
+        self.prev_map_grid = self.cur_map_grid
+        return self.cur_map_grid
+    
     def dummy(self):
         pass
+
+
+
+"""
+Global coordinates:
+If I'm moving up and appending, the global y coordinates of every object increases by 1
+If I'm moving down and appending, the global y coordinates of every object remains the same
+
+If I'm moving left and appending, the global x coordinaes of every object increases by 1
+If I'm moving right and appending, the global x coordinates of every object remains the same
+
+If I'm moving without appending, global coordinates remain the same.
+
+Local coordinates: (changing from local to global)
+If I'm moving up, decrease y-offset
+If I'm
+
+"""
