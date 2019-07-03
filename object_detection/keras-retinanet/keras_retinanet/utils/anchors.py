@@ -16,8 +16,9 @@ limitations under the License.
 
 import numpy as np
 import keras
-
-from ..utils.compute_overlap import compute_overlap
+import sys
+if not(sys.platform == 'win32'):
+    from ..utils.compute_overlap import compute_overlap
 
 
 class AnchorParameters:
@@ -49,6 +50,31 @@ AnchorParameters.default = AnchorParameters(
     scales  = np.array([2 ** 0, 2 ** (1.0 / 3.0), 2 ** (2.0 / 3.0)], keras.backend.floatx()),
 )
 
+def compute_overlap_windows(a, b):
+    """
+    Parameters
+    ----------
+    a: (N, 4) ndarray of float
+    b: (K, 4) ndarray of float
+    Returns
+    -------
+    overlaps: (N, K) ndarray of overlap between boxes and query_boxes
+    """
+    area = (b[:, 2] - b[:, 0]) * (b[:, 3] - b[:, 1])
+
+    iw = np.minimum(np.expand_dims(a[:, 2], axis=1), b[:, 2]) - np.maximum(np.expand_dims(a[:, 0], 1), b[:, 0])
+    ih = np.minimum(np.expand_dims(a[:, 3], axis=1), b[:, 3]) - np.maximum(np.expand_dims(a[:, 1], 1), b[:, 1])
+
+    iw = np.maximum(iw, 0)
+    ih = np.maximum(ih, 0)
+
+    ua = np.expand_dims((a[:, 2] - a[:, 0]) * (a[:, 3] - a[:, 1]), axis=1) + area - iw * ih
+
+    ua = np.maximum(ua, np.finfo(float).eps)
+
+    intersection = iw * ih
+
+    return intersection / ua
 
 def anchor_targets_bbox(
     anchors,
@@ -136,7 +162,11 @@ def compute_gt_annotations(
         argmax_overlaps_inds: ordered overlaps indices
     """
 
-    overlaps = compute_overlap(anchors.astype(np.float64), annotations.astype(np.float64))
+    overlaps = None
+    if (sys.platform == 'win32'):
+        overlaps = compute_overlap_windows(anchors.astype(np.float64), annotations.astype(np.float64))
+    else:
+        overlaps = compute_overlap(anchors.astype(np.float64), annotations.astype(np.float64))
     argmax_overlaps_inds = np.argmax(overlaps, axis=1)
     max_overlaps = overlaps[np.arange(overlaps.shape[0]), argmax_overlaps_inds]
 
