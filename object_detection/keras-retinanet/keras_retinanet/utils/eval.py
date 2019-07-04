@@ -14,7 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from .anchors import compute_overlap
+import sys
+
+if not(sys.platform == 'win32'):
+    from .anchors import compute_overlap
+else:
+    from .anchors import compute_overlap_windows as compute_overlap
+    
 from .visualization import draw_detections, draw_annotations
 
 import keras
