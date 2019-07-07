@@ -1,0 +1,37 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VBA_VS2010", "VBA2010.vcxproj", "{200824A0-CDBA-45D7-83B8-E5A8468792EC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wlib7zip", "..\src\win32\7zip\7z\7zip_2010.vcxproj", "{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C9522B8B-9C44-407D-9D67-71C77AD3C969}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+		V7Debug|Win32 = V7Debug|Win32
+		V7Release|Win32 = V7Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{200824A0-CDBA-45D7-83B8-E5A8468792EC}.Debug|Win32.ActiveCfg = V82XD|Win32
+		{200824A0-CDBA-45D7-83B8-E5A8468792EC}.Debug|Win32.Build.0 = V82XD|Win32
+		{200824A0-CDBA-45D7-83B8-E5A8468792EC}.Release|Win32.ActiveCfg = V82XR|Win32
+		{200824A0-CDBA-45D7-83B8-E5A8468792EC}.Release|Win32.Build.0 = V82XR|Win32
+		{200824A0-CDBA-45D7-83B8-E5A8468792EC}.V7Debug|Win32.ActiveCfg = V72XD|Win32
+		{200824A0-CDBA-45D7-83B8-E5A8468792EC}.V7Debug|Win32.Build.0 = V72XD|Win32
+		{200824A0-CDBA-45D7-83B8-E5A8468792EC}.V7Release|Win32.ActiveCfg = V72XR|Win32
+		{200824A0-CDBA-45D7-83B8-E5A8468792EC}.V7Release|Win32.Build.0 = V72XR|Win32
+		{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}.Debug|Win32.Build.0 = Debug|Win32
+		{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}.Release|Win32.ActiveCfg = Release|Win32
+		{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}.Release|Win32.Build.0 = Release|Win32
+		{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}.V7Debug|Win32.ActiveCfg = Debug|Win32
+		{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}.V7Debug|Win32.Build.0 = Debug|Win32
+		{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}.V7Release|Win32.ActiveCfg = Release|Win32
+		{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}.V7Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

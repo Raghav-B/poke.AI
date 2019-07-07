@@ -1,0 +1,1098 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="7zip">
+      <UniqueIdentifier>{640011be-3f4f-4873-8d35-29603260353a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archive">
+      <UniqueIdentifier>{ca6f9c4b-9f5f-48ad-a31c-af98fcd62e40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archive\7z">
+      <UniqueIdentifier>{92298691-8079-41ab-97b4-ea8c5d57705d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archive\Archive common">
+      <UniqueIdentifier>{07c1f99d-328c-4292-bcae-756aa615b6b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archive\bz2">
+      <UniqueIdentifier>{d4404f87-37f6-47c0-84ad-28f886e050f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archive\GZip">
+      <UniqueIdentifier>{2da83f5f-49e0-4bf4-94df-5f71548d513e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archive\Lzh">
+      <UniqueIdentifier>{c294dbd6-e157-4b12-a25f-f86c6f33c0ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archive\Lzma Ar">
+      <UniqueIdentifier>{cf17b1b3-505a-4072-82c3-a558076da4c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archive\Rar">
+      <UniqueIdentifier>{2c848328-adab-4c70-8850-0cd99749a22a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archive\Split">
+      <UniqueIdentifier>{681491fd-a85a-4c9d-979c-16310a4bc7d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archive\Tar">
+      <UniqueIdentifier>{f3894462-e945-41f6-8e24-095eb40a5366}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archive\Zip">
+      <UniqueIdentifier>{67371b0c-95dc-4dc8-8783-b64dff05d198}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C">
+      <UniqueIdentifier>{5ea4ccf3-187c-4ab5-a59c-a7ad7eec0faa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{f50e973f-7173-4cde-a755-fb5e8d91ab0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compress">
+      <UniqueIdentifier>{6af22ddd-1f4e-4843-a216-ec5e10c4fa28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compress\7z Compress">
+      <UniqueIdentifier>{79334f59-b7f7-4c4f-86af-408256cd4abe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compress\Bit Coder">
+      <UniqueIdentifier>{489a1d17-d337-4891-9071-61795accd837}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compress\BZip2 Compress">
+      <UniqueIdentifier>{97f1da29-65d5-42e9-9d87-6e25185e01c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compress\PPMD">
+      <UniqueIdentifier>{6ae17cf5-91d4-437c-84ea-e70b79c5f915}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compress\Rar Compress">
+      <UniqueIdentifier>{17dd5db8-6972-4bde-a450-a16aded15a07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compress\Zip Compress">
+      <UniqueIdentifier>{3a7d5a57-f03c-4adb-8101-4dd3c84d9514}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Crypto">
+      <UniqueIdentifier>{7164d745-e58e-44a4-bfe9-037f44bee447}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{33eeb3f2-448c-4542-b150-472136c39410}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Register">
+      <UniqueIdentifier>{6f4b2871-2e91-4697-a7f5-6596fae9ac6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows">
+      <UniqueIdentifier>{c1dbfe74-7113-46fd-80cf-bb76de09bf98}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CPP\7zip\Archive\7z\7zCompressionMode.cpp">
+      <Filter>Archive\7z</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\7z\7zDecode.cpp">
+      <Filter>Archive\7z</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\7z\7zExtract.cpp">
+      <Filter>Archive\7z</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\7z\7zFolderInStream.cpp">
+      <Filter>Archive\7z</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\7z\7zFolderOutStream.cpp">
+      <Filter>Archive\7z</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\7z\7zHandler.cpp">
+      <Filter>Archive\7z</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\7z\7zHeader.cpp">
+      <Filter>Archive\7z</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\7z\7zIn.cpp">
+      <Filter>Archive\7z</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\7z\7zProperties.cpp">
+      <Filter>Archive\7z</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\7z\7zRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\7z\7zSpecStream.cpp">
+      <Filter>Archive\7z</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\ArchiveExports.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\BZip2\bz2Register.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\BZip2\BZip2Handler.cpp">
+      <Filter>Archive\bz2</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Common\CoderMixer2.cpp">
+      <Filter>Archive\Archive common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Common\CoderMixer2MT.cpp">
+      <Filter>Archive\Archive common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Common\DummyOutStream.cpp">
+      <Filter>Archive\Archive common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Common\FindSignature.cpp">
+      <Filter>Archive\Archive common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Common\InStreamWithCRC.cpp">
+      <Filter>Archive\Archive common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Common\ItemNameUtils.cpp">
+      <Filter>Archive\Archive common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Common\MultiStream.cpp">
+      <Filter>Archive\Archive common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Common\OutStreamWithCRC.cpp">
+      <Filter>Archive\Archive common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Common\ParseProperties.cpp">
+      <Filter>Archive\Archive common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\DllExports2.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\GZip\GZipHandler.cpp">
+      <Filter>Archive\GZip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\GZip\GZipHeader.cpp">
+      <Filter>Archive\GZip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\GZip\GZipIn.cpp">
+      <Filter>Archive\GZip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\GZip\GZipRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Lzh\LzhCRC.cpp">
+      <Filter>Archive\Lzh</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Lzh\LzhHandler.cpp">
+      <Filter>Archive\Lzh</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Lzh\LzhIn.cpp">
+      <Filter>Archive\Lzh</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Lzh\LzhOutStreamWithCRC.cpp">
+      <Filter>Archive\Lzh</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Lzh\LzhRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Lzma\LzmaArcRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Lzma\LzmaFiltersDecode.cpp">
+      <Filter>Archive\Lzma Ar</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Lzma\LzmaHandler.cpp">
+      <Filter>Archive\Lzma Ar</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Lzma\LzmaIn.cpp">
+      <Filter>Archive\Lzma Ar</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Rar\RarHandler.cpp">
+      <Filter>Archive\Rar</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Rar\RarHeader.cpp">
+      <Filter>Archive\Rar</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Rar\RarIn.cpp">
+      <Filter>Archive\Rar</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Rar\RarItem.cpp">
+      <Filter>Archive\Rar</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Rar\RarRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Rar\RarVolumeInStream.cpp">
+      <Filter>Archive\Rar</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Split\SplitHandler.cpp">
+      <Filter>Archive\Split</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Split\SplitRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Tar\TarHandler.cpp">
+      <Filter>Archive\Tar</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Tar\TarHeader.cpp">
+      <Filter>Archive\Tar</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Tar\TarIn.cpp">
+      <Filter>Archive\Tar</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Tar\TarRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Zip\ZipHandler.cpp">
+      <Filter>Archive\Zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Zip\ZipHeader.cpp">
+      <Filter>Archive\Zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Zip\ZipIn.cpp">
+      <Filter>Archive\Zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Zip\ZipItem.cpp">
+      <Filter>Archive\Zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Archive\Zip\ZipRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\CreateCoder.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\FilterCoder.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\InBuffer.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\InOutTempBuffer.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\LimitedStreams.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\LockedStream.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\MemBlocks.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\MethodId.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\MethodProps.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\OffsetStream.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\OutBuffer.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\OutMemStream.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\ProgressMt.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\ProgressUtils.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\StreamBinder.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\StreamObjects.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\StreamUtils.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Common\VirtThread.cpp">
+      <Filter>7zip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\Bcj2Coder.cpp">
+      <Filter>Compress\7z Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\Bcj2Register.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\BcjCoder.cpp">
+      <Filter>Compress\7z Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\BcjRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\BitlDecoder.cpp">
+      <Filter>Compress\Bit Coder</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\BranchCoder.cpp">
+      <Filter>Compress\7z Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\BranchMisc.cpp">
+      <Filter>Compress\7z Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\BranchRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\ByteSwap.cpp">
+      <Filter>Compress\7z Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\ByteSwapRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\BZip2Crc.cpp">
+      <Filter>Compress\BZip2 Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\BZip2Decoder.cpp">
+      <Filter>Compress\BZip2 Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\BZip2Register.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\CodecExports.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\CopyCoder.cpp">
+      <Filter>Compress\7z Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\CopyRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\Deflate64Register.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\DeflateDecoder.cpp">
+      <Filter>Compress\Zip Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\DeflateNsisRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\DeflateRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\ImplodeDecoder.cpp">
+      <Filter>Compress\Zip Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\ImplodeHuffmanDecoder.cpp">
+      <Filter>Compress\Zip Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\LzhDecoder.cpp">
+      <Filter>Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\LzmaDecoder.cpp">
+      <Filter>Compress\7z Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\LzmaRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\LzOutWindow.cpp">
+      <Filter>Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\PpmdDecoder.cpp">
+      <Filter>Compress\PPMD</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\PpmdRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\Rar1Decoder.cpp">
+      <Filter>Compress\Rar Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\Rar2Decoder.cpp">
+      <Filter>Compress\Rar Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\Rar3Decoder.cpp">
+      <Filter>Compress\Rar Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\Rar3Vm.cpp">
+      <Filter>Compress\Rar Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\RarCodecsRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\ShrinkDecoder.cpp">
+      <Filter>Compress\Zip Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Compress\ZlibDecoder.cpp">
+      <Filter>Compress\Zip Compress</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Crypto\7zAes.cpp">
+      <Filter>Crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Crypto\7zAesRegister.cpp">
+      <Filter>Register</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Crypto\HmacSha1.cpp">
+      <Filter>Crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Crypto\MyAes.cpp">
+      <Filter>Crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Crypto\Pbkdf2HmacSha1.cpp">
+      <Filter>Crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Crypto\RandGen.cpp">
+      <Filter>Crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Crypto\Rar20Crypto.cpp">
+      <Filter>Crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Crypto\RarAes.cpp">
+      <Filter>Crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Crypto\Sha1.cpp">
+      <Filter>Crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Crypto\WzAes.cpp">
+      <Filter>Crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Crypto\ZipCrypto.cpp">
+      <Filter>Crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\7zip\Crypto\ZipStrong.cpp">
+      <Filter>Crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\CRC.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\IntToString.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\MyMap.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\MyString.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\MyVector.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\MyXml.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\NewHandler.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\StringConvert.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\StringToInt.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\UTFConvert.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Common\Wildcard.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\FileDir.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\FileFind.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\FileIO.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\PropVariant.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Windows\Time.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="C\7zCrc.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\Aes.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\Alloc.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\Bra.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\Bra86.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\BraIA64.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\BwtSort.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\HuffEnc.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\LzFind.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\LzFindMt.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\LzmaDec.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\LzmaEnc.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\Sha256.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\Sort.c">
+      <Filter>C</Filter>
+    </ClCompile>
+    <ClCompile Include="C\Threads.c">
+      <Filter>C</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CPP\7zip\Archive\7z\7zCompressionMode.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\7z\7zDecode.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\7z\7zFolderInStream.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\7z\7zFolderOutStream.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\7z\7zHandler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\7z\7zHeader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\7z\7zIn.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\7z\7zItem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\7z\7zProperties.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\7z\7zSpecStream.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\7z\StdAfx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\BZip2\BZip2Handler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\BZip2\BZip2Item.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\BZip2\StdAfx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Common\CoderMixer2.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Common\CoderMixer2MT.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Common\DummyOutStream.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Common\FindSignature.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Common\InStreamWithCRC.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Common\ItemNameUtils.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Common\MultiStream.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Common\OutStreamWithCRC.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Common\ParseProperties.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Common\StdAfx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\GZip\GZipHandler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\GZip\GZipHeader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\GZip\GZipIn.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\GZip\GZipItem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\GZip\GZipUpdate.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\GZip\StdAfx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\IArchive.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Lzh\LzhCRC.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Lzh\LzhHandler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Lzh\LzhHeader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Lzh\LzhIn.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Lzh\LzhItem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Lzh\LzhOutStreamWithCRC.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Lzh\StdAfx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Lzma\LzmaFiltersDecode.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Lzma\LzmaHandler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Lzma\LzmaIn.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Lzma\LzmaItem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Lzma\StdAfx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Rar\RarHandler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Rar\RarHeader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Rar\RarIn.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Rar\RarItem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Rar\RarVolumeInStream.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Rar\StdAfx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Split\SplitHandler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Split\StdAfx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\StdAfx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Tar\StdAfx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Tar\TarHandler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Tar\TarHeader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Tar\TarIn.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Tar\TarItem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Zip\StdAfx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Zip\ZipCompressionMode.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Zip\ZipHandler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Zip\ZipHeader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Zip\ZipIn.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Zip\ZipItem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Archive\Zip\ZipItemEx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\CreateCoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\DeclareArcs.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\DeclareCodecs.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\FilterCoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\InBuffer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\InOutTempBuffer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\LimitedStreams.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\LockedStream.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\MemBlocks.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\MethodId.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\MethodProps.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\OffsetStream.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\OutBuffer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\OutMemStream.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\ProgressMt.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\ProgressUtils.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\RegisterArc.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\RegisterCodec.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\StdAfx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\StreamBinder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\StreamObjects.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\StreamUtils.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Common\VirtThread.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\Bcj2Coder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\BcjCoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\BitlDecoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\BitmDecoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\BranchCoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\BranchMisc.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\ByteSwap.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\BZip2Const.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\BZip2Crc.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\BZip2Decoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\CopyCoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\DeflateConst.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\DeflateDecoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\HuffmanDecoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\ImplodeDecoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\ImplodeHuffmanDecoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\LzhDecoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\LzmaDecoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\LzOutWindow.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\Mtf8.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\PpmdContext.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\PpmdDecode.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\PpmdDecoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\PpmdSubAlloc.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\PpmdType.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\RangeCoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\RangeCoderBit.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\Rar1Decoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\Rar2Decoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\Rar3Decoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\Rar3Vm.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\ShrinkDecoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\StdAfx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Compress\ZlibDecoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Crypto\7zAes.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Crypto\HmacSha1.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Crypto\MyAes.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Crypto\Pbkdf2HmacSha1.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Crypto\RandGen.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Crypto\Rar20Crypto.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Crypto\RarAes.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Crypto\Sha1.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Crypto\StdAfx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Crypto\WzAes.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Crypto\ZipCrypto.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\Crypto\ZipStrong.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\ICoder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\IDecl.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\IPassword.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\IProgress.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\IStream.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\7zip\PropID.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\Buffer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\ComTry.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\Defs.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\DynamicBuffer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\InitializeStaticLib.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\IntToString.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\MyCom.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\MyException.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\MyInitGuid.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\MyMap.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\MyString.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\MyUnknown.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\MyVector.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\MyWindows.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\MyXml.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\NewHandler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\StringConvert.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\StringToInt.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\Types.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\UTFConvert.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Common\Wildcard.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\Defs.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\FileDir.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\FileFind.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\FileIO.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\FileName.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\Handle.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\PropVariant.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\StdAfx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\Synchronization.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\Thread.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CPP\Windows\Time.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\7zCrc.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\Aes.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\Alloc.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\Bra.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\BwtSort.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\CpuArch.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\HuffEnc.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\LzFind.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\LzFindMt.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\LzHash.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\LzmaDec.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\LzmaEnc.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\RotateDefs.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\Sha256.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\Sort.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\Threads.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="C\Types.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

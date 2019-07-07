@@ -1,0 +1,33 @@
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VBA_VS2008", "VBA2008.vcproj", "{200824A0-CDBA-45D7-83B8-E5A8468792EC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5646C572-A578-49F8-9DA9-3E00A8CBFE3F} = {5646C572-A578-49F8-9DA9-3E00A8CBFE3F}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wlib7zip", "..\src\win32\7zip\7z\7zip_2008.vcproj", "{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release FastBuild|Win32 = Release FastBuild|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{200824A0-CDBA-45D7-83B8-E5A8468792EC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{200824A0-CDBA-45D7-83B8-E5A8468792EC}.Debug|Win32.Build.0 = Debug|Win32
+		{200824A0-CDBA-45D7-83B8-E5A8468792EC}.Release FastBuild|Win32.ActiveCfg = Release FastBuild|Win32
+		{200824A0-CDBA-45D7-83B8-E5A8468792EC}.Release FastBuild|Win32.Build.0 = Release FastBuild|Win32
+		{200824A0-CDBA-45D7-83B8-E5A8468792EC}.Release|Win32.ActiveCfg = Release|Win32
+		{200824A0-CDBA-45D7-83B8-E5A8468792EC}.Release|Win32.Build.0 = Release|Win32
+		{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}.Debug|Win32.Build.0 = Debug|Win32
+		{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}.Release FastBuild|Win32.ActiveCfg = Release FastBuild|Win32
+		{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}.Release FastBuild|Win32.Build.0 = Release FastBuild|Win32
+		{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}.Release|Win32.ActiveCfg = Release|Win32
+		{5646C572-A578-49F8-9DA9-3E00A8CBFE3F}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

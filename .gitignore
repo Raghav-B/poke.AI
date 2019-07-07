@@ -9,4 +9,5 @@
 **/training_maps
 **/test_inputs
 **/large_training
-
+**/.vs
+**/.VS2010

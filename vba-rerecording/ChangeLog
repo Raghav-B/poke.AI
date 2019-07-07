@@ -1,0 +1,98 @@
+TODO: Repair this log.
+
+---VBA-rr v23--
+02-10-2010 aquanull - Finally fixed accelerator keys.
+02-09-2010 aquanull - A more organized hot-key configuration dialog.
+02-05-2010 nitsuja - fix input disable bug from r153 and throttler Sleep(1.6 years) bug, which were making vba impossible to use at least half of the time
+01-15-2010 aquanull - Fixed torn graphics with good old Direct Draw with VSync enabled.
+11-23-2009 aquanull - Fixed crash when playing a movie from power-on with a ROM selected from a multi-
+file archive.
+11-22-2009 aquanull - Hopefully fixed multi-byte character set support.
+11-19-2009 aquanull - Fixed Escape shortcut key.
+11-12-2009 gochaism - Lua: fixed joypad.set, it works fine even though the script has no frame-advance
+loop.
+11-12-2009 gochaism - Lua: changed joypad.set, it no longer adds input if the field value means false.
+
+VBA-rr V22 released November 8, 2009 - SVN 182
+??-??-???? ???????? - (missing log)
+
+---VBA-rr V21+(interim)---
+09-04-2009 aquanull - Added Pixelate 3x and Pixelate 4x filters for fun.
+08-18-2009 aquanull - Fixed GDI/D3D/OpenGL display with 3x filters.
+08-18-2009 aquanull - Added Simple 3x and Simple 4x filters (unoptimized).
+08-05-2009 aquanull - Fixed a bug that certain accelerator keys would not be enabled correctly.
+08-05-2009 aquanull - Fixed an assertion failure in the old cheat search dialog.
+08-05-2009 aquanull - Fixed several activation problems of the main window and dialogs.
+07-30-2009 aquanull - Fixed an old bug that would crash the emulator if the user paused it with the throttle set to 25% or less and without a ROM loaded.
+07-30-2009 aquanull - Fixed menu item File->Pause. It now updates correctly.
+07-29-2009 aquanull - Fixed display of timestamps of Save Slots. It can be enabled via File->Current Slot->Display Timestamps.
+07-29-2009 aquanull - Now the emulator will never write to the Windows Registry anymore.
+07-28-2009 aquanull - Fixed an old bug that caused the emulator to freeze.
+07-28-2009 aquanull - Added an option to make the emulator prefer the old-fashion save/movie/etc. file naming to the new-fashion.
+07-28-2009 aquanull - Removed the last Win32 Registry junks.
+07-22-2009 aquanull - Added a missing header file.
+07-22-2009 aquanull - Fixed various out-of-range errors within some file dialogs.
+07-22-2009 aquanull - Removed some redundant functions.
+07-01-2009 adelikat - Hooked up RamWatch AskSave() function to VBA exit
+07-01-2009 adelikat - Ramwatch - Hooked up Ramwatch recent files, save window position flag, save window position
+06-30-2009 adelikat - Ramwatch - Hooked up Ramwatch autoload
+06-29-2009 nitsuja - enabled directory override edit boxes
+06-28-2009 nitsuja - added RAM search and RAM watch (from Gens)
+06-28-2009 nitsuja - fixed GB memory viewer crash
+06-28-2009 nitsuja - fixed read-only toggle to refuse toggling when the movie file is not writable
+06-28-2009 nitsuja - added "All Files" filter option to all browse dialogs
+06-28-2009 nitsuja - fixed browse dialog filter selection crash
+06-28-2009 nitsuja - added support for loading ROMs and movies in 7z/rar/zip/etc archives, including multi-file archive selection support
+06-25-2009 aquanull - Tweaked UI again.
+06-25-2009 aquanull - Fixed movie drag & drop behavior.
+06-25-2009 aquanull - Fixed Reset/Cancel in the Directories dialog.
+06-19-2009 aquanull - Fixed compilation with SDL and gtk. Still malfunctioning.
+06-18-2009 aquanull - Beautified the code with automatical tools. Halfly fixed header craze. Hopefully nothing got messed up.
+06-04-2009 aquanull - Fixed small bugs in trunk/src/win32/MemoryViewerDlg.cpp.
+05-09-2009 gochaism - Probably the gbx SRAM issue ( issue 29 ) is now fixed.
+05-09-2009 aquanull - Added directory overrides for GBx rom, cheats, ips, LUA scritps, AVI and sound recording.
+05-09-2009 aquanull - Re-added the "Open GBx ROM..." menu command. "Open ROM..." changed to "Open GBA ROM...".
+05-09-2009 aquanull - Cleaned hotkeys (somehow). Old hotkeys settings might fail.
+05-09-2009 aquanull - Rearranged/renamed menu items in a more sensible way.
+05-09-2009 gochaism - Changed the URL of AboutDialog.
+05-09-2009 gochaism - Unfreezed GBx "from SRAM" check for the time being. VBA now tells you that the feature might be problematic.
+05-09-2009 gochaism - Removed all the skin functions and CxImage.
+04-27-2009 aquanull - Provided several options for what to do at movie end (buggy right now). 
+04-27-2009 aquanull - Added multiple options of what to do after movie playback ended.
+04-26-2009 aquanull - Fixed copied strings for VBAWacth/VBxWatch.
+04-20-2009 gochaism - Replaced math.random and math.randomseed with SFMT version.
+04-20-2009 gochaism - Added input.get().
+04-20-2009 gochaism - gui.gdscreenshot, gui.gdoverlay code changes. removed the upper limit of opacity.
+04-20-2009 gochaism - Changed the draw timing of Lua GUI (use gui.register to display something).
+04-20-2009 gochaism - Changed version number string for the time being.
+
+---VBA-rr V21 released---
+04-09-2009 gochaism - Lua - added savestate.create(), savestate.load(), savestate.save() functions
+04-09-2009 gochaism - MOVIE_SETTING_GBECHORAMFIX added, REmoved gbEchoRAMFix from INI (win32)
+03-26-2009 gochaism - Transparent border rendering, Added gui.opacity
+03-26-2009 gochasim - str2colour bugfix, gui.drawbox optimization.
+03-21-2009 gochasim - Added vba.registerbefore, vba-registerafter, vba.registerexit fucntions
+03-20-2009 adelikat - Added movie.filename(), VBA.lagcount(), VBA.getlagged() functions
+03-20-2009 gochaism - Merged Play/Record menu items
+03-18-2009 gochaism - Segmented AVI output
+03-07-2009 gochaism - joypad.set, lua movie functions
+03-07-2009 gochaism - minor change at noise channel
+03-07-2009 gochaism - joypad.read() (has 1 frame of lag)
+03-07-2009 gochaism - Added Lag Counter & Lua hotkeys
+03-07-2009 gochaism - Lua Open Dialog menu option
+03-07-2009 gochaism - Lag-counter stored in savestates
+03-06-2009 gochaism - Lua - added memory.register
+03-05-2009 gochaism - Lua - added memory.readbyterange, guit.text activated, gui.gd activated
+03-05-2009 gochaism - more lua functions added
+03-05-2009 gochaism - fixed SGB border drawing
+03-04-2009 gochaism - Lua scripting implemented
+02-14-2009 gochaism - Fixed RTC snapshot length problem
+02-14-2009 gochaism - Drag and Drop for movie files
+02-14-2009 gochaism - gbEchoRAMFix option added, it can be enabled from registry/ini
+02-07-2009 gochaism - Fixed a fatal bug that VBA doesn't clear out SRAM before movie playback.
+02-05-2009 gochaism - Added lag counter.
+01-06-2009 aquanull - Fixed 'xn' window size would not reset when clicking on the option that is already checked.
+01-06-2009 aquanull - Fix for not recording the  lag Reduction flag in GBA movies caused by using Ctrl-key-combos right before opening the recording
+11-09-2008 Nitsuja - Fix crash caused by trying to open a file that doesn't exist and ends with .gba
+11-09-2008 Nitsuja - Fix crash caused by the sequence "Load movie, use cheat search, close movie, open new movie, open cheat search"
+--VBA rerecording v21---

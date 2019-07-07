@@ -1,0 +1,895 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="V82XD|Win32">
+      <Configuration>V82XD</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="V82XR|Win32">
+      <Configuration>V82XR</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="V72XD|Win32">
+      <Configuration>V72XD</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="V72XR|Win32">
+      <Configuration>V72XR</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>VBA_VS2010</ProjectName>
+    <ProjectGuid>{200824A0-CDBA-45D7-83B8-E5A8468792EC}</ProjectGuid>
+    <RootNamespace>VBA</RootNamespace>
+    <Keyword>MFCProj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Static</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Static</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Static</UseOfMfc>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Static</UseOfMfc>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <UseOfMfc>Static</UseOfMfc>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.21006.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">$(SolutionDir)__V82Xbins\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">$(SolutionDir)__bins\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">$(SolutionDir).VS2010\$(Configuration)\$(Platform)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">$(SolutionDir).VS2010\$(Configuration)\$(Platform)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">$(SolutionDir)__V82Xbins\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">$(SolutionDir)__V72Xbins\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">$(SolutionDir).VS2010\$(Configuration)\$(Platform)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">$(SolutionDir).VS2010\$(Configuration)\$(Platform)\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'" />
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">$(ProjectName)_$(Configuration)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">$(ProjectName)_$(Configuration)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">$(ProjectName)_$(Configuration)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">$(ProjectName)_release</TargetName>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">$(SolutionDir)__V72Xbins\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">$(SolutionDir).VS2010\$(Configuration)\$(Platform)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">$(ProjectName)_$(Configuration)</TargetName>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">$(SolutionDir)__bins\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">$(SolutionDir).VS2010\$(Configuration)\$(Platform)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">$(ProjectName)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">
+    <ClCompile>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>directx;lib/zlib;lib/libpng;../src/lua/src;defaultconfig</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;HAVE_STDINT_H;OEMRESOURCE;MMX;FINAL_VERSION;BKPT_SUPPORT;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;EXTRACT_ONLY;_NO_CRYPTO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <DisableSpecificWarnings>4244;4996;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OmitFramePointers>true</OmitFramePointers>
+      <Optimization>Full</Optimization>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <MinimalRebuild>true</MinimalRebuild>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <UndefinePreprocessorDefinitions>USE_GB_CORE_V7;USE_GBA_CORE_V7</UndefinePreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>directx/d3d9.lib;directx/d3dx9.lib;directx/DxErr.lib;wsock32.lib;directx/ddraw.lib;directx/dxguid.lib;winmm.lib;directx/dinput8.lib;vfw32.lib;opengl32.lib;nafxcw.lib;libcmt.lib;lua51.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(TargetPath)</OutputFile>
+      <AdditionalLibraryDirectories>lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libci.lib;nafxcw.lib;libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <DelayLoadDLLs>lua51.dll</DelayLoadDLLs>
+    </Link>
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>$(OutDir)$(TargetName).tlb</TypeLibraryName>
+    </Midl>
+    <PreBuildEvent>
+      <Command>defaultconfig\SubWCRev.bat</Command>
+    </PreBuildEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;_AFXDLL;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <UndefinePreprocessorDefinitions>USE_GB_CORE_V7;USE_GBA_CORE_V7</UndefinePreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">
+    <ClCompile>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>directx;lib/zlib;lib/libpng;../src/lua/src;defaultconfig;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;HAVE_STDINT_H;OEMRESOURCE;MMX;FINAL_VERSION;BKPT_SUPPORT;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;EXTRACT_ONLY;_NO_CRYPTO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4996;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OmitFramePointers>true</OmitFramePointers>
+      <Optimization>Full</Optimization>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <MinimalRebuild>true</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>directx/d3d9.lib;directx/d3dx9.lib;directx/DxErr.lib;wsock32.lib;directx/ddraw.lib;directx/dxguid.lib;winmm.lib;directx/dinput8.lib;vfw32.lib;opengl32.lib;nafxcw.lib;libcmt.lib;lua51.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)_release.exe</OutputFile>
+      <AdditionalLibraryDirectories>lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libci.lib;nafxcw.lib;libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>$(OutDir)$(TargetName).tlb</TypeLibraryName>
+    </Midl>
+    <PreBuildEvent>
+      <Command>defaultconfig\SubWCRev.bat</Command>
+    </PreBuildEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;_AFXDLL;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>directx;lib/zlib;lib/libpng;../src/lua/src;defaultconfig</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;HAVE_STDINT_H;OEMRESOURCE;MMX;BKPT_SUPPORT;_CRT_SECURE_NO_WARNINGS;_ITERATOR_DEBUG_LEVEL=1;_USE_32BIT_TIME_T;LUA_USE_APICHECK;EXTRACT_ONLY;_NO_CRYPTO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DisableSpecificWarnings>4244;4996;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <StringPooling>true</StringPooling>
+      <Optimization>Disabled</Optimization>
+      <MinimalRebuild>true</MinimalRebuild>
+      <UndefinePreprocessorDefinitions>USE_GB_CORE_V7;USE_GBA_CORE_V7</UndefinePreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>directx/d3d9.lib;directx/d3dx9.lib;directx/DxErr.lib;wsock32.lib;directx/ddraw.lib;directx/dxguid.lib;winmm.lib;directx/dinput8.lib;vfw32.lib;opengl32.lib;nafxcwd.lib;libcmtd.lib;lua51.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(TargetPath)</OutputFile>
+      <AdditionalLibraryDirectories>lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libci.lib;nafxcwd.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <LinkTimeCodeGeneration>
+      </LinkTimeCodeGeneration>
+      <DelayLoadDLLs>lua51.dll</DelayLoadDLLs>
+    </Link>
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>$(OutDir)$(TargetName).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;_AFXDLL;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <UndefinePreprocessorDefinitions>USE_GB_CORE_V7;USE_GBA_CORE_V7</UndefinePreprocessorDefinitions>
+    </ResourceCompile>
+    <PreBuildEvent />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>directx;lib/zlib;lib/libpng;../src/lua/src;defaultconfig</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;HAVE_STDINT_H;OEMRESOURCE;MMX;BKPT_SUPPORT;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;LUA_USE_APICHECK;EXTRACT_ONLY;_NO_CRYPTO;USE_GB_CORE_V7;USE_GBA_CORE_V7;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DisableSpecificWarnings>4244;4996;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <StringPooling>true</StringPooling>
+      <Optimization>Disabled</Optimization>
+      <MinimalRebuild>true</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>directx/d3d9.lib;directx/d3dx9.lib;directx/DxErr.lib;wsock32.lib;directx/ddraw.lib;directx/dxguid.lib;winmm.lib;directx/dinput8.lib;vfw32.lib;opengl32.lib;nafxcwd.lib;libcmtd.lib;lua51.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(TargetPath)</OutputFile>
+      <AdditionalLibraryDirectories>lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libci.lib;nafxcwd.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <LinkTimeCodeGeneration>
+      </LinkTimeCodeGeneration>
+      <DelayLoadDLLs>lua51.dll</DelayLoadDLLs>
+    </Link>
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>$(OutDir)$(TargetName).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;_AFXDLL;WIN32;USE_GB_CORE_V7;USE_GBA_CORE_V7;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <PreBuildEvent />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>NDEBUG;WIN32;HAVE_STDINT_H;OEMRESOURCE;MMX;FINAL_VERSION;BKPT_SUPPORT;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;EXTRACT_ONLY;_NO_CRYPTO;USE_GB_CORE_V7;USE_GBA_CORE_V7;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>directx;lib/zlib;lib/libpng;../src/lua/src;defaultconfig</AdditionalIncludeDirectories>
+      <WarningLevel>Level3</WarningLevel>
+      <DisableSpecificWarnings>4244;4996;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(TargetPath)</OutputFile>
+      <AdditionalLibraryDirectories>lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>directx/d3d9.lib;directx/d3dx9.lib;directx/DxErr.lib;wsock32.lib;directx/ddraw.lib;directx/dxguid.lib;winmm.lib;directx/dinput8.lib;vfw32.lib;opengl32.lib;nafxcw.lib;libcmt.lib;lua51.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libci.lib;nafxcw.lib;libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <DelayLoadDLLs>lua51.dll</DelayLoadDLLs>
+    </Link>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;_AFXDLL;WIN32;USE_GB_CORE_V7;USE_GBA_CORE_V7;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <PreBuildEvent>
+      <Command>defaultconfig\SubWCRev.bat</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>directx;lib/zlib;lib/libpng;../src/lua/src;defaultconfig</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(TargetPath)</OutputFile>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <DelayLoadDLLs>lua51.dll</DelayLoadDLLs>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\common\CheatSearch.cpp" />
+    <ClCompile Include="..\src\common\lua-engine.cpp" />
+    <ClCompile Include="..\src\common\memgzio.c" />
+    <ClCompile Include="..\src\common\movie.cpp" />
+    <ClCompile Include="..\src\common\nesvideos-piece.cpp" />
+    <ClCompile Include="..\src\common\System.cpp" />
+    <ClCompile Include="..\src\common\SystemGlobals.cpp" />
+    <ClCompile Include="..\src\common\Text.cpp" />
+    <ClCompile Include="..\src\common\unzip.cpp" />
+    <ClCompile Include="..\src\common\Util.cpp" />
+    <ClCompile Include="..\src\gba\agbprint.cpp" />
+    <ClCompile Include="..\src\gba\armdis.cpp" />
+    <ClCompile Include="..\src\gba\bios.cpp" />
+    <ClCompile Include="..\src\gba\GBA-arm.cpp" />
+    <ClCompile Include="..\src\gba\GBA-thumb.cpp" />
+    <ClCompile Include="..\src\gba\GBACheats.cpp" />
+    <ClCompile Include="..\src\gba\EEprom.cpp" />
+    <ClCompile Include="..\src\gba\elf.cpp" />
+    <ClCompile Include="..\src\gba\Flash.cpp" />
+    <ClCompile Include="..\src\gba\GBA.cpp" />
+    <ClCompile Include="..\src\gba\GBAGfx.cpp" />
+    <ClCompile Include="..\src\gba\GBAGlobals.cpp" />
+    <ClCompile Include="..\src\gba\GBAMemory.cpp" />
+    <ClCompile Include="..\src\gba\Mode0.cpp" />
+    <ClCompile Include="..\src\gba\Mode1.cpp" />
+    <ClCompile Include="..\src\gba\Mode2.cpp" />
+    <ClCompile Include="..\src\gba\Mode3.cpp" />
+    <ClCompile Include="..\src\gba\Mode4.cpp" />
+    <ClCompile Include="..\src\gba\Mode5.cpp" />
+    <ClCompile Include="..\src\gba\remote.cpp" />
+    <ClCompile Include="..\src\gba\RTC.cpp" />
+    <ClCompile Include="..\src\gba\GBASound.cpp" />
+    <ClCompile Include="..\src\gba\Sram.cpp" />
+    <ClCompile Include="lib\libpng\png.c" />
+    <ClCompile Include="lib\libpng\pngerror.c" />
+    <ClCompile Include="lib\libpng\pnggccrd.c" />
+    <ClCompile Include="lib\libpng\pngget.c" />
+    <ClCompile Include="lib\libpng\pngmem.c" />
+    <ClCompile Include="lib\libpng\pngpread.c" />
+    <ClCompile Include="lib\libpng\pngread.c" />
+    <ClCompile Include="lib\libpng\pngrio.c" />
+    <ClCompile Include="lib\libpng\pngrtran.c" />
+    <ClCompile Include="lib\libpng\pngrutil.c" />
+    <ClCompile Include="lib\libpng\pngset.c" />
+    <ClCompile Include="lib\libpng\pngtrans.c" />
+    <ClCompile Include="lib\libpng\pngvcrd.c" />
+    <ClCompile Include="lib\libpng\pngwio.c" />
+    <ClCompile Include="lib\libpng\pngwrite.c" />
+    <ClCompile Include="lib\libpng\pngwtran.c" />
+    <ClCompile Include="lib\libpng\pngwutil.c" />
+    <ClCompile Include="lib\zlib\adler32.c" />
+    <ClCompile Include="lib\zlib\compress.c" />
+    <ClCompile Include="lib\zlib\crc32.c" />
+    <ClCompile Include="lib\zlib\deflate.c" />
+    <ClCompile Include="lib\zlib\gzclose.c" />
+    <ClCompile Include="lib\zlib\gzlib.c" />
+    <ClCompile Include="lib\zlib\gzread.c" />
+    <ClCompile Include="lib\zlib\gzwrite.c" />
+    <ClCompile Include="lib\zlib\infback.c" />
+    <ClCompile Include="lib\zlib\inffast.c" />
+    <ClCompile Include="lib\zlib\inflate.c" />
+    <ClCompile Include="lib\zlib\inftrees.c" />
+    <ClCompile Include="lib\zlib\trees.c" />
+    <ClCompile Include="lib\zlib\uncompr.c" />
+    <ClCompile Include="lib\zlib\zutil.c" />
+    <ClInclude Include="..\src\gba\V7\arm-new.h" />
+    <ClInclude Include="..\src\gba\V7\GBA-arm.h" />
+    <ClInclude Include="..\src\gba\V7\GBA-thumb.h" />
+    <ClInclude Include="..\src\gba\V7\GBACpu.h" />
+    <ClInclude Include="..\src\gba\V7\thumb.h" />
+    <ClInclude Include="..\src\gba\V8\bios.cpp" />
+    <ClInclude Include="..\src\gba\V8\GBA-arm.cpp" />
+    <ClInclude Include="..\src\gba\V8\GBA-thumb.cpp" />
+    <ClInclude Include="..\src\gba\V8\GBA.cpp" />
+    <ClInclude Include="..\src\gba\V8\GBACheats.cpp" />
+    <ClInclude Include="..\src\gba\V8\GBAMemory.cpp" />
+    <ClInclude Include="..\src\gba\V7\bios.cpp" />
+    <ClInclude Include="..\src\gba\V7\GBA.cpp" />
+    <ClInclude Include="..\src\gba\V7\GBACheats.cpp" />
+    <ClInclude Include="..\src\gba\V7\GBAMemory.cpp" />
+    <ClCompile Include="..\src\gb\GB.cpp" />
+    <ClCompile Include="..\src\gb\gbCheats.cpp" />
+    <ClCompile Include="..\src\gb\gbDis.cpp" />
+    <ClCompile Include="..\src\gb\gbGfx.cpp" />
+    <ClCompile Include="..\src\gb\gbGlobals.cpp" />
+    <ClCompile Include="..\src\gb\gbMemory.cpp" />
+    <ClCompile Include="..\src\gb\gbPrinter.cpp" />
+    <ClCompile Include="..\src\gb\gbSGB.cpp" />
+    <ClCompile Include="..\src\gb\gbSound.cpp" />
+    <ClInclude Include="..\src\gba\V8\GBACpu.h" />
+    <ClInclude Include="..\src\gb\V7\GB.cpp" />
+    <ClInclude Include="..\src\gb\V7\gbGfx.cpp" />
+    <ClInclude Include="..\src\gb\V7\gbMemory.cpp" />
+    <ClInclude Include="..\src\gb\V7\gbSound.cpp" />
+    <ClInclude Include="..\src\gb\V8\GB.cpp" />
+    <ClInclude Include="..\src\gb\V8\gbGfx.cpp" />
+    <ClInclude Include="..\src\gb\V8\gbMemory.cpp" />
+    <ClInclude Include="..\src\gb\V8\gbSound.cpp" />
+    <ClCompile Include="..\src\lua\src\lapi.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\lauxlib.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\lbaselib.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\lcode.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\ldblib.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\ldebug.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\ldo.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\ldump.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\lfunc.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\lgc.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\linit.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\liolib.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\llex.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\lmathlib.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\lmem.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\loadlib.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\lobject.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\lopcodes.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\loslib.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\lparser.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\lstate.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\lstring.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\lstrlib.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\ltable.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\ltablib.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\ltm.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\lundump.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\lvm.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\lzio.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\lua\src\print.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\Commands.cpp" />
+    <ClCompile Include="..\src\win32\Controls\BitmapControl.cpp" />
+    <ClCompile Include="..\src\win32\Controls\ColorButton.cpp" />
+    <ClCompile Include="..\src\win32\Controls\ColorControl.cpp" />
+    <ClCompile Include="..\src\win32\Controls\Hyperlink.cpp" />
+    <ClCompile Include="..\src\win32\Controls\KeyboardEdit.cpp" />
+    <ClCompile Include="..\src\win32\Controls\PaletteViewControl.cpp" />
+    <ClCompile Include="..\src\win32\Controls\ZoomControl.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\AboutDialog.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\AccelEditor.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\Associate.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\BugReport.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\Directories.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\Disassemble.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\ExportGSASnapshot.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\FileDlg.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\GBACheatsDlg.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\GBCheatsDlg.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\GBColorDlg.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\GBDisassemble.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\GBMapView.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\GBMemoryViewerDlg.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\GBOamView.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\GBPaletteView.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\GBPrinterDlg.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\GBTileView.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\GDBConnection.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\GSACodeSelect.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\IOViewer.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\Joypad.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\LangSelect.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\Logging.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\LuaOpenDialog.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\MapView.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\MaxScale.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\MemoryViewer.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\MemoryViewerAddressSize.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\MemoryViewerDlg.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\ModeConfirm.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\MovieCreate.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\MovieOpen.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\OamView.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\PaletteView.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\ramwatch.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\ram_search.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\ResizeDlg.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\RewindInterval.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\RomInfo.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\TextOptions.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\Throttle.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\TileView.cpp" />
+    <ClCompile Include="..\src\win32\Dialogs\VideoMode.cpp" />
+    <ClCompile Include="..\src\win32\WinSystem.cpp" />
+    <ClCompile Include="..\src\win32\WinMiscUtil.cpp" />
+    <ClCompile Include="..\src\filters\2xSaI.cpp" />
+    <ClCompile Include="..\src\filters\admame.cpp" />
+    <ClCompile Include="..\src\filters\bilinear.cpp" />
+    <ClCompile Include="..\src\filters\hq2x.cpp" />
+    <ClCompile Include="..\src\filters\hq3x32.cpp" />
+    <ClCompile Include="..\src\filters\hq_shared32.cpp" />
+    <ClCompile Include="..\src\filters\interframe.cpp" />
+    <ClCompile Include="..\src\filters\motionblur.cpp" />
+    <ClCompile Include="..\src\filters\pixel.cpp" />
+    <ClCompile Include="..\src\filters\scanline.cpp" />
+    <ClCompile Include="..\src\filters\simple2x.cpp" />
+    <ClCompile Include="..\src\win32\AcceleratorManager.cpp" />
+    <ClCompile Include="..\src\win32\AVIWrite.cpp" />
+    <ClCompile Include="..\src\win32\CmdAccelOb.cpp" />
+    <ClCompile Include="..\src\win32\Direct3D.cpp" />
+    <ClCompile Include="..\src\win32\DirectDraw.cpp" />
+    <ClCompile Include="..\src\win32\DirectInput.cpp" />
+    <ClCompile Include="..\src\win32\DirectSound.cpp" />
+    <ClCompile Include="..\src\win32\GDIDisplay.cpp" />
+    <ClCompile Include="..\src\win32\MainWnd.cpp" />
+    <ClCompile Include="..\src\win32\MainWndCheats.cpp" />
+    <ClCompile Include="..\src\win32\MainWndFile.cpp" />
+    <ClCompile Include="..\src\win32\MainWndHelp.cpp" />
+    <ClCompile Include="..\src\win32\MainWndOptions.cpp" />
+    <ClCompile Include="..\src\win32\MainWndTools.cpp" />
+    <ClCompile Include="..\src\win32\OpenGL.cpp" />
+    <ClCompile Include="..\src\win32\Reg.cpp" />
+    <ClCompile Include="..\src\win32\stdafx.cpp" />
+    <ClCompile Include="..\src\win32\StringTokenizer.cpp" />
+    <ClCompile Include="..\src\win32\VBA.cpp" />
+    <ClCompile Include="..\src\win32\WavWriter.cpp" />
+    <ClCompile Include="..\src\win32\WinResUtil.cpp" />
+    <ClCompile Include="..\src\win32\7zip\7zip.cpp" />
+    <ClCompile Include="..\src\win32\7zip\OpenArchive.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\filters\2xSaImmx.asm">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">nasm.exe -D__DJGPP__ -f win32 -o "$(IntDir)%(FileName).obj" "%(FullPath)"
+</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">nasm.exe -D__DJGPP__ -f win32 -o "$(IntDir)%(FileName).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">$(IntDir)%(FileName).obj;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">$(IntDir)%(FileName).obj;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">nasm.exe -D__DJGPP__ -f win32 -o "$(IntDir)%(FileName).obj" "%(FullPath)"
+</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">nasm.exe -D__DJGPP__ -f win32 -o "$(IntDir)%(FileName).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='V82XR|Win32'">$(IntDir)%(FileName).obj;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">$(IntDir)%(FileName).obj;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">nasm.exe -D__DJGPP__ -f win32 -o "$(IntDir)%(FileName).obj" "%(FullPath)"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">$(IntDir)%(FileName).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <None Include="..\documentation\Changelog.txt" />
+    <None Include="..\documentation\License.txt" />
+    <None Include="..\documentation\Readme.txt" />
+    <None Include="..\documentation\TODO.txt" />
+    <None Include="..\src\win32\gbadvance.ico" />
+    <None Include="..\src\win32\vba.rc2" />
+    <None Include="..\src\win32\VisualBoyAdvance.exe.manifest" />
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\common\CheatSearch.h" />
+    <ClInclude Include="..\src\common\inputGlobal.h" />
+    <ClInclude Include="..\src\common\memgzio.h" />
+    <ClInclude Include="..\src\common\movie.h" />
+    <ClInclude Include="..\src\common\nesvideos-piece.h" />
+    <ClInclude Include="..\src\common\SystemGlobals.h" />
+    <ClInclude Include="..\src\filters\filters.h" />
+    <ClInclude Include="..\src\gb\V7\gbCodes.h" />
+    <ClInclude Include="..\src\gb\V7\gbCodesCB.h" />
+    <ClInclude Include="..\src\gb\V8\gbCodes.h" />
+    <ClInclude Include="..\src\gb\V8\gbCodesCB.h" />
+    <ClInclude Include="..\src\NLS.h" />
+    <ClInclude Include="..\src\Port.h" />
+    <ClInclude Include="..\src\common\System.h" />
+    <ClInclude Include="..\src\common\Text.h" />
+    <ClInclude Include="..\src\common\unzip.h" />
+    <ClInclude Include="..\src\common\Util.h" />
+    <ClInclude Include="..\src\common\vbalua.h" />
+    <ClInclude Include="..\src\version.h" />
+    <ClInclude Include="..\src\filters\hq2x.h" />
+    <ClInclude Include="..\src\filters\hq3x32.h" />
+    <ClInclude Include="..\src\filters\hq_shared32.h" />
+    <ClInclude Include="..\src\filters\interp.h" />
+    <ClInclude Include="..\src\filters\lq2x.h" />
+    <ClInclude Include="..\src\gba\agbprint.h" />
+    <ClInclude Include="..\src\gba\armdis.h" />
+    <ClInclude Include="..\src\gba\bios.h" />
+    <ClInclude Include="..\src\gba\GBACheats.h" />
+    <ClInclude Include="..\src\gba\EEprom.h" />
+    <ClInclude Include="..\src\gba\elf.h" />
+    <ClInclude Include="..\src\gba\Flash.h" />
+    <ClInclude Include="..\src\gba\GBA.h" />
+    <ClInclude Include="..\src\gba\GBAGfx.h" />
+    <ClInclude Include="..\src\gba\GBAinline.h" />
+    <ClInclude Include="..\src\gba\GBAGlobals.h" />
+    <ClInclude Include="..\src\gba\RTC.h" />
+    <ClInclude Include="..\src\gba\GBASound.h" />
+    <ClInclude Include="..\src\gba\Sram.h" />
+    <ClInclude Include="..\src\gb\GB.h" />
+    <ClInclude Include="..\src\gb\gbCheats.h" />
+    <ClInclude Include="..\src\gb\gbGlobals.h" />
+    <ClInclude Include="..\src\gb\gbMemory.h" />
+    <ClInclude Include="..\src\gb\gbPrinter.h" />
+    <ClInclude Include="..\src\gb\gbSGB.h" />
+    <ClInclude Include="..\src\gb\gbSound.h" />
+    <ClInclude Include="..\src\win32\AcceleratorManager.h" />
+    <ClInclude Include="..\src\win32\AVIWrite.h" />
+    <ClInclude Include="..\src\win32\CmdAccelOb.h" />
+    <ClInclude Include="..\src\win32\Controls\BitmapControl.h" />
+    <ClInclude Include="..\src\win32\Controls\ColorButton.h" />
+    <ClInclude Include="..\src\win32\Controls\ColorControl.h" />
+    <ClInclude Include="..\src\win32\Controls\Hyperlink.h" />
+    <ClInclude Include="..\src\win32\Controls\KeyboardEdit.h" />
+    <ClInclude Include="..\src\win32\Controls\PaletteViewControl.h" />
+    <ClInclude Include="..\src\win32\Controls\ZoomControl.h" />
+    <ClInclude Include="..\src\win32\Dialogs\AboutDialog.h" />
+    <ClInclude Include="..\src\win32\Dialogs\AccelEditor.h" />
+    <ClInclude Include="..\src\win32\Dialogs\Associate.h" />
+    <ClInclude Include="..\src\win32\Dialogs\BugReport.h" />
+    <ClInclude Include="..\src\win32\Dialogs\Directories.h" />
+    <ClInclude Include="..\src\win32\Dialogs\Disassemble.h" />
+    <ClInclude Include="..\src\win32\Dialogs\ExportGSASnapshot.h" />
+    <ClInclude Include="..\src\win32\Dialogs\FileDlg.h" />
+    <ClInclude Include="..\src\win32\Dialogs\GBACheatsDlg.h" />
+    <ClInclude Include="..\src\win32\Dialogs\GBCheatsDlg.h" />
+    <ClInclude Include="..\src\win32\Dialogs\GBColorDlg.h" />
+    <ClInclude Include="..\src\win32\Dialogs\GBDisassemble.h" />
+    <ClInclude Include="..\src\win32\Dialogs\GBMapView.h" />
+    <ClInclude Include="..\src\win32\Dialogs\GBMemoryViewerDlg.h" />
+    <ClInclude Include="..\src\win32\Dialogs\GBOamView.h" />
+    <ClInclude Include="..\src\win32\Dialogs\GBPaletteView.h" />
+    <ClInclude Include="..\src\win32\Dialogs\GBPrinterDlg.h" />
+    <ClInclude Include="..\src\win32\Dialogs\GBTileView.h" />
+    <ClInclude Include="..\src\win32\Dialogs\GDBConnection.h" />
+    <ClInclude Include="..\src\win32\Dialogs\GSACodeSelect.h" />
+    <ClInclude Include="..\src\win32\Dialogs\IOViewer.h" />
+    <ClInclude Include="..\src\win32\Dialogs\IOViewerRegs.h" />
+    <ClInclude Include="..\src\win32\Dialogs\Joypad.h" />
+    <ClInclude Include="..\src\win32\Dialogs\LangSelect.h" />
+    <ClInclude Include="..\src\win32\Dialogs\Logging.h" />
+    <ClInclude Include="..\src\win32\Dialogs\LuaOpenDialog.h" />
+    <ClInclude Include="..\src\win32\Dialogs\MapView.h" />
+    <ClInclude Include="..\src\win32\Dialogs\MaxScale.h" />
+    <ClInclude Include="..\src\win32\Dialogs\MemoryViewer.h" />
+    <ClInclude Include="..\src\win32\Dialogs\MemoryViewerAddressSize.h" />
+    <ClInclude Include="..\src\win32\Dialogs\MemoryViewerDlg.h" />
+    <ClInclude Include="..\src\win32\Dialogs\ModeConfirm.h" />
+    <ClInclude Include="..\src\win32\Dialogs\MovieCreate.h" />
+    <ClInclude Include="..\src\win32\Dialogs\MovieOpen.h" />
+    <ClInclude Include="..\src\win32\Dialogs\OamView.h" />
+    <ClInclude Include="..\src\win32\Dialogs\PaletteView.h" />
+    <ClInclude Include="..\src\win32\Dialogs\ramwatch.h" />
+    <ClInclude Include="..\src\win32\Dialogs\ram_search.h" />
+    <ClInclude Include="..\src\win32\Dialogs\ResizeDlg.h" />
+    <ClInclude Include="..\src\win32\Dialogs\RewindInterval.h" />
+    <ClInclude Include="..\src\win32\Dialogs\RomInfo.h" />
+    <ClInclude Include="..\src\win32\Dialogs\TextOptions.h" />
+    <ClInclude Include="..\src\win32\Dialogs\Throttle.h" />
+    <ClInclude Include="..\src\win32\Dialogs\TileView.h" />
+    <ClInclude Include="..\src\win32\Dialogs\VideoMode.h" />
+    <ClInclude Include="..\src\win32\Display.h" />
+    <ClInclude Include="..\src\win32\Input.h" />
+    <ClInclude Include="..\src\win32\IUpdate.h" />
+    <ClInclude Include="..\src\win32\MainWnd.h" />
+    <ClInclude Include="..\src\win32\Reg.h" />
+    <ClInclude Include="..\src\win32\Sound.h" />
+    <ClInclude Include="..\src\win32\stdafx.h" />
+    <ClInclude Include="..\src\win32\StringTokenizer.h" />
+    <ClInclude Include="..\src\win32\VBA.h" />
+    <ClInclude Include="..\src\win32\VersionInfo.h" />
+    <ClInclude Include="..\src\win32\WavWriter.h" />
+    <ClInclude Include="..\src\win32\WinHelper.h" />
+    <ClInclude Include="..\src\win32\WinMiscUtil.h" />
+    <ClInclude Include="..\src\win32\WinResUtil.h" />
+    <ClInclude Include="..\src\win32\7zip\7zip.h" />
+    <ClInclude Include="..\src\win32\7zip\7zipstreams.h" />
+    <ClInclude Include="..\src\win32\7zip\OpenArchive.h" />
+    <ClInclude Include="..\src\lua\src\lapi.h" />
+    <ClInclude Include="..\src\lua\src\lauxlib.h" />
+    <ClInclude Include="..\src\lua\src\lcode.h" />
+    <ClInclude Include="..\src\lua\src\ldebug.h" />
+    <ClInclude Include="..\src\lua\src\ldo.h" />
+    <ClInclude Include="..\src\lua\src\lfunc.h" />
+    <ClInclude Include="..\src\lua\src\lgc.h" />
+    <ClInclude Include="..\src\lua\src\llex.h" />
+    <ClInclude Include="..\src\lua\src\llimits.h" />
+    <ClInclude Include="..\src\lua\src\lmem.h" />
+    <ClInclude Include="..\src\lua\src\lobject.h" />
+    <ClInclude Include="..\src\lua\src\lopcodes.h" />
+    <ClInclude Include="..\src\lua\src\lparser.h" />
+    <ClInclude Include="..\src\lua\src\lstate.h" />
+    <ClInclude Include="..\src\lua\src\lstring.h" />
+    <ClInclude Include="..\src\lua\src\ltable.h" />
+    <ClInclude Include="..\src\lua\src\ltm.h" />
+    <ClInclude Include="..\src\lua\src\lua.h" />
+    <ClInclude Include="..\src\lua\src\luaconf.h" />
+    <ClInclude Include="..\src\lua\src\lualib.h" />
+    <ClInclude Include="..\src\lua\src\lundump.h" />
+    <ClInclude Include="..\src\lua\src\lvm.h" />
+    <ClInclude Include="..\src\lua\src\lzio.h" />
+    <ClInclude Include="..\src\win32\resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\src\win32\7zip\7zip.rc" />
+    <ResourceCompile Include="..\src\win32\VBA.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\src\win32\7zip\7z\7zip_2010.vcxproj">
+      <Project>{5646c572-a578-49f8-9da9-3e00a8cbfe3f}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

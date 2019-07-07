@@ -1,0 +1,36 @@
+---VBA-rr v23-- released October 28, 2010
+10-24-2010 kylethomson - Add option to bind movie savestates to movies
+10-24-2010 kylethomson - Add default directories to VBA, if none exist, create them
+10-11-2010 aquanull - Fix input delay, which fixes things such as the warp glitch in the Smurfs
+10-07-2010 gochaism - Adapted fixes to RAM Search from Desmume (such as multiple selection of watches)
+09-27-2010 aquanull - Really finally fixed accelerator keys.
+09-27-2010 aquanull - Fixed several screen redraw problems.
+09-26-2010 aquanull - Added "Enable Background Input" option.
+09-26-2010 aquanull - Added "Mute When Inactive" option.
+09-12-2010 aquanull - Added "Always On Top" option.
+09-12-2010 aquanull - Fixed the random error in application start up.
+09-12-2010 aquanull - Fixed the error raised when the user canceled selecting from an archive after dragging & dropping a certain types of files onto the main window.
+09-17-2010 adelikat - make Read-only checkbox in Open Movie dialog checked by default, drag & drop movies are now read-only by default
+09-03-2010 gcupcakekid - Let RAM Watch list have more than one entry for the same RAM address
+08-10-2010 gochaism - Lua: refresh screen on load
+08-10-2010 gochaism - RAM Search - Fix counting of number of changes
+08-09-2010 adelikat - RAM Watch - "Add Separator" button
+06-23-2010 gcupcakekid - Options to account for lag during autofire & frame advance
+06-08-2010 gcupcakekid - fix for pausing AVI 
+03-16-2010 gochaism - RAM Search - fix reset to update previous values RAM Search, redraw list when serach size/format is changed
+02-11-2010 aquanull - Fixed crash with GDI/OpenGL + 4x filter + SGB border on
+02-10-2010 aquanull - Fixed crash with Pixelate filters
+02-10-2010 aquanull - Fixed mysterious "Error opening image" bug while opening a movie file
+02-10-2010 aquanull - Finally fixed accelerator keys.
+02-09-2010 aquanull - A more organized hot-key configuration dialog.
+02-05-2010 nitsuja - fix input disable bug from r153 and throttler Sleep(1.6 years) bug, which were making vba impossible to use at least half of the time
+01-15-2010 aquanull - Fixed torn graphics with good old Direct Draw with VSync enabled.
+11-23-2009 aquanull - Fixed crash when playing a movie from power-on with a ROM selected from a multi-
+file archive.
+11-22-2009 aquanull - Hopefully fixed multi-byte character set support.
+11-19-2009 aquanull - Fixed Escape shortcut key.
+11-12-2009 gochaism - Lua: fixed joypad.set, it works fine even though the script has no frame-advance
+loop.
+11-12-2009 gochaism - Lua: changed joypad.set, it no longer adds input if the field value means false.
+
+VBA-rr V22 released November 8, 2009 - SVN 182
