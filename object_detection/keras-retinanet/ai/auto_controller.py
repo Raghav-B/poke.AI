@@ -81,8 +81,9 @@ class controller:
 
     def move_up(self):
         start_time = time.time()
+        PressKey(W)
         while time.time() - start_time < key_hold_time:
-            PressKey(W)
+            pass
         ReleaseKey(W)
         cur_dir = 0
         return "up"
@@ -90,8 +91,9 @@ class controller:
 
     def move_right(self):
         start_time = time.time()
+        PressKey(D)
         while time.time() - start_time < key_hold_time:
-            PressKey(D)
+            pass
         ReleaseKey(D)
         cur_dir = 1
         return "right"
@@ -99,8 +101,9 @@ class controller:
 
     def move_down(self):
         start_time = time.time()
+        PressKey(S)
         while time.time() - start_time < key_hold_time:
-            PressKey(S)
+            pass
         ReleaseKey(S)
         cur_dir = 2
         return "down"
@@ -108,8 +111,9 @@ class controller:
 
     def move_left(self):
         start_time = time.time()
+        PressKey(A)
         while time.time() - start_time < key_hold_time:
-            PressKey(A)
+            pass
         ReleaseKey(A)
         cur_dir = 3
         return "left"
@@ -117,8 +121,9 @@ class controller:
 
     def interact(self):
         start_time = time.time()
+        PressKey("z")
         while time.time() - start_time < key_hold_time:
-            PressKey("z") # Change to "x" on ubuntu
+            pass # Change to "x" on ubuntu
         ReleaseKey("z") # Change to "x" on ubuntu
         return "z" # Change to "x" on ubuntu
 
@@ -145,11 +150,7 @@ class controller:
         pag.press("")
     
     def win_test(self):
-        start_time = time.time()
-        while time.time() - start_time < key_hold_time:
-            PressKey(W)
-        ReleaseKey(W)
-        cur_dir = 0
+        self.move_up()
         return "up"
 
 """ IF UBUNTU """
