@@ -121,7 +121,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>directx;lib/zlib;lib/libpng;../src/lua/src;defaultconfig</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>directx;lib/zlib;lib/libpng;../src/lua/src;defaultconfig;D:\App Development\pokemon_ai\vba-rerecording\zmq_files\libzmq-4.3.1\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;HAVE_STDINT_H;OEMRESOURCE;MMX;FINAL_VERSION;BKPT_SUPPORT;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;EXTRACT_ONLY;_NO_CRYPTO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -162,6 +162,9 @@
       <Culture>0x0409</Culture>
       <UndefinePreprocessorDefinitions>USE_GB_CORE_V7;USE_GBA_CORE_V7</UndefinePreprocessorDefinitions>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "D:\App Development\pokemon_ai\vba-rerecording\zmq_files\x86-Release\bin\libzmq-mt-4_3_1.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">
     <ClCompile>
@@ -211,7 +214,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='V82XD|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>directx;lib/zlib;lib/libpng;../src/lua/src;defaultconfig</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>directx;lib/zlib;lib/libpng;../src/lua/src;defaultconfig;D:\App Development\pokemon_ai\vba-rerecording\zmq_files\libzmq-4.3.1\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;HAVE_STDINT_H;OEMRESOURCE;MMX;BKPT_SUPPORT;_CRT_SECURE_NO_WARNINGS;_ITERATOR_DEBUG_LEVEL=1;_USE_32BIT_TIME_T;LUA_USE_APICHECK;EXTRACT_ONLY;_NO_CRYPTO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -249,10 +252,13 @@
       <UndefinePreprocessorDefinitions>USE_GB_CORE_V7;USE_GBA_CORE_V7</UndefinePreprocessorDefinitions>
     </ResourceCompile>
     <PreBuildEvent />
+    <PostBuildEvent>
+      <Command>xcopy /y /d "D:\App Development\pokemon_ai\vba-rerecording\zmq_files\x86-Release\bin\libzmq-mt-4_3_1.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='V72XD|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>directx;lib/zlib;lib/libpng;../src/lua/src;defaultconfig</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>directx;lib/zlib;lib/libpng;../src/lua/src;defaultconfig;D:\App Development\pokemon_ai\vba-rerecording\zmq_files\libzmq-4.3.1\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;HAVE_STDINT_H;OEMRESOURCE;MMX;BKPT_SUPPORT;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;LUA_USE_APICHECK;EXTRACT_ONLY;_NO_CRYPTO;USE_GB_CORE_V7;USE_GBA_CORE_V7;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -288,6 +294,9 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <PreBuildEvent />
+    <PostBuildEvent>
+      <Command>xcopy /y /d "D:\App Development\pokemon_ai\vba-rerecording\zmq_files\x86-Release\bin\libzmq-mt-4_3_1.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='V72XR|Win32'">
     <ClCompile>
@@ -303,7 +312,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>directx;lib/zlib;lib/libpng;../src/lua/src;defaultconfig</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>directx;lib/zlib;lib/libpng;../src/lua/src;defaultconfig;D:\App Development\pokemon_ai\vba-rerecording\zmq_files\libzmq-4.3.1\include</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <DisableSpecificWarnings>4244;4996;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
@@ -324,10 +333,13 @@
     <PreBuildEvent>
       <Command>defaultconfig\SubWCRev.bat</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "D:\App Development\pokemon_ai\vba-rerecording\zmq_files\x86-Release\bin\libzmq-mt-4_3_1.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>directx;lib/zlib;lib/libpng;../src/lua/src;defaultconfig</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>directx;lib/zlib;lib/libpng;../src/lua/src;defaultconfig;D:\App Development\pokemon_ai\vba-rerecording\zmq_files\libzmq-4.3.1\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <OutputFile>$(TargetPath)</OutputFile>
@@ -335,6 +347,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <DelayLoadDLLs>lua51.dll</DelayLoadDLLs>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "D:\App Development\pokemon_ai\vba-rerecording\zmq_files\x86-Release\bin\libzmq-mt-4_3_1.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\common\CheatSearch.cpp" />

@@ -12,14 +12,6 @@
 #include <windows.h>
 #include <string>
 #include "../../common/Util.h"
-#include <iostream>
-#include <sstream>
-
-#define DBOUT(s) {\
-    std::ostringstream os_;\
-    os_ << s;\
-    OutputDebugString(os_.str().c_str());\
-}
 
 /*
 #include <commctrl.h>
@@ -196,10 +188,6 @@ void Update_RAM_Watch()
 				rswatches[i].CurValue = newCurValue;
 				watchChanged[i] = TRUE;
 			}
-
-            if (i == 0) DBOUT("x_pos is " << newCurValue << std::endl);
-            if (i == 1) DBOUT("y_pos is " << newCurValue << std::endl);
-            if (i == 2) DBOUT("direction is " << newCurValue << std::endl);
 		}
 	}
 
