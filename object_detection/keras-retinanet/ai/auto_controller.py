@@ -6,7 +6,7 @@ import random
 # lazy to type self. everywhere
 corner_x = 0 # x coordinate of top left corner of gameplay
 corner_y = 0 # y coordinate
-key_hold_time = 0.25 # If this is too short, character won't move, will instead turn
+key_hold_time = 1 # If this is too short, character won't move, will instead turn
 # Storing character facing direction. CURRENTLY NOT IN USE
 cur_dir = 0 # 0=up, 1=right, 2=down, 3=left
 
@@ -14,7 +14,7 @@ cur_dir = 0 # 0=up, 1=right, 2=down, 3=left
 # as player input
 class controller:
     def __init__(self, x, y):
-        pag.FAILSAFE = True
+        pag.FAILSAFE = False
         pag.PAUSE = 0
         self.corner_x = x
         self.corner_y = y
@@ -88,3 +88,11 @@ class controller:
     # Dummy function that does absolutely nothing
     def dummy(self):
         pag.press("")
+    
+    def win_test(self):
+        start_time = time.time()
+        while time.time() - start_time < key_hold_time:
+            pag.keyDown("up")
+        pag.keyUp("up")
+        cur_dir = 0
+        return "up"

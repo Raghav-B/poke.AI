@@ -8,7 +8,8 @@ import tensorflow as tf
 import cv2
 import numpy as np
 np.set_printoptions(linewidth=500) # For map debugging (view map array in terminal)
-from fastgrab._linux_x11 import screenshot
+#from fastgrab._linux_x11 import screenshot
+from mss import mss
 import pyautogui as pag
 import time
 import sys
@@ -31,46 +32,55 @@ def get_session():
 
 
 # Initializes model for detection, mapper, controller and finds game window
-def initialise(game_window, game_width, game_height, model_path):
+def initialise(game_window_size, model_path):
     keras.backend.tensorflow_backend.set_session(get_session())
     model = models.load_model(model_path, backbone_name='resnet101')
 
     # Setting up windows
     cv2.namedWindow("Map", cv2.WINDOW_NORMAL)
-    cv2.resizeWindow("Map", 720, 480)
+    cv2.resizeWindow("Map", game_window_size["width"], game_window_size["height"])
     cv2.moveWindow("Map", 1810, 600)
     cv2.namedWindow("Screen")
     cv2.moveWindow("Screen", 1050, 80)
     cv2.createTrackbar("ScoreThresh", "Screen", 70, 99, nothing)
 
     # Finding game window using included .png
-    window_x, window_y, temp1, temp2 = pag.locateOnScreen("find_game_window_windows.png")
+    game_window_size["left"], game_window_size["top"], temp1, temp2 = pag.locateOnScreen("find_game_window_windows.png")
 
     # Adding a 61 pixel offset to the y coordinate since the function above returns the x,y
     # coordinates of the menu bar - we want the coords of the gameplay below this bar
     # Change this offset to 20 if you are running on ubuntu and are using find_game_window_ubuntu.png
-    window_y += 61
+    game_window_size["top"] += 61
 
     # Setup controller
-    ctrl = controller(window_x, window_y)
+    ctrl = controller(game_window_size["left"], game_window_size["top"])
+
+    # Initialise screen capturer
+    sct = mss()
     
     # Get padding for converting 720:480 aspect ratio to 1:1
-    temp3, padding = get_screen(game_window, window_x, window_y)
+    temp3, padding = get_screen(sct, game_window_size)
     
     # Initialising mapper object with retroarch pid and memory addresses to watch for player's
     # x and y coordinates
-    mp = live_map(game_width, game_height, padding, 4681, 0x55c106d0bf5c, 0x55c106d0bf5e)
+    mp = live_map(game_window_size["width"], game_window_size["height"], padding, 4681, 0x55c106d0bf5c, 0x55c106d0bf5e)
 
-    return ctrl, window_x, window_y, model, mp
+    return game_window_size, sct, ctrl, model, mp
 
 
 # Gets single frame of gameplay as a numpy array on which object inference will be later ran
-def get_screen(game_window, window_x, window_y):
+def get_screen(sct, game_window_size):
     # Getting game screen as input
-    screenshot(window_x, window_y, game_window)
-    frame = game_window[:, :, :3] # Splicing off alpha channel
+    frame = np.array(sct.grab(game_window_size))
+    frame = frame[:, :, :3] # Splicing off alpha channel
+
+    
+    #screenshot(game_window_size)
+    #frame = game_window[:, :, :3] 
 
     # Making input a square by padding
+    game_width = game_window_size["width"]
+    game_height = game_window_size["height"]
     padding = 0
     if game_height < game_width:
         padding = int((game_width - game_height) / 2)
@@ -126,14 +136,15 @@ def run_detection(frame, model, labels_to_names, mp):
 # Main function
 if __name__ == "__main__":
     # Setup variables here
-    game_width = 720
-    game_height = 480
-    game_window = np.zeros((game_height, game_width, 4), "uint8")
+    game_window_size = {"top": 0, "left": 0, "width": 720, "height": 480}
+    #game_width = 720
+    #game_height = 480
+    #game_window = np.zeros((game_height, game_width, 4), "uint8")
     model_path = "../inference_graphs/400p/resnet101_csv_13.h5" # Model to be used for detection
     labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"} # Labels to draw
 
     # Initialising model, window, controller, and mapper
-    ctrl, window_x, window_y, model, mp = initialise(game_window, game_width, game_height, model_path)
+    game_window_size, sct, ctrl, model, mp = initialise(game_window_size, model_path)
 
     is_init_frame = True
     predictions_for_map = []
@@ -164,7 +175,7 @@ if __name__ == "__main__":
             # Initial startup frame to put detection and key presses in sync
             if (is_init_frame == True):
                 key_pressed = None
-                frame, temp = get_screen(game_window, window_x, window_y)
+                frame, temp = get_screen(sct, game_window_size)
                 status, predictions_for_map, temp_init = run_detection(frame, model, labels_to_names, mp)
                 four_frame_count += 1
                 map_grid = mp.draw_map(key_pressed, predictions_for_map)
@@ -172,8 +183,9 @@ if __name__ == "__main__":
 
             # All other frames
             else:
-                key_pressed = ctrl.random_movement()#action=actions[action_index]) # Use action parameter for pre-defined input
-                #ctrl.dummy()
+                #key_pressed = ctrl.random_movement()#action=actions[action_index]) # Use action parameter for pre-defined input
+                ctrl.win_test()
+                #pass
             
             print(key_pressed) # For debugging purposes TODO: Display pressed_key in "Screen" window
             four_frame_count += 1
@@ -181,7 +193,7 @@ if __name__ == "__main__":
         # All other frames just deal with normal inferencing for nicer visualization purposes, but this does
         # nothing to affect out mapping algorithm
         elif (four_frame_count < 4):
-            frame, temp = get_screen(game_window, window_x, window_y)
+            frame, temp = get_screen(sct, game_window_size)
             status, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
             four_frame_count += 1
 
@@ -191,7 +203,7 @@ if __name__ == "__main__":
         # Last frame is when the new detections are properly taken from the inferencing, and are used as inputs in the
         # mapping algorithm
         elif (four_frame_count == 4):
-            frame, temp = get_screen(game_window, window_x, window_y)
+            frame, temp = get_screen(sct, game_window_size)
             status, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
 
             # Draw map in window
