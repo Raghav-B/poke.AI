@@ -11,7 +11,6 @@ np.set_printoptions(linewidth=500) # For map debugging (view map array in termin
 from fastgrab._linux_x11 import screenshot
 import pyautogui as pag
 import time
-import threading
 import sys
 
 # Custom imports
@@ -45,11 +44,12 @@ def initialise(game_window, game_width, game_height, model_path):
     cv2.createTrackbar("ScoreThresh", "Screen", 70, 99, nothing)
 
     # Finding game window using included .png
-    window_x, window_y, temp1, temp2 = pag.locateOnScreen("find_game_window.png")
+    window_x, window_y, temp1, temp2 = pag.locateOnScreen("find_game_window_windows.png")
 
-    # Adding a 20 pixel offset to the y coordinate since the function above returns the x,y
+    # Adding a 61 pixel offset to the y coordinate since the function above returns the x,y
     # coordinates of the menu bar - we want the coords of the gameplay below this bar
-    window_y += 20
+    # Change this offset to 20 if you are running on ubuntu and are using find_game_window_ubuntu.png
+    window_y += 61
 
     # Setup controller
     ctrl = controller(window_x, window_y)

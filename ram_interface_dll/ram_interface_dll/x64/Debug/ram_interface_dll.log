@@ -1,0 +1,6 @@
+﻿  stdafx.cpp
+  dllmain.cpp
+  ram_interface_dll.cpp
+  Generating Code...
+     Creating library D:\App Development\pokemon_ai\ram_interface_dll\x64\Debug\ram_interface_dll.lib and object D:\App Development\pokemon_ai\ram_interface_dll\x64\Debug\ram_interface_dll.exp
+  ram_interface_dll.vcxproj -> D:\App Development\pokemon_ai\ram_interface_dll\x64\Debug\ram_interface_dll.dll

@@ -2,16 +2,18 @@
 python keras_retinanet/bin/debug.py --random-transform --loop --annotations csv ../training_csvs/keras_train.csv ../training_csvs/labels.csv
 
 # Training the model
-python keras_retinanet/bin/train.py --imagenet-weights --backbone=resnet101 --batch-size=2 --epochs=50 --steps=2000 --min_side=400 csv ../training_csvs/keras_train.csv ../training_csvs/labels.csv 
+python keras_retinanet/bin/train.py --imagenet-weights --backbone=resnet101 --batch-size=2 --epochs=50 --steps=2000 --image-min-side=400 --compute-val-loss csv ../training_csvs/keras_train.csv ../training_csvs/labels.csv --val-annotations=../training_csvs/keras_validation.csv
+
+python keras_retinanet/bin/train.py --imagenet-weights --backbone=mobilenet224_1 --batch-size=2 --epochs=50 --steps=2000 --image-min-side=400 --compute-val-loss csv ../training_csvs/keras_train.csv ../training_csvs/labels.csv --val-annotations=../training_csvs/keras_validation.csv
 
 # Validating the model
 python keras_retinanet/bin/evaluate.py --backbone=resnet101 --score-threshold=0.7 --image-min-side=400 csv ../training_csvs/keras_validation.csv ../training_csvs/labels.csv inference_graphs/400p/resnet101_csv_01.h5
 
 # Creating inference models from training models
-retinanet-convert-model snapshots/resnet101_csv_01.h5 inference_graphs/resnet101_csv_01.h5
-retinanet-convert-model snapshots/resnet101_csv_02.h5 inference_graphs/resnet101_csv_02.h5
-retinanet-convert-model snapshots/resnet101_csv_03.h5 inference_graphs/resnet101_csv_03.h5
-retinanet-convert-model snapshots/resnet101_csv_04.h5 inference_graphs/resnet101_csv_04.h5
+python keras_retinanet/bin/convert_model.py snapshots/resnet101_csv_01.h5 inference_graphs/resnet101_csv_01.h5
+python keras_retinanet/bin/convert_model.py snapshots/resnet101_csv_02.h5 inference_graphs/resnet101_csv_02.h5
+python keras_retinanet/bin/convert_model.py snapshots/resnet101_csv_03.h5 inference_graphs/resnet101_csv_03.h5
+python keras_retinanet/bin/convert_model.py snapshots/resnet101_csv_04.h5 inference_graphs/resnet101_csv_04.h5
 retinanet-convert-model snapshots/resnet101_csv_05.h5 inference_graphs/resnet101_csv_05.h5
 retinanet-convert-model snapshots/resnet101_csv_06.h5 inference_graphs/resnet101_csv_06.h5
 retinanet-convert-model snapshots/resnet101_csv_07.h5 inference_graphs/resnet101_csv_07.h5
@@ -22,3 +24,6 @@ retinanet-convert-model snapshots/resnet101_csv_11.h5 inference_graphs/resnet101
 retinanet-convert-model snapshots/resnet101_csv_12.h5 inference_graphs/resnet101_csv_12.h5
 retinanet-convert-model snapshots/resnet101_csv_13.h5 inference_graphs/resnet101_csv_13.h5
 retinanet-convert-model snapshots/resnet101_csv_14.h5 inference_graphs/resnet101_csv_14.h5
+
+python keras_retinanet/bin/convert_model.py snapshots/mobilenet128_0.25_csv_13.h5 inference_graphs/mobilenet128_0.25_csv_13.h5 --backbone=mobilenet128_0.25
+python keras_retinanet/bin/convert_model.py snapshots/mobilenet128_0.25_csv_40.h5 inference_graphs/mobilenet128_0.25_csv_40.h5 --backbone=mobilenet128_0.25

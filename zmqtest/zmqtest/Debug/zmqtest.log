@@ -1,0 +1,4 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (zmqtest.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  zmqclient.cpp
+  zmqtest.vcxproj -> D:\App Development\zmqtest\Debug\zmqclient.exe
+  0 File(s) copied

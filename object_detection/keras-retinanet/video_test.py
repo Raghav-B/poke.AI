@@ -20,12 +20,12 @@ def get_session():
     return tf.Session(config=config)
 keras.backend.tensorflow_backend.set_session(get_session())
 
-model_path = os.path.join('inference_graphs', 'resnet101_csv_09.h5')
+model_path = os.path.join('inference_graphs', '400p/resnet101_csv_13.h5')
 model = models.load_model(model_path, backbone_name='resnet101')
 
 labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"}
 
-video = cv2.VideoCapture("../videos/Pokemon Emerald Gameplay - Part 2.mp4")
+video = cv2.VideoCapture("../videos/gameplay_reduced.mp4")
 total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
 frame_skip_amt = 1
 
@@ -57,7 +57,7 @@ while(True):
 
     # preprocess image for network
     image = preprocess_image(frame)
-    image, scale = resize_image(image, min_side = 720)
+    image, scale = resize_image(image, min_side = 400)
 
     # process image
     boxes, scores, labels = model.predict_on_batch(np.expand_dims(image, axis=0))

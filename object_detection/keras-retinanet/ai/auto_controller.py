@@ -63,9 +63,9 @@ class controller:
     def interact(self):
         start_time = time.time()
         while time.time() - start_time < key_hold_time:
-            pag.keyDown("x")
-        pag.keyUp("x")
-        return "x"
+            pag.keyDown("z") # Change to "x" on ubuntu
+        pag.keyUp("z") # Change to "x" on ubuntu
+        return "z" # Change to "x" on ubuntu
 
     # A nice test function, by default moves the character randomly, but a string of
     # actions to perform can be sent from main.py
