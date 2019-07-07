@@ -183,8 +183,8 @@ if __name__ == "__main__":
 
             # All other frames
             else:
-                #key_pressed = ctrl.random_movement()#action=actions[action_index]) # Use action parameter for pre-defined input
-                ctrl.win_test()
+                key_pressed = ctrl.random_movement()#action=actions[action_index]) # Use action parameter for pre-defined input
+                #ctrl.win_test()
                 #pass
             
             print(key_pressed) # For debugging purposes TODO: Display pressed_key in "Screen" window
