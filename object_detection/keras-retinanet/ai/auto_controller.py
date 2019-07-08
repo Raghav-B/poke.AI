@@ -6,7 +6,7 @@ import random
 # lazy to type self. everywhere
 corner_x = 0 # x coordinate of top left corner of gameplay
 corner_y = 0 # y coordinate
-key_hold_time = 0.25 # If this is too short, character won't move, will instead turn
+key_hold_time = 1#0.25 # If this is too short, character won't move, will instead turn
 # Storing character facing direction. CURRENTLY NOT IN USE
 cur_dir = 0 # 0=up, 1=right, 2=down, 3=left
 

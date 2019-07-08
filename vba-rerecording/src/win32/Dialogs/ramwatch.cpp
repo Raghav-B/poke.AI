@@ -13,13 +13,18 @@
 #include <string>
 #include "../../common/Util.h"
 #include <iostream>	
-#include <sstream>	
+#include <sstream>
+#include <zmq.h>
 
 #define DBOUT(s) {\
     std::ostringstream os_;\
     os_ << s;\
     OutputDebugString(os_.str().c_str());\
 }
+
+// Socket variables
+void *context;
+void *publisher;
 
 /*
 #include <commctrl.h>
@@ -197,6 +202,15 @@ void Update_RAM_Watch()
 				watchChanged[i] = TRUE;
 			}
 		}
+
+        char msg[4];
+        msg[0] = (rswatches[0].CurValue & 0xFF); //x_pos
+        msg[1] = (rswatches[1].CurValue & 0xFF); //y_pos
+        msg[2] = (rswatches[2].CurValue & 0xFF); //direction+speed
+        msg[3] = 0;
+
+        zmq_send(publisher, msg, strlen(msg), 0);
+        //DBOUT("Send: " << (int)msg[0] << (int)msg[1] << (int)msg[2] << std::endl);
 	}
 
 	// refresh any visible parts of the listview box that changed
@@ -932,6 +946,12 @@ LRESULT CALLBACK RamWatchProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam
 
 			// due to some bug in windows, the arrow button width from the resource gets ignored, so we have to set it here
 			SetWindowPos(GetDlgItem(hDlg,ID_WATCHES_UPDOWN), 0,0,0, 30,60, SWP_NOMOVE);
+
+            // Add socket initialization code here
+            context = zmq_ctx_new();
+            publisher = zmq_socket(context, ZMQ_PUB);
+            int rc = zmq_bind(publisher, "tcp://*:5556");
+            //DBOUT("Socket initialized.");
 
 			Update_RAM_Watch();
 

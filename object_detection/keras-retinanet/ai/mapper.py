@@ -38,7 +38,7 @@ class live_map:
     cur_pos = None
 
 
-    def __init__(self, w, h, pad, pid, xpa, ypa):
+    def __init__(self, w, h, pad):#, pid, xpa, ypa):
         self.window_width = w
         self.window_height = h
         self.padding = pad
@@ -48,8 +48,8 @@ class live_map:
         #self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 7] = 24
         
         # Setting up ram searcher
-        self.ram_search = ram_searcher(pid, xpa, ypa)
-        self.prev_pos = [self.ram_search.get_x_pos(), self.ram_search.get_y_pos()] # Storing character's position
+        self.ram_search = ram_searcher()#pid, xpa, ypa)
+        self.prev_pos = self.ram_search.get_vals() # Storing character's position
 
 
     # Not the fastest function, is essentially a O(n^2) solution that fills in
@@ -245,7 +245,7 @@ class live_map:
     # This is called from main.py to draw our global map. Inputs are the bounding boxes raw data from
     # the frame inferencing and the most recent key pressed by the controller
     def draw_map(self, key_pressed, bounding_box_list):
-        self.cur_pos = [self.ram_search.get_x_pos(), self.ram_search.get_y_pos()] # Player position from ram searcher
+        self.cur_pos = self.ram_search.get_vals() # Player position from ram searcher
         has_map_changed = True # Flag for wall/collision detection
 
         # These conditionals handle the wall/collision detection by comparing the previous player position with the new

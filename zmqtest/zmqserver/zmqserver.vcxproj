@@ -91,16 +91,16 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>C:\Users\Raghav Bhardwaj\Downloads\libzmq-4.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\App Development\pokemon_ai\vba-rerecording\zmq_files\libzmq-4.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libzmq-mt-s-4_3_1.lib;libzmq-mt-4_3_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\Raghav Bhardwaj\CMakeBuilds\aca121d9-2ad6-d836-b584-7a6b482b6132\build\x86-Release\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\App Development\pokemon_ai\vba-rerecording\zmq_files\x86-Release\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "C:\Users\Raghav Bhardwaj\CMakeBuilds\aca121d9-2ad6-d836-b584-7a6b482b6132\build\x86-Release\bin\libzmq-mt-4_3_1.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y /d "D:\App Development\pokemon_ai\vba-rerecording\zmq_files\x86-Release\bin\libzmq-mt-4_3_1.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -112,16 +112,16 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>C:\Users\Raghav Bhardwaj\Downloads\libzmq-4.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\App Development\pokemon_ai\vba-rerecording\zmq_files\libzmq-4.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libzmq-mt-s-4_3_1.lib;libzmq-mt-4_3_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\Raghav Bhardwaj\CMakeBuilds\aca121d9-2ad6-d836-b584-7a6b482b6132\build\x86-Release\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\App Development\pokemon_ai\vba-rerecording\zmq_files\x86-Release\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "C:\Users\Raghav Bhardwaj\CMakeBuilds\aca121d9-2ad6-d836-b584-7a6b482b6132\build\x86-Release\bin\libzmq-mt-4_3_1.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y /d "D:\App Development\pokemon_ai\vba-rerecording\zmq_files\x86-Release\bin\libzmq-mt-4_3_1.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -135,7 +135,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>C:\Users\Raghav Bhardwaj\Downloads\libzmq-4.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\App Development\pokemon_ai\vba-rerecording\zmq_files\libzmq-4.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,10 +143,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libzmq-mt-s-4_3_1.lib;libzmq-mt-4_3_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\Raghav Bhardwaj\CMakeBuilds\aca121d9-2ad6-d836-b584-7a6b482b6132\build\x86-Release\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\App Development\pokemon_ai\vba-rerecording\zmq_files\x86-Release\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "C:\Users\Raghav Bhardwaj\CMakeBuilds\aca121d9-2ad6-d836-b584-7a6b482b6132\build\x86-Release\bin\libzmq-mt-4_3_1.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y /d "D:\App Development\pokemon_ai\vba-rerecording\zmq_files\x86-Release\bin\libzmq-mt-4_3_1.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -160,7 +160,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>C:\Users\Raghav Bhardwaj\Downloads\libzmq-4.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\App Development\pokemon_ai\vba-rerecording\zmq_files\libzmq-4.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -168,10 +168,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libzmq-mt-s-4_3_1.lib;libzmq-mt-4_3_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\Raghav Bhardwaj\CMakeBuilds\aca121d9-2ad6-d836-b584-7a6b482b6132\build\x86-Release\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\App Development\pokemon_ai\vba-rerecording\zmq_files\x86-Release\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "C:\Users\Raghav Bhardwaj\CMakeBuilds\aca121d9-2ad6-d836-b584-7a6b482b6132\build\x86-Release\bin\libzmq-mt-4_3_1.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y /d "D:\App Development\pokemon_ai\vba-rerecording\zmq_files\x86-Release\bin\libzmq-mt-4_3_1.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

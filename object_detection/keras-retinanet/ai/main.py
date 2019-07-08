@@ -63,7 +63,7 @@ def initialise(game_window_size, model_path):
     
     # Initialising mapper object with retroarch pid and memory addresses to watch for player's
     # x and y coordinates
-    mp = live_map(game_window_size["width"], game_window_size["height"], padding, 4681, 0x55c106d0bf5c, 0x55c106d0bf5e)
+    mp = live_map(game_window_size["width"], game_window_size["height"], padding)#, 4681, 0x55c106d0bf5c, 0x55c106d0bf5e)
 
     return game_window_size, sct, ctrl, model, mp
 

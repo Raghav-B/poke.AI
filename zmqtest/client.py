@@ -1,23 +1,35 @@
 #
-#   Hello World client in Python
-#   Connects REQ socket to tcp://localhost:5555
-#   Sends "Hello" to server, expects "World" back
+#   Weather update client
+#   Connects SUB socket to tcp://localhost:5556
+#   Collects weather updates and finds avg temp in zipcode
 #
 
 import zmq
 
-context = zmq.Context()
-
 #  Socket to talk to server
-print("Connecting to hello world server…")
-socket = context.socket(zmq.REQ)
-socket.connect("tcp://localhost:5555")
+context = zmq.Context()
+socket = context.socket(zmq.SUB)
 
-#  Do 10 requests, waiting each time for a response
+print("Collecting ram values from emulator...")
+socket.connect("tcp://localhost:5556")
+
+socket.setsockopt_string(zmq.SUBSCRIBE, "")
+
 while True:
-    print("Sending request")
-    socket.send(b"bitch")
+    string = socket.recv_string()
 
-    #  Get the reply.
-    message = socket.recv()
-    print("Received data: %s" % (message))
+    #string = str(string)
+    vals = [0,0,0]
+
+    for i in range(0, 3):
+        if (i + 1) > len(string):
+            break
+        vals[i] = ord(string[i])
+
+    #if (len(string) == 2):
+    #    string[2] = '\0'
+    #elif (len(string) == 1):
+    #    string[1] = '\0'
+    #    string[2] = '\0'
+    #print(f"x_pos: {ord(string[0])}, y_pos: {ord(string[1])}, dir: {ord(string[2])}")
+    print(vals)
