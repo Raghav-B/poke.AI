@@ -15,14 +15,14 @@ class ram_searcher:
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.SUB)
         print("Listening to emulator...")
-        self.socket.connect("tcp://localhost:5556")
         
-        self.socket.setsockopt_string(zmq.SUBSCRIBE, "")
         #self.game_pid = pid
         #self.x_pos_address = xpa
         #self.y_pos_address = ypa
     
     def get_vals(self):
+        self.socket.connect("tcp://localhost:5556")
+        self.socket.setsockopt_string(zmq.SUBSCRIBE, "")
         string = self.socket.recv_string()
         vals = [0,0,0]
 
@@ -31,6 +31,8 @@ class ram_searcher:
                 break
             vals[i] = ord(string[i])
         print(vals)
+
+        self.socket.disconnect("tcp://localhost:5556")
         return vals
 
     # Get x_pos
