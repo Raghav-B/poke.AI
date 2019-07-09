@@ -70,6 +70,8 @@ class live_map:
     def fill_area(self, area_bound, symbol):
         if (symbol == 0):
             self.cur_map_grid[area_bound[3]][area_bound[2]][0] = 0
+        elif (symbol == 200):
+            self.cur_map_grid[area_bound[3]][area_bound[2]][0] = 200
         elif (symbol == 128):
             if (self.cur_map_grid[area_bound[1]][area_bound[0]][0] != 0):
                 self.cur_map_grid[area_bound[1]][area_bound[0]][0] = 128
@@ -135,13 +137,8 @@ class live_map:
         
         return tiles
     
-    # This function handles detection of new objects and uses this new information to further built
-    # the global map
-    def add_to_object_list(self, key_pressed, bounding_box_list):
+    def append_handler(self, key_pressed):
         is_appending = False # Flag for when player character is moving into unmapped regions
-        # Reset map to blank slate as a failsafe against other functions that might access this map
-        self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1, 2), 255, dtype=np.uint8)
-        self.cur_map_grid[:,:,1:] = self.prev_map_grid[:,:,1:]
 
         # Conditionals below append to the map if the game view tries to pass an edge
         if (key_pressed == "up"):
@@ -204,9 +201,6 @@ class live_map:
         else:
             pass
 
-        # Get newly detected objects in terms of tiles
-        tiles = self.convert_points_to_grid(key_pressed, bounding_box_list)
-
         # Adjusting global coordinates if map is being appended in any of the 4 directions
         # In other words, if player character is stepping into unmapped territory. This is
         # important because all the objects' coordinates will change relative to a map that
@@ -227,6 +221,19 @@ class live_map:
                 else:
                     pass
 
+    # This function handles detection of new objects and uses this new information to further built
+    # the global map
+    def add_to_object_list(self, key_pressed, bounding_box_list):
+        # Reset map to blank slate as a failsafe against other functions that might access this map
+        self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1, 2), 255, dtype=np.uint8)
+        self.cur_map_grid[:,:,1:] = self.prev_map_grid[:,:,1:]
+
+        # Function to handle changes in global coordinates if map_grid needs to be appended to
+        self.append_handler(key_pressed)
+
+        # Get newly detected objects in terms of tiles
+        tiles = self.convert_points_to_grid(key_pressed, bounding_box_list)
+
         # O(n^2) solution for keeping track of new and old objects. Perhaps a faster method exists?
         # This basically gets the latest detected objects and checks whether they are in fact the same
         # as previously detected objects or are completely new objects
@@ -237,6 +244,7 @@ class live_map:
             for label, box in self.object_list: # Iterating through previously detected objects
                 # This conditional checks whether a new object is the same as an old object by checking if the top_left or
                 # bot_right points reside inside an old object's area
+ 
                 if (new_box[0] >= box[0] and new_box[0] <= box[2] and new_box[1] >= box[1] and new_box[1] <= box[3]) or \
                     (new_box[2] >= box[0] and new_box[2] <= box[2] and new_box[3] >= box[1] and new_box[3] <= box[3]):
                     # If this is true then the two objects are indeed the same, now we need to decide whether we keep
@@ -265,26 +273,32 @@ class live_map:
     def draw_map(self, key_pressed, bounding_box_list):
         self.cur_pos = self.ram_search.get_vals() # Player position from ram searcher
         has_map_changed = True # Flag for wall/collision detection
+        dir_to_move = None
 
+        self.boundary_points = []
         # These conditionals handle the wall/collision detection by comparing the previous player position with the new
         # player position based on the most recent key press
         if (key_pressed == "up"):
             if (self.cur_pos[1] == self.prev_pos[1]):
                 has_map_changed = False
+                dir_to_move = 0#np.random.choice([1,2,3])
                 if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 4][(self.map_offset_x - self.map_min_offset_x) + 7][0] == 255):
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 4))
         elif (key_pressed == "right"):
             if (self.cur_pos[0] == self.prev_pos[0]):
                 has_map_changed = False
+                dir_to_move = 1#np.random.choice([0,2,3])
                 if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 8][0] == 255):
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 8, (self.map_offset_y - self.map_min_offset_y) + 5))
         elif (key_pressed == "down"):
             if (self.cur_pos[1] == self.prev_pos[1]):
+                dir_to_move = 2#np.random.choice([0,1,3])
                 has_map_changed = False
                 if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 6][(self.map_offset_x - self.map_min_offset_x) + 7][0] == 255):
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 6))
         elif (key_pressed == "left"):
             if (self.cur_pos[0] == self.prev_pos[0]):
+                dir_to_move = 3#np.random.choice([0,1,2])
                 has_map_changed = False
                 if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 6][0] == 255):
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 6, (self.map_offset_y - self.map_min_offset_y) + 5))
@@ -307,9 +321,14 @@ class live_map:
 
                 self.fill_area(coords, 200)
 
+            # Used for anything that needs to compare previous map state with new map state
+            self.prev_map_grid = self.cur_map_grid
+            self.prev_pos = self.cur_pos
+
+            self.frametime += 1
             #print(self.object_list)
-            # If collision is detected, move in random direction
-            return self.cur_map_grid, np.random.randint(0, 3)
+            # If collision is detected, move in random direction except our last direction
+            return self.cur_map_grid, dir_to_move
         
         # Use bounding box list to add to our list of global objects
         self.add_to_object_list(key_pressed, bounding_box_list)
@@ -337,7 +356,8 @@ class live_map:
         self.cur_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 7][0] = 24
 
         # Put path finder function here
-        dir_to_move = self.pf.get_next_dir(self.cur_map_grid, self.frametime)
+        dir_to_move = self.pf.get_next_dir(self.cur_map_grid, self.frametime, \
+            (self.map_offset_x - self.map_min_offset_x), (self.map_offset_y - self.map_min_offset_y))
 
         # Used for anything that needs to compare previous map state with new map state
         self.prev_map_grid = self.cur_map_grid

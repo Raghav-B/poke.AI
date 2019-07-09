@@ -155,8 +155,9 @@ if __name__ == "__main__":
     four_frame_count = 0
 
     # Use to set pre-defined actions to send to controller (default is random)
-    actions = [0,0,0,0,0,3,3,3,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,0,0,0,0,0,0,0,0,\
-        3,3,3,3,3,3,2,3,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1]
+    #actions = [0,0,0,0,0,3,3,3,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,0,0,0,0,0,0,0,0,\
+    #    3,3,3,3,3,3,2,3,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1]
+    actions = [2,1]
     action_index = -1 # Initialise this from -1
     
     # It takes about 5 frames for our player characte to perform a movement in any direction. Thus,
@@ -165,13 +166,13 @@ if __name__ == "__main__":
     while True:  
         # 0th frame handles key presses
         if (four_frame_count == 0):
-            time.sleep(5) # Adjust this to reduce frequency of actions sent by controller
+            time.sleep(1) # Adjust this to reduce frequency of actions sent by controller
             
             # Used to iterate through pre-defined actions and break once actions have ended
-            #action_index += 1
-            #if (action_index >= len(actions)):
+            action_index += 1
+            if (action_index >= len(actions)):
                 #break
-                #action_index = 0
+                action_index = 0
 
             # Initial startup frame to put detection and key presses in sync
             if (is_init_frame == True):
@@ -184,9 +185,9 @@ if __name__ == "__main__":
 
             # All other frames
             else:
-                #key_pressed = ctrl.random_movement()#action=actions[action_index]) # Use action parameter for pre-defined input
+                #key_pressed = ctrl.random_movement(action=actions[action_index]) # Use action parameter for pre-defined input
                 #ctrl.win_test()
-                key_pressed = ctrl.random_movement(action=key_to_press)
+                key_pressed = ctrl.random_movement()#action=key_to_press)
                 #pass
             
             print(key_to_press)
