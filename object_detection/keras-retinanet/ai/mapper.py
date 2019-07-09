@@ -2,6 +2,7 @@ import numpy as np
 import math
 
 from ram_searcher import ram_searcher
+from path_finder import path_finder
 
 # Think of this object as something akin to SLAM. This will basically simultaenously
 # localize the player character and map out its surroundings. This live map will be
@@ -13,9 +14,13 @@ class live_map:
     padding = 0 # Black bars used to make input square
     tile_size = 0 # real-world size of square tiles
 
+    # Stores time that has passed since beginning of movement
+    frametime = 1 # Initial value is 1
+
     # Internals used by mapper
     prev_map_grid = None # The detected map represented as a 2D array
     cur_map_grid = None
+    #score_grid = None # Basically a duplicate of map_grid, but stores score of tiles instead
     # Num of tiles in x and y axies (+ 1) - the num of tiles is 1-indexed here btw
     grid_x = 16
     grid_y = 12
@@ -37,38 +42,46 @@ class live_map:
     prev_pos = None
     cur_pos = None
 
+    # Path finder object
+    pf = None
+
 
     def __init__(self, w, h, pad):#, pid, xpa, ypa):
         self.window_width = w
         self.window_height = h
         self.padding = pad
         self.tile_size = int(w / (self.grid_x - 1))
-        self.prev_map_grid = np.full((self.grid_y - 1, self.grid_x - 1), 255, dtype=np.uint8)
+        self.prev_map_grid = np.full((self.grid_y - 1, self.grid_x - 1, 2), 255, dtype=np.uint8)
+        self.prev_map_grid[:,:,1:] = self.frametime # Initialzing time of detection of every tile to be 1
+        #self.score_grid = np.full_like(self.prev_map_grid, 1)
         # Drawing character's position on map for localization purposes
         #self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 7] = 24
         
         # Setting up ram searcher
-        self.ram_search = ram_searcher()#pid, xpa, ypa)
+        self.ram_search = ram_searcher()
         self.prev_pos = self.ram_search.get_vals() # Storing character's position
+
+        # Setting up path finder
+        self.pf = path_finder()
 
 
     # Not the fastest function, is essentially a O(n^2) solution that fills in
     # the tiles covered by detected objects
     def fill_area(self, area_bound, symbol):
         if (symbol == 0):
-            self.cur_map_grid[area_bound[3]][area_bound[2]] = 0
+            self.cur_map_grid[area_bound[3]][area_bound[2]][0] = 0
         elif (symbol == 128):
-            if (self.cur_map_grid[area_bound[1]][area_bound[0]] != 0):
-                self.cur_map_grid[area_bound[1]][area_bound[0]] = 128
-            if (self.cur_map_grid[area_bound[1]][area_bound[2]] != 0):
-                self.cur_map_grid[area_bound[1]][area_bound[2]] = 128
+            if (self.cur_map_grid[area_bound[1]][area_bound[0]][0] != 0):
+                self.cur_map_grid[area_bound[1]][area_bound[0]][0] = 128
+            if (self.cur_map_grid[area_bound[1]][area_bound[2]][0] != 0):
+                self.cur_map_grid[area_bound[1]][area_bound[2]][0] = 128
         else:
             x = area_bound[0] 
             while (x <= area_bound[2]):
                 y = area_bound[1]
                 while (y <= area_bound[3]):
-                    if (self.cur_map_grid[y][x] != 0):
-                        self.cur_map_grid[y][x] = symbol
+                    if (self.cur_map_grid[y][x][0] != 0):
+                        self.cur_map_grid[y][x][0] = symbol
                     y += 1
                 x += 1
 
@@ -127,7 +140,8 @@ class live_map:
     def add_to_object_list(self, key_pressed, bounding_box_list):
         is_appending = False # Flag for when player character is moving into unmapped regions
         # Reset map to blank slate as a failsafe against other functions that might access this map
-        self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1), 255, dtype=np.uint8)
+        self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1, 2), 255, dtype=np.uint8)
+        self.cur_map_grid[:,:,1:] = self.prev_map_grid[:,:,1:]
 
         # Conditionals below append to the map if the game view tries to pass an edge
         if (key_pressed == "up"):
@@ -135,7 +149,8 @@ class live_map:
             if (self.map_offset_y - 1 < self.map_min_offset_y):
                 self.grid_y += 1
                 self.map_min_offset_y -= 1
-                append_arr = np.full((1, self.grid_x - 1), 255, dtype=np.uint8)
+                append_arr = np.full((1, self.grid_x - 1, 2), 255, dtype=np.uint8)
+                append_arr[:,:,1:] = self.frametime
                 self.cur_map_grid = np.append(append_arr, self.cur_map_grid, axis=0)
                 self.map_offset_y -= 1
 
@@ -148,7 +163,8 @@ class live_map:
             if (self.map_offset_x + 1 + 14 > self.map_max_offset_x):
                 self.grid_x += 1
                 self.map_max_offset_x += 1
-                append_arr = np.full((self.grid_y - 1, 1), 255, dtype=np.uint8)
+                append_arr = np.full((self.grid_y - 1, 1, 2), 255, dtype=np.uint8)
+                append_arr[:,:,1:] = self.frametime
                 self.cur_map_grid = np.append(self.cur_map_grid, append_arr, axis=1)
                 self.map_offset_x += 1
 
@@ -161,7 +177,8 @@ class live_map:
             if (self.map_offset_y + 1 + 10 > self.map_max_offset_y):
                 self.grid_y += 1
                 self.map_max_offset_y += 1
-                append_arr = np.full((1, self.grid_x - 1), 255, dtype=np.uint8)
+                append_arr = np.full((1, self.grid_x - 1, 2), 255, dtype=np.uint8)
+                append_arr[:,:,1:] = self.frametime
                 self.cur_map_grid = np.append(self.cur_map_grid, append_arr, axis=0)
                 self.map_offset_y += 1
 
@@ -174,7 +191,8 @@ class live_map:
             if (self.map_offset_x - 1 < self.map_min_offset_x):
                 self.grid_x += 1
                 self.map_min_offset_x -= 1
-                append_arr = np.full((self.grid_y - 1, 1), 255, dtype=np.uint8)
+                append_arr = np.full((self.grid_y - 1, 1, 2), 255, dtype=np.uint8)
+                append_arr[:,:,1:] = self.frametime
                 self.cur_map_grid = np.append(append_arr, self.cur_map_grid, axis=1)
                 self.map_offset_x -= 1
 
@@ -253,22 +271,22 @@ class live_map:
         if (key_pressed == "up"):
             if (self.cur_pos[1] == self.prev_pos[1]):
                 has_map_changed = False
-                if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 4][(self.map_offset_x - self.map_min_offset_x) + 7] == 255):
+                if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 4][(self.map_offset_x - self.map_min_offset_x) + 7][0] == 255):
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 4))
         elif (key_pressed == "right"):
             if (self.cur_pos[0] == self.prev_pos[0]):
                 has_map_changed = False
-                if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 8] == 255):
+                if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 8][0] == 255):
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 8, (self.map_offset_y - self.map_min_offset_y) + 5))
         elif (key_pressed == "down"):
             if (self.cur_pos[1] == self.prev_pos[1]):
                 has_map_changed = False
-                if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 6][(self.map_offset_x - self.map_min_offset_x) + 7] == 255):
+                if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 6][(self.map_offset_x - self.map_min_offset_x) + 7][0] == 255):
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 6))
         elif (key_pressed == "left"):
             if (self.cur_pos[0] == self.prev_pos[0]):
                 has_map_changed = False
-                if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 6] == 255):
+                if (self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 6][0] == 255):
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 6, (self.map_offset_y - self.map_min_offset_y) + 5))
         else:
             pass
@@ -290,7 +308,8 @@ class live_map:
                 self.fill_area(coords, 200)
 
             #print(self.object_list)
-            return self.cur_map_grid
+            # If collision is detected, move in random direction
+            return self.cur_map_grid, np.random.randint(0, 3)
         
         # Use bounding box list to add to our list of global objects
         self.add_to_object_list(key_pressed, bounding_box_list)
@@ -315,10 +334,16 @@ class live_map:
                 symbol = 200
             self.fill_area(box, symbol)
         # Draw player character position for localization purpose
-        self.cur_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 7] = 24
+        self.cur_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 7][0] = 24
+
+        # Put path finder function here
+        dir_to_move = self.pf.get_next_dir(self.cur_map_grid, self.frametime)
 
         # Used for anything that needs to compare previous map state with new map state
         self.prev_map_grid = self.cur_map_grid
         self.prev_pos = self.cur_pos
 
-        return self.cur_map_grid
+        # Time is only updated after score is calculated
+        self.frametime += 1
+
+        return self.cur_map_grid, dir_to_move

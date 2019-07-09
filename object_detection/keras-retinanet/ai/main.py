@@ -38,7 +38,7 @@ def initialise(game_window_size, model_path):
 
     # Setting up windows
     cv2.namedWindow("Map", cv2.WINDOW_NORMAL)
-    cv2.resizeWindow("Map", game_window_size["width"], game_window_size["height"])
+    cv2.resizeWindow("Map", game_window_size["width"], game_window_size["height"] + 100)
     cv2.moveWindow("Map", 1810, 600)
     cv2.namedWindow("Screen")
     cv2.moveWindow("Screen", 1050, 80)
@@ -150,6 +150,7 @@ if __name__ == "__main__":
     predictions_for_map = []
     temp_bool = None
     key_pressed = None
+    key_to_press = None
     map_grid = np.full((2, 2), 255, dtype=np.uint8)
     four_frame_count = 0
 
@@ -164,7 +165,7 @@ if __name__ == "__main__":
     while True:  
         # 0th frame handles key presses
         if (four_frame_count == 0):
-            # time.sleep(0.5) # Adjust this to reduce frequency of actions sent by controller
+            time.sleep(5) # Adjust this to reduce frequency of actions sent by controller
             
             # Used to iterate through pre-defined actions and break once actions have ended
             #action_index += 1
@@ -178,15 +179,17 @@ if __name__ == "__main__":
                 frame, temp = get_screen(sct, game_window_size)
                 status, predictions_for_map, temp_init = run_detection(frame, model, labels_to_names, mp)
                 four_frame_count += 1
-                map_grid = mp.draw_map(key_pressed, predictions_for_map)
-                cv2.imshow("Map", map_grid)
+                map_grid, key_to_press = mp.draw_map(key_pressed, predictions_for_map)
+                cv2.imshow("Map", map_grid[:,:,:1])
 
             # All other frames
             else:
-                key_pressed = ctrl.random_movement()#action=actions[action_index]) # Use action parameter for pre-defined input
+                #key_pressed = ctrl.random_movement()#action=actions[action_index]) # Use action parameter for pre-defined input
                 #ctrl.win_test()
+                key_pressed = ctrl.random_movement(action=key_to_press)
                 #pass
             
+            print(key_to_press)
             print(key_pressed) # For debugging purposes TODO: Display pressed_key in "Screen" window
             four_frame_count += 1
 
@@ -209,10 +212,13 @@ if __name__ == "__main__":
             # Draw map in window
             # Take note that there is a one frame delay because of something in OpenCV itself. If you print
             # the map_grid, you'll see that the mapping is actually performed realtime
-            map_grid = mp.draw_map(key_pressed, predictions_for_map)
-            #print(map_grid)
+            map_grid, key_to_press = mp.draw_map(key_pressed, predictions_for_map)
+            print(key_to_press)
+            #debug_arr = np.zeros((map_grid.shape[0], map_grid.shape[1], 1))
+            #debug_arr = map_grid[:,:,:1]
+            #print(debug_arr) # Print scores of every tile for debugging
             print("")
-            cv2.imshow("Map", map_grid)
+            cv2.imshow("Map", map_grid[:,:,:1])
             
             # Reset 5 frame cycle
             four_frame_count = 0
