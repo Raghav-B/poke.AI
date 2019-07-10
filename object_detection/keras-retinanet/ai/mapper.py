@@ -52,6 +52,7 @@ class live_map:
         self.padding = pad
         self.tile_size = int(w / (self.grid_x - 1))
         self.prev_map_grid = np.full((self.grid_y - 1, self.grid_x - 1, 4), [0, 0, 0, 0], dtype=np.uint8)
+        self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1, 4), [0, 0, 0, 0], dtype=np.uint8)
         #self.prev_map_grid[:,:,1:] = 0 # Setting as unvisited
         #self.score_grid = np.full_like(self.prev_map_grid, 1)
         # Drawing character's position on map for localization purposes
@@ -228,8 +229,9 @@ class live_map:
     # the global map
     def add_to_object_list(self, key_pressed, bounding_box_list):
         # Reset map to blank slate as a failsafe against other functions that might access this map
-        self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1, 4), [0, 0, 0, 0], dtype=np.uint8)
+        #self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1, 4), [0, 0, 0, 0], dtype=np.uint8)
         #self.cur_map_grid[:,:,1:] = self.prev_map_grid[:,:,1:]
+        self.cur_map_grid[:,:,:3] = [0, 0, 0]
 
         # Function to handle changes in global coordinates if map_grid needs to be appended to
         self.append_handler(key_pressed)
@@ -334,7 +336,7 @@ class live_map:
             # Put path finder function here
             dir_penalties = [0, 0, 0, 0]
             col_penalty = (key_pressed, 5)
-            dir_to_move = self.pf.get_next_dir(self.cur_map_grid, self.frametime, \
+            self.cur_map_grid = self.pf.get_next_dir(self.cur_map_grid, self.frametime, \
                 (self.map_offset_x - self.map_min_offset_x), (self.map_offset_y - self.map_min_offset_y), \
                 col_penalty=col_penalty)
             print("Penalty given")
@@ -342,7 +344,7 @@ class live_map:
             self.frametime += 1
             #print(self.object_list)
             # If collision is detected, move in random direction except our last direction
-            return self.cur_map_grid, dir_to_move
+            return self.cur_map_grid, 0#dir_to_move
         
         # Use bounding box list to add to our list of global objects
         self.add_to_object_list(key_pressed, bounding_box_list)
@@ -370,7 +372,7 @@ class live_map:
         self.cur_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 7][:3] = [33, 166, 28]
 
         # Put path finder function here
-        dir_to_move = self.pf.get_next_dir(self.cur_map_grid, self.frametime, \
+        self.cur_map_grid = self.pf.get_next_dir(self.cur_map_grid, self.frametime, \
             (self.map_offset_x - self.map_min_offset_x), (self.map_offset_y - self.map_min_offset_y))
 
         # Used for anything that needs to compare previous map state with new map state
@@ -380,4 +382,4 @@ class live_map:
         # Time is only updated after score is calculated
         self.frametime += 1
 
-        return self.cur_map_grid, dir_to_move
+        return self.cur_map_grid, 0#dir_to_move

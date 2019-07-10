@@ -3,7 +3,7 @@
 An experimental project to attempt to create an AI that can play the 3rd generation Pokemon games (specifically Pokemon Emerald - it's very close to my heart).
 
 <p align = "center">
-    <img src="readme_src/mapping_prototype.png" alt="Prototype of mapping with detection">
+    <img src="readme_src/mapping_trial.png" alt="Prototype of mapping with detection">
 </p>
 
 ## Introduction

@@ -168,7 +168,7 @@ if __name__ == "__main__":
     while True:  
         # 0th frame handles key presses
         if (four_frame_count == 0):
-            time.sleep(3) # Adjust this to reduce frequency of actions sent by controller
+            #time.sleep(1) # Adjust this to reduce frequency of actions sent by controller
             
             # Used to iterate through pre-defined actions and break once actions have ended
             action_index += 1

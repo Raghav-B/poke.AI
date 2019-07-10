@@ -94,9 +94,28 @@ class path_finder:
         self.local_bot_x = top_x + 14
         self.local_bot_y = top_y + 10
 
-        print(self.local_top_x, self.local_top_y)
-        print(self.local_bot_x, self.local_bot_y)
+        #print(self.local_top_x, self.local_top_y)
+        #print(self.local_bot_x, self.local_bot_y)
+        
+        for i in range(0, len(map_grid)):
+            for j in range(0, len(map_grid[i])):
+                if (j > self.local_top_x and j < self.local_bot_x) and \
+                    (i > self.local_top_y and i < self.local_bot_y):
+                    if (np.array_equal(map_grid[i][j][:3], [0, 0, 0])):
+                        map_grid[i][j] = [255, 255, 255, 1]
+                elif (map_grid[i][j][3] == 1):
+                    if (np.array_equal(map_grid[i][j][:3], [0, 0, 0])):
+                        map_grid[i][j][:3] = [255, 255, 255]
 
+
+
+        # for i in range(self.local_top_y + 1, self.local_bot_y):
+        #for j in range(self.local_top_x + 1, self.local_bot_x):
+        #   if (np.array_equal(map_grid[i][j][:3], [0, 0, 0])):
+        #       map_grid[i][j] = [255, 255, 255, 1]
+
+        return map_grid
+        """
         top_left_score = 0
         for row in range(0, len(map_grid[:center_y + 1])):
             for col in range(0, len(map_grid[row][:center_x + 1])):
@@ -163,3 +182,6 @@ class path_finder:
             return random.randint(0, 3)
         else:
             return scores.index(max_score) # Returns the best movement to make based on score
+        """
+
+        return 0

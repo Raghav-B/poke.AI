@@ -131,7 +131,7 @@ class controller:
     # actions to perform can be sent from main.py
     def random_movement(self, action=-1):
         if action == -1:
-            action = random.randint(1, 3) # Currently removed 4 because it ends up getting stuck in dialogue
+            action = random.randint(0, 3) # Currently removed 4 because it ends up getting stuck in dialogue
         key_pressed = None
         if action == 0:
             key_pressed = self.move_up()
