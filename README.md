@@ -1,4 +1,4 @@
-# AI Plays Pokemon
+# poke.AI
 
 An experimental project to attempt to create an AI that can play the 3rd generation Pokemon games (specifically Pokemon Emerald - it's very close to my heart).
 
