@@ -157,9 +157,7 @@ if __name__ == "__main__":
     keys = ["up", "right", "down", "left"]
 
     # Use to set pre-defined actions to send to controller (default is random)
-    #actions = [0,0,0,0,0,3,3,3,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,0,0,0,0,0,0,0,0,\
-    #    3,3,3,3,3,3,2,3,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1]
-    actions = [2,1]
+    actions = []
     action_index = -1 # Initialise this from -1
     
     # It takes about 5 frames for our player characte to perform a movement in any direction. Thus,
@@ -168,35 +166,30 @@ if __name__ == "__main__":
     while True:  
         # 0th frame handles key presses
         if (four_frame_count == 0):
-            #time.sleep(1) # Adjust this to reduce frequency of actions sent by controller
-            
-            # Used to iterate through pre-defined actions and break once actions have ended
-            action_index += 1
-            if (action_index >= len(actions)):
-                #break
-                action_index = 0
+            time.sleep(3) # Adjust this to reduce frequency of actions sent by controller
 
             # Initial startup frame to put detection and key presses in sync
             if (is_init_frame == True):
                 key_pressed = None
-                #frame, temp = get_screen(sct, game_window_size)
-                #status, predictions_for_map, temp_init = run_detection(frame, model, labels_to_names, mp)
-                four_frame_count += 1
-                #map_grid, key_to_press = mp.draw_map(key_pressed, predictions_for_map)
-                #cv2.imshow("Map", map_grid[:,:,:1])
-                #pass
+                frame, temp = get_screen(sct, game_window_size)
+                status, predictions_for_map, temp_init = run_detection(frame, model, labels_to_names, mp)
+                map_grid, has_collided = mp.draw_map(key_pressed, predictions_for_map)
+                # No collision handler here since it is literally impossible to collide on the first frame
 
-            # All other frames
+                four_frame_count += 1
+                cv2.imshow("Map", map_grid[:,:,:1])
+                actions = mp.get_movelist()
+
+            # All other 0 frames that are not the initial frame
             else:
-                print("To press: " + keys[key_to_press])   #ctrl.win_test()
-                #key_pressed = ctrl.random_movement(action=actions[action_index]) # Use action parameter for pre-defined input
+                # Used to iterate through pre-defined actions and break once actions have ended
+                action_index += 1
+                if (action_index >= len(actions)):
+                    actions = mp.get_movelist()
+                    action_index = 0
                 
-                key_pressed = ctrl.random_movement()#action=key_to_press)
-                #pass
-            
-            
-            #print("Pressed last: " + keys[key_pressed]) # For debugging purposes TODO: Display pressed_key in "Screen" window
-            
+                print("Key pressed: " + keys[actions[action_index]])            
+                key_pressed = ctrl.perform_movement(action=actions[action_index])
                 four_frame_count += 1
 
         # All other frames just deal with normal inferencing for nicer visualization purposes, but this does
@@ -215,14 +208,25 @@ if __name__ == "__main__":
             frame, temp = get_screen(sct, game_window_size)
             status, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
 
+            print("fourth frame")
+
             # Draw map in window
             # Take note that there is a one frame delay because of something in OpenCV itself. If you print
             # the map_grid, you'll see that the mapping is actually performed realtime
-            map_grid, key_to_press = mp.draw_map(key_pressed, predictions_for_map)
-            print("Pressed last: " + keys[key_to_press])
-            print("")
+            map_grid, has_collided = mp.draw_map(key_pressed, predictions_for_map)
             cv2.imshow("Map", map_grid[:,:,:3])
-            
+            print("")
+
+            # Change actions to newly calculated path if a collision occurs
+            if (has_collided == True):
+                actions = mp.pf.frontier_path_collision_handler(map_grid, \
+                    (mp.map_offset_x - mp.map_min_offset_x), \
+                    (mp.map_offset_y - mp.map_min_offset_y))
+                if (actions == False): # If we have experienced 5 consecutive collisions
+                    # Find a new frontier to go towards
+                    actions = mp.get_movelist()
+                action_index = -1 # Either way we reset the index
+
             # Reset 5 frame cycle
             four_frame_count = 0
 

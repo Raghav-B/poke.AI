@@ -14,9 +14,6 @@ class live_map:
     padding = 0 # Black bars used to make input square
     tile_size = 0 # real-world size of square tiles
 
-    # Stores time that has passed since beginning of movement
-    frametime = 1 # Initial value is 1
-
     # Internals used by mapper
     prev_map_grid = None # The detected map represented as a 2D array
     cur_map_grid = None
@@ -44,6 +41,7 @@ class live_map:
 
     # Path finder object
     pf = None
+    move_list = []
 
 
     def __init__(self, w, h, pad):#, pid, xpa, ypa):
@@ -278,7 +276,6 @@ class live_map:
     def draw_map(self, key_pressed, bounding_box_list):
         self.cur_pos = self.ram_search.get_vals() # Player position from ram searcher
         has_map_changed = True # Flag for wall/collision detection
-        dir_to_move = None
 
         self.boundary_points = []
         # These conditionals handle the wall/collision detection by comparing the previous player position with the new
@@ -286,27 +283,23 @@ class live_map:
         if (key_pressed == 0):
             if (self.cur_pos[1] == self.prev_pos[1]):
                 has_map_changed = False
-                dir_to_move = np.random.choice([1,2,3])
                 if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 4][(self.map_offset_x - self.map_min_offset_x) + 7][:3], [255, 255, 255])):
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 4))
         
         elif (key_pressed == 1):
             if (self.cur_pos[0] == self.prev_pos[0]):
                 has_map_changed = False
-                dir_to_move = np.random.choice([0,2,3])
                 if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 8][:3], [255, 255, 255])):
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 8, (self.map_offset_y - self.map_min_offset_y) + 5))
         
         elif (key_pressed == 2):
             if (self.cur_pos[1] == self.prev_pos[1]):
-                dir_to_move = np.random.choice([0,1,3])
                 has_map_changed = False
                 if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 6][(self.map_offset_x - self.map_min_offset_x) + 7][:3], [255, 255, 255])):
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 6))
         
         elif (key_pressed == 3):
             if (self.cur_pos[0] == self.prev_pos[0]):
-                dir_to_move = np.random.choice([0,1,2])
                 has_map_changed = False
                 if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 6][:3], [255, 255, 255])):
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 6, (self.map_offset_y - self.map_min_offset_y) + 5))
@@ -320,35 +313,27 @@ class live_map:
             
             for point in self.boundary_points:
                 coords = [point[0], point[1], point[0], point[1]]
-                #coords[0] = point[0] #+ (self.map_offset_x - self.map_min_offset_x)
-                #coords[1] = point[1] #+ (self.map_offset_y - self.map_min_offset_y)
-                #coords[2] = point[0] #+ (self.map_offset_x - self.map_min_offset_x)
-                #coords[3] = point[1] #+ (self.map_offset_y - self.map_min_offset_y)
                 if not ((6, coords) in self.object_list):
                     self.object_list.append((6, coords))
-
                 self.fill_area(coords, [105, 105, 105])
 
             # Used for anything that needs to compare previous map state with new map state
             self.prev_map_grid = self.cur_map_grid
             self.prev_pos = self.cur_pos
             
-            # Put path finder function here
-            dir_penalties = [0, 0, 0, 0]
-            col_penalty = (key_pressed, 5)
-            self.cur_map_grid = self.pf.get_next_dir(self.cur_map_grid, self.frametime, \
-                (self.map_offset_x - self.map_min_offset_x), (self.map_offset_y - self.map_min_offset_y), \
-                col_penalty=col_penalty)
-            print("Penalty given")
+            # Draw frontiers on map
+            self.cur_map_grid = self.pf.draw_frontiers(self.cur_map_grid, \
+                (self.map_offset_x - self.map_min_offset_x), \
+                (self.map_offset_y - self.map_min_offset_y))
 
-            self.frametime += 1
-            #print(self.object_list)
-            # If collision is detected, move in random direction except our last direction
-            return self.cur_map_grid, 0#dir_to_move
+            # If collision is detected, move in adjusted manner
+            return self.cur_map_grid, True
         
+        # At this point, map hasn't changed, so we will set consecutive collisions to be 0
+        self.pf.consecutive_collisions = 0
+
         # Use bounding box list to add to our list of global objects
         self.add_to_object_list(key_pressed, bounding_box_list)
-        #print(self.object_list)
 
         # This block handles drawing of tiles in the map with different colours on the grayscale spectrum
         symbol = None
@@ -369,17 +354,24 @@ class live_map:
                 symbol = [105, 105, 105] # grey
             self.fill_area(box, symbol)
         # Draw player character position for localization purpose # green
-        self.cur_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 7][:3] = [33, 166, 28]
+        self.cur_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5]\
+            [(self.map_offset_x - self.map_min_offset_x) + 7][:3] = [33, 166, 28]
 
-        # Put path finder function here
-        self.cur_map_grid = self.pf.get_next_dir(self.cur_map_grid, self.frametime, \
-            (self.map_offset_x - self.map_min_offset_x), (self.map_offset_y - self.map_min_offset_y))
+        # Draw frontiers on map
+        self.cur_map_grid = self.pf.draw_frontiers(self.cur_map_grid, \
+            (self.map_offset_x - self.map_min_offset_x), \
+            (self.map_offset_y - self.map_min_offset_y))
 
         # Used for anything that needs to compare previous map state with new map state
         self.prev_map_grid = self.cur_map_grid
         self.prev_pos = self.cur_pos
 
-        # Time is only updated after score is calculated
-        self.frametime += 1
+        return self.cur_map_grid, False
 
-        return self.cur_map_grid, 0#dir_to_move
+    def get_movelist(self):
+        # Get best frontier to move towards
+        self.move_list = self.pf.get_next_frontier((self.map_offset_x - self.map_min_offset_x), \
+            (self.map_offset_y - self.map_min_offset_y), \
+            self.cur_map_grid)
+        
+        return self.move_list

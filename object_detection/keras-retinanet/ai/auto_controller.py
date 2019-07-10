@@ -129,7 +129,7 @@ class controller:
 
     # A nice test function, by default moves the character randomly, but a string of
     # actions to perform can be sent from main.py
-    def random_movement(self, action=-1):
+    def perform_movement(self, action=-1):
         if action == -1:
             action = random.randint(0, 3) # Currently removed 4 because it ends up getting stuck in dialogue
         key_pressed = None
