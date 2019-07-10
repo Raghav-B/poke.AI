@@ -166,7 +166,7 @@ if __name__ == "__main__":
     while True:  
         # 0th frame handles key presses
         if (four_frame_count == 0):
-            time.sleep(3) # Adjust this to reduce frequency of actions sent by controller
+            #time.sleep(1) # Adjust this to reduce frequency of actions sent by controller
 
             # Initial startup frame to put detection and key presses in sync
             if (is_init_frame == True):

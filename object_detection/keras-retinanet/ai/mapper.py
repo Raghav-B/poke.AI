@@ -213,6 +213,7 @@ class live_map:
                 if (key_pressed == 0):
                     box[1] += 1
                     box[3] += 1
+                    self.pf.next_frontier[2] += 1
                 elif (key_pressed == 1):
                     pass
                 elif (key_pressed == 2):
@@ -220,6 +221,7 @@ class live_map:
                 elif (key_pressed == 3):
                     box[0] += 1
                     box[2] += 1
+                    self.pf.next_frontier[1] += 1
                 else:
                     pass
 
