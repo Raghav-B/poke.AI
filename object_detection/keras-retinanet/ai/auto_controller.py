@@ -86,7 +86,7 @@ class controller:
             pass
         ReleaseKey(W)
         cur_dir = 0
-        return "up"
+        return 0
 
 
     def move_right(self):
@@ -96,7 +96,7 @@ class controller:
             pass
         ReleaseKey(D)
         cur_dir = 1
-        return "right"
+        return 1
 
 
     def move_down(self):
@@ -106,7 +106,7 @@ class controller:
             pass
         ReleaseKey(S)
         cur_dir = 2
-        return "down"
+        return 2
 
 
     def move_left(self):
@@ -116,7 +116,7 @@ class controller:
             pass
         ReleaseKey(A)
         cur_dir = 3
-        return "left"
+        return 3
 
 
     def interact(self):
@@ -125,7 +125,7 @@ class controller:
         while time.time() - start_time < key_hold_time:
             pass # Change to "x" on ubuntu
         ReleaseKey("z") # Change to "x" on ubuntu
-        return "z" # Change to "x" on ubuntu
+        return 4 # Change to "x" on ubuntu
 
     # A nice test function, by default moves the character randomly, but a string of
     # actions to perform can be sent from main.py
@@ -151,7 +151,7 @@ class controller:
     
     def win_test(self):
         self.move_up()
-        return "up"
+        return 0
 
 """ IF UBUNTU """
 """
