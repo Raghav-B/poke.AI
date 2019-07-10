@@ -37,13 +37,43 @@ To find frontier points, we basically do a breadth first search of all unvisited
 
 This potential score measure is based on a measure of proximity to buildings, open space (potential for exploration) and. 
 
-To keep it simple, 
+Start of BFS for frontier detection:
+    - We can start the BFS from the top left corner of the frame.
+    - 
+
+How will a frontier be scored?
+    - Based on the values of the tiles on 4 or 8 of its adjacent sides. Certain objects give higher values. 
+    - Black, unvisited tiles give the highest value as these have the greatest potential for a new object or score. 
+    - White, visited tiles give the lowest value.
+    - Houses, gyms, other buildings give varying values of score to a frontier. 
+
+
+Moving towards a frontier:
+    - A better thing to do might be to run a BFS to find the shortest path to the frontier. 
+    - We find the difference in y and x separately from our current pos to the pos of the frontier. Based on a random coin flip, we will either start in the y direction first or in the x direction first.
+    - This part of the algorithm will use the pledge algorithm as a means to move around obstacles and to get to our final destination.
+    - If we are unable to get to our final destination after some amount of time or collisions, we will mark this frontier as unreachable and will continue to another frontier. 
+    - In the process of moving around obstacles while trying to get to a frontier, we will eventually learn more about the world as more of it will be mapped out. 
+    - If 5 consecutive collisions are detected when trying to reach for a frontier, we will consider that frontier unreachable, and will choose another frontier.
+
+Colliding with an object when trying to reach a frontier:
+- If this happens, we have a 5 consecutive collision counter to ensure that our frontier isn't unreachable. 
+- To move past a collision, we will run a BFS from our current point to the next to next position we're supposed to be at. 
+
+Upon reaching a frontier:
+    - Can be an arbitrary limit such as every 3 houses, we stop chasing frontiers, I'm not sure. 
+    - Once we reach a frontier and a new unvisited object has been detected, we will go to the object. Path to take to object can be done using a simple BFS. 
+    - If no new objects are detected, we will scrap previous frontiers and run a BFS again to detect more frontiers. 
+
+BFS:
+    - This will output a list of moves to make to reach a frontier. Its better to output a list of moves rather than a list of coordinates because these coordinates can get very messy when it comes to shifting from global to local coordinates and whatnot.
 """
 
 # score_grid has a base score of 1 for each tile
 
 import numpy as np
 import random
+import heapq as pq
 
 class path_finder:
     #score_grid = None
@@ -53,8 +83,86 @@ class path_finder:
     local_bot_x = 0
     local_bot_y = 0
 
+    frontier_list = []
+
+    #map_grid = None
+
     def __init__(self):
+        self.frontier_list 
         pass
+
+    def get_frontier_score(self, query_pos):
+        if (np.array_equal(query_pos[:3], [0, 0, 0])): # Unvisited
+            return 100
+        elif (np.array_equal(query_pos[:3], [255, 255, 255])): # Visited
+            return 0
+        elif (np.array_equal(query_pos[:3], [96, 102, 30])): # Gym
+            return 85
+        elif (np.array_equal(query_pos[:3], [30, 57, 102])): # House
+            return 70
+        elif (np.array_equal(query_pos[:3], [0, 0, 255])): # Pokecen
+            return 55
+        elif (np.array_equal(query_pos[:3], [255, 0, 0])): # Pokemart
+            return 40
+        elif (np.array_equal(query_pos[:3], [105, 105, 105])): # Wall/Boundary
+            return -20
+
+    def find_frontier_bfs(self, map_grid, cur_pos, end_pos, move_list, ):
+        frontier_breadth_list = []
+        score = 0
+
+        # Marking the current point as visited by our BFS. Visited = 3 (just an arbitrary number lol)
+        map_grid[cur_pos[1]][cur_pos[0]][3] = 3
+
+        # Up direction
+        if (cur_pos[1] - 1 >= 0): # Checking if inside 2d array
+            score += self.get_frontier_score(map_grid[cur_pos[1] - 1][cur_pos[0]])
+            # Check if unvisited by DFS
+            if (map_grid[cur_pos[1] - 1][cur_pos[0]][3] != 3):
+                # Point needs to be a black, unvisited point. Otherwise we will collide into a building
+                if (np.array_equal(map_grid[cur_pos[1] - 1][cur_pos[0]][:3], [0, 0, 0])):
+                    frontier_breadth_list.append((cur_pos[0], cur_pos[1] - 1))
+        
+        # Right direction
+        if (cur_pos[0] + 1 <= map_grid.shape[1] - 1): # CHecking if inside 2d array
+            score += self.get_frontier_score(map_grid[cur_pos[1]][cur_pos[0] + 1])
+            # Check if unvisited by DFS
+            if (map_grid[cur_pos[1]][cur_pos[0] + 1][3] != 3):
+                # Point needs to be a black, unvisited point. Otherwise we will collide into a building
+                if (np.array_equal(map_grid[cur_pos[1]][cur_pos[0] + 1][:3], [0, 0, 0])):
+                    frontier_breadth_list.append((cur_pos[0] + 1, cur_pos[1]))
+
+        # Down direction
+        if (cur_pos[1] + 1 <= map_grid.shape[0] - 1): # CHecking 
+            score += self.get_frontier_score(map_grid[cur_pos[1]][cur_pos[0] + 1])
+            # Check if unvisited by DFS
+            if (map_grid[cur_pos[1]][cur_pos[0] + 1][3] != 3):
+                # Point needs to be a black, unvisited point. Otherwise we will collide into a building
+                if (np.array_equal(map_grid[cur_pos[1]][cur_pos[0] + 1][:3], [0, 0, 0])):
+                    frontier_breadth_list.append((cur_pos[0] + 1, cur_pos[1]))
+
+        # Left direction
+        if (cur_pos[0] - 1 >= 0): # Checking
+            pass
+
+        # Top left
+
+        # Top right
+
+        # Bottom left
+
+        # Bottom right
+        
+
+
+
+
+        return move_list
+
+    def move_to_frontier_bfs(self, start_pos, end_pos, move_list, ):
+
+        pass
+
 
     def calc_score(self, tile, cur_frametime, local_decay_multiplier):
         tile_score = 0
@@ -72,7 +180,7 @@ class path_finder:
         #    tile_score = 50 * (1 / (((cur_frametime - tile[1]) * local_decay_multiplier) + 1))
         #elif (tile[0] == 48): # gym
         #    tile_score = 100 * (1 / (((cur_frametime - tile[1]) * local_decay_multiplier) + 1))
-        # Unused for now
+        # Unsed for now
         #elif (tile[128] == 128): # exit
         
         return tile_score
@@ -101,6 +209,7 @@ class path_finder:
             for j in range(0, len(map_grid[i])):
                 if (j > self.local_top_x and j < self.local_bot_x) and \
                     (i > self.local_top_y and i < self.local_bot_y):
+                    map_grid[i][j][3] = 1
                     if (np.array_equal(map_grid[i][j][:3], [0, 0, 0])):
                         map_grid[i][j] = [255, 255, 255, 1]
                 elif (map_grid[i][j][3] == 1):
