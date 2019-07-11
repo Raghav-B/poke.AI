@@ -220,6 +220,23 @@ class live_map:
                 self.pf.next_frontier[2] += 1
             elif (key_pressed == 3):
                 self.pf.next_frontier[1] += 1
+            
+            # Modifying global pos of unreachable frontiers as well
+            temp_set = set()
+            for u_frontier in self.pf.unreachable_frontiers:
+                if (key_pressed == 0):
+                    #self.pf.unreachable_frontiers.remove(u_frontier)
+                    x = u_frontier[0]
+                    y = u_frontier[1] + 1
+                    #u_frontier[1] += 1
+                    temp_set.add((x, y))
+                elif (key_pressed == 3):
+                    #u_frontier[0] += 1
+                    #self.pf.unreachable_frontiers.remove(u_frontier)
+                    x = u_frontier[0] + 1
+                    y = u_frontier[1]
+                    temp_set.add((x, y))
+            self.pf.unreachable_frontiers = temp_set
 
 
     # This function handles detection of new objects and uses this new information to further built

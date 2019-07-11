@@ -143,8 +143,10 @@ class path_finder:
                     self.map_grid[cur_pos[1] + 1][cur_pos[0] + 1][3] = 3
                     frontier_breadth_list.append([cur_pos[0] + 1, cur_pos[1] + 1])
 
-        # Pushing current frontier to priority queue
-        pq.heappush(self.frontier_list, [-score, cur_pos[0], cur_pos[1]])
+        # Pushing current frontier to priority queue, only if frontier is reachable
+        if (not ((cur_pos[0], cur_pos[1]) in self.unreachable_frontiers)):
+            pq.heappush(self.frontier_list, [-score, cur_pos[0], cur_pos[1]])
+        
         return frontier_breadth_list # Returns list of points we've reached at our current search depth
     
     def ffb_wrapper(self, cur_pos):
@@ -288,6 +290,7 @@ class path_finder:
             self.consecutive_collisions = 0
             print("Too many consecutive collisions!")
             print("Switching focus to new frontier...")
+            self.unreachable_frontiers.add((self.next_frontier[1], self.next_frontier[2]))
             return False
         else:
             print("Starting course correction...")
