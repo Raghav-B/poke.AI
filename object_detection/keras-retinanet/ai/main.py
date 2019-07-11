@@ -210,6 +210,14 @@ if __name__ == "__main__":
             cv2.imshow("Map", map_grid[:,:,:3])
             print("")
 
+            # Check here if the latest frontier is now a building or another object. 
+            # If it is, search for another frontier.
+            if (not (np.array_equal(map_grid[mp.pf.next_frontier[2]][mp.pf.next_frontier[1]][:3], [0, 0, 0]) or \
+                np.array_equal(map_grid[mp.pf.next_frontier[2]][mp.pf.next_frontier[1]][:3], [255, 255, 255]))):
+                print("Frontier obstructed, switching to new frontier...")
+                actions = mp.get_movelist()
+                action_index = -1
+
             # Change actions to newly calculated path if a collision occurs
             if (has_collided == True):
                 actions = mp.pf.frontier_path_collision_handler(map_grid, \

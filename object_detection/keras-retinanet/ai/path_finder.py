@@ -48,6 +48,7 @@ class path_finder:
 
     map_grid = None
     frontier_list = []
+    unreachable_frontiers = set()
     next_frontier = None
 
     consecutive_movements = 0
@@ -250,8 +251,15 @@ class path_finder:
         # Getting pq of best frontiers to go to
         self.ffb_wrapper(cur_pos)
         #print(self.frontier_list)
+        
         # Getting frontier with highest score
-        self.next_frontier = self.frontier_list[0]#[self.frontier_list[0][0], self.frontier_list[0][1], self.frontier_list[0][2]] 
+        # We introduce a bit of randomness here because otherwise the pq makes the root the top left corner point always.
+        frontier_index = 0
+        if (len(self.frontier_list) < 8):
+            frontier_index = random.randint(0, len(self.frontier_list) - 1)
+        else:
+            frontier_index = random.randint(0, 7)
+        self.next_frontier = self.frontier_list[frontier_index] 
         #end_pos = [self.next_frontier[1], self.next_frontier[2]]
         print("Next frontier found at: " + str(self.next_frontier))
 
