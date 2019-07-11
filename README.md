@@ -68,6 +68,12 @@ Eventually I'll go into more detail about how the algorithm works. For now, you 
 
 ### Automated Movement in the Game World
 
+**NOTE: Will update this soon, I've changed the mapping algorithm to something called frontier based exploration. Here's a preview of the results!**
+
+<p align = "center">
+    <img src="readme_src/frontier_mapping_prototype.png" alt="Drawing out a map of the game world on the global scale while moving around randomly">
+</p>
+
 Now that we have a mapping algorithm, our AI will know exactly where to go! - which might be what you're thinking, but that's wrong. Currently the agent follows a pre-defined set of sequential instructions, [or can move around randomly](https://www.youtube.com/watch?v=PQ_kMoVHZYc). How do we teach the AI how to move around?
 
 After a bit of thinking, it dawned on me that there was no need to really use an AI for this part. We can simply create a policy for the agent to follow which aims to greedily move around the map, detecting new objects. I took a bit of inspiration from Reinforcement Learning for this portion - where our agent is instructed to move in a particular direction based on a greedy search policy, such that it always moves in directions with the highest density of high-value objects (gyms, NPCs) and away from regions that it has already explored.
