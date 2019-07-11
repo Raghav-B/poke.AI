@@ -51,10 +51,6 @@ class live_map:
         self.tile_size = int(w / (self.grid_x - 1))
         self.prev_map_grid = np.full((self.grid_y - 1, self.grid_x - 1, 4), [0, 0, 0, 0], dtype=np.uint8)
         self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1, 4), [0, 0, 0, 0], dtype=np.uint8)
-        #self.prev_map_grid[:,:,1:] = 0 # Setting as unvisited
-        #self.score_grid = np.full_like(self.prev_map_grid, 1)
-        # Drawing character's position on map for localization purposes
-        #self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 7] = 24
         
         # Setting up ram searcher
         self.ram_search = ram_searcher()
@@ -149,7 +145,6 @@ class live_map:
                 self.grid_y += 1
                 self.map_min_offset_y -= 1
                 append_arr = np.full((1, self.grid_x - 1, 4), [0, 0, 0, 0], dtype=np.uint8)
-                #append_arr[:,:,1:] = 0
                 self.cur_map_grid = np.append(append_arr, self.cur_map_grid, axis=0)
                 self.map_offset_y -= 1
 
@@ -163,7 +158,6 @@ class live_map:
                 self.grid_x += 1
                 self.map_max_offset_x += 1
                 append_arr = np.full((self.grid_y - 1, 1, 4), [0, 0, 0, 0], dtype=np.uint8)
-                #append_arr[:,:,1:] = 0
                 self.cur_map_grid = np.append(self.cur_map_grid, append_arr, axis=1)
                 self.map_offset_x += 1
 
@@ -177,7 +171,6 @@ class live_map:
                 self.grid_y += 1
                 self.map_max_offset_y += 1
                 append_arr = np.full((1, self.grid_x - 1, 4), [0, 0, 0, 0], dtype=np.uint8)
-                #append_arr[:,:,1:] = 0
                 self.cur_map_grid = np.append(self.cur_map_grid, append_arr, axis=0)
                 self.map_offset_y += 1
 
@@ -191,7 +184,6 @@ class live_map:
                 self.grid_x += 1
                 self.map_min_offset_x -= 1
                 append_arr = np.full((self.grid_y - 1, 1, 4), [0, 0, 0, 0], dtype=np.uint8)
-                #append_arr[:,:,1:] = 0
                 self.cur_map_grid = np.append(append_arr, self.cur_map_grid, axis=1)
                 self.map_offset_x -= 1
 
@@ -213,7 +205,6 @@ class live_map:
                 if (key_pressed == 0):
                     box[1] += 1
                     box[3] += 1
-                    self.pf.next_frontier[2] += 1
                 elif (key_pressed == 1):
                     pass
                 elif (key_pressed == 2):
@@ -221,16 +212,21 @@ class live_map:
                 elif (key_pressed == 3):
                     box[0] += 1
                     box[2] += 1
-                    self.pf.next_frontier[1] += 1
                 else:
                     pass
+            
+            # Modifying global pos of next frontier as well
+            if (key_pressed == 0):
+                self.pf.next_frontier[2] += 1
+            elif (key_pressed == 3):
+                self.pf.next_frontier[1] += 1
+
 
     # This function handles detection of new objects and uses this new information to further built
     # the global map
     def add_to_object_list(self, key_pressed, bounding_box_list):
-        # Reset map to blank slate as a failsafe against other functions that might access this map
-        #self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1, 4), [0, 0, 0, 0], dtype=np.uint8)
-        #self.cur_map_grid[:,:,1:] = self.prev_map_grid[:,:,1:]
+        # Reset map_colour to blank so we can draw our objects after their global coordinates have been changed.
+        # This does not alter the visited/unvisited labels as we need this for our frontier detection.
         self.cur_map_grid[:,:,:3] = [0, 0, 0]
 
         # Function to handle changes in global coordinates if map_grid needs to be appended to
@@ -272,6 +268,25 @@ class live_map:
         # Add newly found objects to list
         self.object_list.extend(temp_object_list)
 
+    def draw_frontiers(self, top_x, top_y):        
+        self.local_top_x = top_x
+        self.local_top_y = top_y
+        self.local_bot_x = top_x + 14
+        self.local_bot_y = top_y + 10
+
+        #print(self.local_top_x, self.local_top_y)
+        #print(self.local_bot_x, self.local_bot_y)
+        
+        for i in range(0, len(self.cur_map_grid)):
+            for j in range(0, len(self.cur_map_grid[i])):
+                if (j > self.local_top_x and j < self.local_bot_x) and \
+                    (i > self.local_top_y and i < self.local_bot_y):
+                    self.cur_map_grid[i][j][3] = 1
+                    if (np.array_equal(self.cur_map_grid[i][j][:3], [0, 0, 0])):
+                        self.cur_map_grid[i][j] = [255, 255, 255, 1]
+                elif (self.cur_map_grid[i][j][3] == 1):
+                    if (np.array_equal(self.cur_map_grid[i][j][:3], [0, 0, 0])):
+                        self.cur_map_grid[i][j][:3] = [255, 255, 255]
 
     # This is called from main.py to draw our global map. Inputs are the bounding boxes raw data from
     # the frame inferencing and the most recent key pressed by the controller
@@ -324,15 +339,17 @@ class live_map:
             self.prev_pos = self.cur_pos
             
             # Draw frontiers on map
-            self.cur_map_grid = self.pf.draw_frontiers(self.cur_map_grid, \
-                (self.map_offset_x - self.map_min_offset_x), \
+            self.draw_frontiers((self.map_offset_x - self.map_min_offset_x), \
                 (self.map_offset_y - self.map_min_offset_y))
 
             # If collision is detected, move in adjusted manner
             return self.cur_map_grid, True
         
-        # At this point, map hasn't changed, so we will set consecutive collisions to be 0
-        self.pf.consecutive_collisions = 0
+        # We will increase the consecutive normal movmenets by 1 since at this point no collision has occured
+        self.pf.consecutive_movements += 1
+        if (self.pf.consecutive_movements >= 2):
+            # We only reset the consecutive collisions once we have achieved two consecutive movements.
+            self.pf.consecutive_collisions = 0
 
         # Use bounding box list to add to our list of global objects
         self.add_to_object_list(key_pressed, bounding_box_list)
@@ -360,8 +377,7 @@ class live_map:
             [(self.map_offset_x - self.map_min_offset_x) + 7][:3] = [33, 166, 28]
 
         # Draw frontiers on map
-        self.cur_map_grid = self.pf.draw_frontiers(self.cur_map_grid, \
-            (self.map_offset_x - self.map_min_offset_x), \
+        self.draw_frontiers((self.map_offset_x - self.map_min_offset_x), \
             (self.map_offset_y - self.map_min_offset_y))
 
         # Used for anything that needs to compare previous map state with new map state

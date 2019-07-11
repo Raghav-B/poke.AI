@@ -74,10 +74,6 @@ def get_screen(sct, game_window_size):
     frame = np.array(sct.grab(game_window_size))
     frame = frame[:, :, :3] # Splicing off alpha channel
 
-    
-    #screenshot(game_window_size)
-    #frame = game_window[:, :, :3] 
-
     # Making input a square by padding
     game_width = game_window_size["width"]
     game_height = game_window_size["height"]
@@ -137,9 +133,6 @@ def run_detection(frame, model, labels_to_names, mp):
 if __name__ == "__main__":
     # Setup variables here
     game_window_size = {"top": 0, "left": 0, "width": 720, "height": 480}
-    #game_width = 720
-    #game_height = 480
-    #game_window = np.zeros((game_height, game_width, 4), "uint8")
     model_path = "../inference_graphs/400p/resnet101_csv_13.h5" # Model to be used for detection
     labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"} # Labels to draw
 
@@ -208,7 +201,7 @@ if __name__ == "__main__":
             frame, temp = get_screen(sct, game_window_size)
             status, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
 
-            print("fourth frame")
+            print("Map drawing frame")
 
             # Draw map in window
             # Take note that there is a one frame delay because of something in OpenCV itself. If you print

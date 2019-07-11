@@ -1,35 +1,4 @@
 """
-Coming up with a custom reward function is hard :(
-
-Things I can do:
-- Add more classes into game. This can help more with mapping and seeing ways to explore the map
-    - Use some kind of BFS/DFS to find a way to get into open spaces in the map.
-
-- How does a human do it? A human will look for open spaces where there are no boundaries.
-    - 
-
-What I want the behaviour to be like:
-- Over time, I want the agent to be able to explore the entire map, even if it means by using a pseudo-brute force exploration method.
-- If the agent spends too long in a certain area, it should be told to move in a relatively less explored region.
-    - I can get a measure of how well-explored a region is by taking the count of how many times a particular tile has been in our gameplay frame.
-    - If a tile has appeared say, 10 times, then we have explored this area too much. At this point we move to a point where the tile appearance is maybe 1. This should be somewhere along the edge of our map. We use a measure of average tile appearance. If the average of our region is above maybe 10 or something, we find the closest tile that is 1 using a BFS. 
-    - This BFS will return us a sequence of steps we have to take to get to this tile. If, in the process of getting to this tile, we are interrupted by an unseen collision (this has to be an unseen collision because otherwise our algorithm wouldn't give us this sequence of steps), we mark this collision, and use a mini BFS to find the fastest way to get to our next point in the sequence. 
-        - If we have 5 consequent collisions on our way to this point, we ignore this point and try to find  
-    - In this step, we ignore all scores, but keep the score algo running and simply move to our chosen location. Should we implment a BFS for this? Perhaps, this will give us the path to the closest map_edge. 
-
-- Using Deep Q Learning or something:
-    - We gave 4 actions. Move up, down, left or right. 
-    - 
-
-
-The less your offset has changed from the starting offset in a particular direction, the higher chance there is of you exploring other offsets. 
-
-rand_thresh = 100 - (abs(x_offset_change - y_offset_change))
-x = random.randint(0, 100)
-if (x > rand_thresh):
-    #go in particular direction
-
-
 We can use a frontier based exploration algorithm, where frontiers are determined in terms of their open space.
 Frontier points will be any points that are on the edge of our current grid_map. Points that have come inside the frame are considered detected, while those not on our frame are considered undetected.
 
@@ -39,14 +8,12 @@ This potential score measure is based on a measure of proximity to buildings, op
 
 Start of BFS for frontier detection:
     - We can start the BFS from the top left corner of the frame.
-    - 
 
 How will a frontier be scored?
     - Based on the values of the tiles on 4 or 8 of its adjacent sides. Certain objects give higher values. 
     - Black, unvisited tiles give the highest value as these have the greatest potential for a new object or score. 
     - White, visited tiles give the lowest value.
     - Houses, gyms, other buildings give varying values of score to a frontier. 
-
 
 Moving towards a frontier:
     - A better thing to do might be to run a BFS to find the shortest path to the frontier. 
@@ -83,6 +50,7 @@ class path_finder:
     frontier_list = []
     next_frontier = None
 
+    consecutive_movements = 0
     consecutive_collisions = 0
 
     def __init__(self):
@@ -106,101 +74,77 @@ class path_finder:
 
     def find_frontier_bfs(self, cur_pos):
         frontier_breadth_list = []
-        #can_continue = False
         score = 0
 
         # Up direction
-        if (cur_pos[1] - 1 >= 0): # Checking if inside 2d array
+        if (cur_pos[1] - 1 >= 0): # Checking if not out of bounds of 2d map_grid array
             score += self.get_frontier_score(self.map_grid[cur_pos[1] - 1][cur_pos[0]])
-            # Check if unvisited by DFS
+            # Check if unvisited by BFS
             if (self.map_grid[cur_pos[1] - 1][cur_pos[0]][3] != 3):
                 # Point needs to be a black, unvisited point. Otherwise we will collide into a building
                 if (np.array_equal(self.map_grid[cur_pos[1] - 1][cur_pos[0]][:3], [0, 0, 0])):
                     self.map_grid[cur_pos[1] - 1][cur_pos[0]][3] = 3
                     frontier_breadth_list.append([cur_pos[0], cur_pos[1] - 1])
-                    #can_continue = True
         
         # Right direction
-        if (cur_pos[0] + 1 <= self.map_grid.shape[1] - 1): # Checking if inside 2d array
+        if (cur_pos[0] + 1 <= self.map_grid.shape[1] - 1):
             score += self.get_frontier_score(self.map_grid[cur_pos[1]][cur_pos[0] + 1])
-            # Check if unvisited by DFS
             if (self.map_grid[cur_pos[1]][cur_pos[0] + 1][3] != 3):
-                # Point needs to be a black, unvisited point. Otherwise we will collide into a building
                 if (np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] + 1][:3], [0, 0, 0])):
                     self.map_grid[cur_pos[1]][cur_pos[0] + 1][3] = 3
                     frontier_breadth_list.append([cur_pos[0] + 1, cur_pos[1]])
-                    #can_continue = True
 
         # Down direction
-        if (cur_pos[1] + 1 <= self.map_grid.shape[0] - 1): # Checking 
+        if (cur_pos[1] + 1 <= self.map_grid.shape[0] - 1):
             score += self.get_frontier_score(self.map_grid[cur_pos[1] + 1][cur_pos[0]])
-            # Check if unvisited by DFS
             if (self.map_grid[cur_pos[1] + 1][cur_pos[0]][3] != 3):
-                # Point needs to be a black, unvisited point. Otherwise we will collide into a building
                 if (np.array_equal(self.map_grid[cur_pos[1] + 1][cur_pos[0]][:3], [0, 0, 0])):
                     self.map_grid[cur_pos[1] + 1][cur_pos[0]][3] = 3
                     frontier_breadth_list.append([cur_pos[0], cur_pos[1] + 1])
-                    #can_continue = True
 
         # Left direction
-        if (cur_pos[0] - 1 >= 0): # Checking
+        if (cur_pos[0] - 1 >= 0):
             score += self.get_frontier_score(self.map_grid[cur_pos[1]][cur_pos[0] - 1])
-            # Check if unvisited by DFS
             if (self.map_grid[cur_pos[1]][cur_pos[0] - 1][3] != 3):
-                # Point needs to be a black, unvisited point. Otherwise we will collide into a building
                 if (np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] - 1][:3], [0, 0, 0])):
                     self.map_grid[cur_pos[1]][cur_pos[0] - 1][3] = 3
                     frontier_breadth_list.append([cur_pos[0] - 1, cur_pos[1]])
-                    #can_continue = True
 
         # Top left
         if (cur_pos[1] - 1 >= 0 and cur_pos[0] - 1 >= 0):
             score += self.get_frontier_score(self.map_grid[cur_pos[1] - 1][cur_pos[0] - 1])
-            # Check if unvisited by DFS
             if (self.map_grid[cur_pos[1] - 1][cur_pos[0] - 1][3] != 3):
-                # Point needs to be a black, unvisited point. Otherwise we will collide into a building
                 if (np.array_equal(self.map_grid[cur_pos[1] - 1][cur_pos[0] - 1][:3], [0, 0, 0])):
                     self.map_grid[cur_pos[1] - 1][cur_pos[0]][3] = 3
                     frontier_breadth_list.append([cur_pos[0] - 1, cur_pos[1] - 1])
-                    #can_continue = True
 
         # Top right
         if (cur_pos[1] - 1 >= 0 and cur_pos[0] + 1 <= self.map_grid.shape[1] - 1):
             score += self.get_frontier_score(self.map_grid[cur_pos[1] - 1][cur_pos[0] + 1])
-            # Check if unvisited by DFS
             if (self.map_grid[cur_pos[1] - 1][cur_pos[0] + 1][3] != 3):
-                # Point needs to be a black, unvisited point. Otherwise we will collide into a building
                 if (np.array_equal(self.map_grid[cur_pos[1] - 1][cur_pos[0] + 1][:3], [0, 0, 0])):
                     self.map_grid[cur_pos[1] - 1][cur_pos[0] + 1][3] = 3
                     frontier_breadth_list.append([cur_pos[0] + 1, cur_pos[1] - 1])
-                    #can_continue = True
 
         # Bottom left
         if (cur_pos[1] + 1 <= self.map_grid.shape[0] - 1 and cur_pos[0] - 1 >= 0):
             score += self.get_frontier_score(self.map_grid[cur_pos[1] + 1][cur_pos[0] - 1])
-            # Check if unvisited by DFS
             if (self.map_grid[cur_pos[1] + 1][cur_pos[0] - 1][3] != 3):
-                # Point needs to be a black, unvisited point. Otherwise we will collide into a building
                 if (np.array_equal(self.map_grid[cur_pos[1] + 1][cur_pos[0] - 1][:3], [0, 0, 0])):
                     self.map_grid[cur_pos[1] + 1][cur_pos[0] - 1][3] = 3
                     frontier_breadth_list.append([cur_pos[0] - 1, cur_pos[1] + 1])
-                    #can_continue = True
 
         # Bottom right
         if (cur_pos[1] + 1 <= self.map_grid.shape[0] - 1 and cur_pos[0] + 1 <= self.map_grid.shape[1] - 1):
             score += self.get_frontier_score(self.map_grid[cur_pos[1] + 1][cur_pos[0] + 1])
-            # Check if unvisited by DFS
             if (self.map_grid[cur_pos[1] + 1][cur_pos[0] + 1][3] != 3):
-                # Point needs to be a black, unvisited point. Otherwise we will collide into a building
                 if (np.array_equal(self.map_grid[cur_pos[1] + 1][cur_pos[0] + 1][:3], [0, 0, 0])):
                     self.map_grid[cur_pos[1] + 1][cur_pos[0] + 1][3] = 3
                     frontier_breadth_list.append([cur_pos[0] + 1, cur_pos[1] + 1])
-                    #can_continue = True
 
         # Pushing current frontier to priority queue
         pq.heappush(self.frontier_list, [-score, cur_pos[0], cur_pos[1]])
-
-        return frontier_breadth_list
+        return frontier_breadth_list # Returns list of points we've reached at our current search depth
     
     def ffb_wrapper(self, cur_pos):
         points = [cur_pos]
@@ -221,83 +165,52 @@ class path_finder:
         if (cur_pos[:] == end_pos[:]):
             return True, [[cur_pos, move_list]]
 
-        #can_continue = False
         breadth_list = []
-        #split_move_list = [[],[],[],[]]
 
         # Up direction
-        if (cur_pos[1] - 1 >= 0): # Checking if inside 2d array
-            # Check if unvisited by DFS
+        if (cur_pos[1] - 1 >= 0): # Checking if not out of bounds of 2d array
+            # Check if unvisited by BFS
             if (self.map_grid[cur_pos[1] - 1][cur_pos[0]][3] != 3):
-                # Point needs to be a black, unvisited point. Otherwise we will collide into a building
+                # Point needs to be a black or white unvisited point. Otherwise we will collide into a building
                 if (np.array_equal(self.map_grid[cur_pos[1] - 1][cur_pos[0]][:3], [255, 255, 255]) or \
                     np.array_equal(self.map_grid[cur_pos[1] - 1][cur_pos[0]][:3], [0, 0, 0])):
                     self.map_grid[cur_pos[1] - 1][cur_pos[0]][3] = 3
                     temp_move_list = move_list.copy()
                     temp_move_list.append(0)
                     breadth_list.append([[cur_pos[0], cur_pos[1] - 1], temp_move_list])
-                    #split_move_list[0].append(0)
-                    #can_continue = True
         
         # Right direction
-        if (cur_pos[0] + 1 <= self.map_grid.shape[1] - 1): # Checking if inside 2d array
-            # Check if unvisited by DFS
+        if (cur_pos[0] + 1 <= self.map_grid.shape[1] - 1):
             if (self.map_grid[cur_pos[1]][cur_pos[0] + 1][3] != 3):
-                # Point needs to be a black, unvisited point. Otherwise we will collide into a building
                 if (np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] + 1][:3], [255, 255, 255]) or \
                     np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] + 1][:3], [0, 0, 0])):
                     self.map_grid[cur_pos[1]][cur_pos[0] + 1][3] = 3
                     temp_move_list = move_list.copy()
                     temp_move_list.append(1)
                     breadth_list.append([[cur_pos[0] + 1, cur_pos[1]], temp_move_list])
-                    #split_move_list[1].append(1)
-                    #can_continue = True
 
         # Down direction
-        if (cur_pos[1] + 1 <= self.map_grid.shape[0] - 1): # Checking 
-            # Check if unvisited by DFS
+        if (cur_pos[1] + 1 <= self.map_grid.shape[0] - 1):
             if (self.map_grid[cur_pos[1] + 1][cur_pos[0]][3] != 3):
-                # Point needs to be a black, unvisited point. Otherwise we will collide into a building
                 if (np.array_equal(self.map_grid[cur_pos[1] + 1][cur_pos[0]][:3], [255, 255, 255]) or \
                     np.array_equal(self.map_grid[cur_pos[1] + 1][cur_pos[0]][:3], [0, 0, 0])):
                     self.map_grid[cur_pos[1] + 1][cur_pos[0]][3] = 3
                     temp_move_list = move_list.copy()
                     temp_move_list.append(2)
                     breadth_list.append([[cur_pos[0], cur_pos[1] + 1], temp_move_list])
-                    #split_move_list[2].append(2)
-                    #can_continue = True
 
         # Left direction
-        if (cur_pos[0] - 1 >= 0): # Checking
-            # Check if unvisited by DFS
+        if (cur_pos[0] - 1 >= 0):
             if (self.map_grid[cur_pos[1]][cur_pos[0] - 1][3] != 3):
-                # Point needs to be a black, unvisited point. Otherwise we will collide into a building
                 if (np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] - 1][:3], [255, 255, 255]) or \
                     np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] - 1][:3], [0, 0, 0])):
                     self.map_grid[cur_pos[1]][cur_pos[0] - 1][3] = 3
                     temp_move_list = move_list.copy()
                     temp_move_list.append(3)
                     breadth_list.append([[cur_pos[0] - 1, cur_pos[1]], temp_move_list])
-                    #split_move_list[3].append(3)
-                    #can_continue = True
 
-        #if (can_continue == False):
-            #print("false")
+        # Returns whether our frontier point has been found, along with the list of points at our current BFS search level
         return False, breadth_list
-        
-        #print(breadth_list)
-        #print("")
-
-        #for i in range(len(breadth_list)):
-        #    is_frontier_found, temp_move_list = self.move_to_frontier_bfs(breadth_list[i], end_pos, split_move_list[i])
-        #    if (is_frontier_found == True):
-        #        move_list.extend(temp_move_list)
-        #        print("hmm")
-        #        return True, move_list
-        #    else:
-        #        continue
-
-        #print("broken")
 
     def mtfb_wrapper(self, cur_pos, end_pos, move_list):
         points = [[cur_pos, move_list]]
@@ -309,43 +222,16 @@ class path_finder:
                 is_found, temp_points = self.move_to_frontier_bfs(point[0], end_pos, point[1])
                 level_points.extend(temp_points)
 
-                #print(temp_points)
 
                 if (is_found == True):
-                    #print("found")
                     return temp_points[0][1]
 
             points = level_points
-
-            #print("while loop")
-
-
-    def draw_frontiers(self, og_map_grid, top_x, top_y):        
-        self.map_grid = og_map_grid
-
-        self.local_top_x = top_x
-        self.local_top_y = top_y
-        self.local_bot_x = top_x + 14
-        self.local_bot_y = top_y + 10
-
-        #print(self.local_top_x, self.local_top_y)
-        #print(self.local_bot_x, self.local_bot_y)
-        
-        for i in range(0, len(self.map_grid)):
-            for j in range(0, len(self.map_grid[i])):
-                if (j > self.local_top_x and j < self.local_bot_x) and \
-                    (i > self.local_top_y and i < self.local_bot_y):
-                    self.map_grid[i][j][3] = 1
-                    if (np.array_equal(self.map_grid[i][j][:3], [0, 0, 0])):
-                        self.map_grid[i][j] = [255, 255, 255, 1]
-                elif (self.map_grid[i][j][3] == 1):
-                    if (np.array_equal(self.map_grid[i][j][:3], [0, 0, 0])):
-                        self.map_grid[i][j][:3] = [255, 255, 255]
-
-        return self.map_grid
         
     def get_next_frontier(self, top_x, top_y, og_map_grid):
         self.map_grid = og_map_grid.copy()
+        
+        # Getting a random unvisited black point to start our search for best frontier from.
         x = 0
         y = 0
         while True:
@@ -355,27 +241,27 @@ class path_finder:
                 break
             else:
                 continue
-        cur_pos = [x, y] # Can randomize this to one of the corners of the map
-        print(cur_pos)
-        self.frontier_list = []
-
+        cur_pos = [x, y]
+        print("Frontier BFS start point: " + str(cur_pos))
 
         print("Finding next frontier to move to...")
+        # Resetting frontier pq to ensure we do not double count with our previous frontiers.
+        self.frontier_list = []
+        # Getting pq of best frontiers to go to
         self.ffb_wrapper(cur_pos)
-        #self.find_frontier_bfs(cur_pos)
-        # This returns the frontier with the smallest (largest) score
-        print(self.frontier_list)
-        self.next_frontier = [self.frontier_list[0][0], self.frontier_list[0][1], self.frontier_list[0][2]] 
-        end_pos = [self.next_frontier[1], self.next_frontier[2]]
+        #print(self.frontier_list)
+        # Getting frontier with highest score
+        self.next_frontier = self.frontier_list[0]#[self.frontier_list[0][0], self.frontier_list[0][1], self.frontier_list[0][2]] 
+        #end_pos = [self.next_frontier[1], self.next_frontier[2]]
         print("Next frontier found at: " + str(self.next_frontier))
 
-        # Get list of moves required to reach frontier
+        # Get list of moves required to reach our selected frontier
         self.map_grid = og_map_grid.copy()
         print("Getting predicted moves to frontier...")
         move_list = []
-        cur_pos = [top_x + 7, top_y + 5]
-        move_list = self.mtfb_wrapper(cur_pos, end_pos, move_list)
-        #ret_val, move_list = self.move_to_frontier_bfs(cur_pos, end_pos, move_list)
+        cur_pos = [top_x + 7, top_y + 5] # Resetting cur_pos variable to our agent's current global position
+        # Getting move_list of moves required to get to our chosen frontier
+        move_list = self.mtfb_wrapper(cur_pos, self.next_frontier[1:], move_list)
         print(move_list)
         print("Path found. Executing...")
 
@@ -386,14 +272,22 @@ class path_finder:
         cur_pos = [top_x + 7, top_y + 5]
 
         self.consecutive_collisions += 1
+        # If a collision has occured our consecutive movements are naturally reset back to 0
+        self.consecutive_movements = 0
+        print("Consecutive collisions: " + str(self.consecutive_collisions))
 
         if (self.consecutive_collisions >= 5):
             self.consecutive_collisions = 0
+            print("Too many consecutive collisions!")
+            print("Switching focus to new frontier...")
             return False
         else:
             print("Starting course correction...")
-            print(self.next_frontier[1:])
+            print("Continuing movement to frontier: " + str(self.next_frontier))
+            # Getting new list of moves after considering any new developments in the map
+            print("Getting correct moves to frontier...")
             new_moves = []
             new_moves = self.mtfb_wrapper(cur_pos, self.next_frontier[1:], new_moves)
             print(new_moves)
+            
             return new_moves
