@@ -33,7 +33,7 @@ By letting go of our obsession with AI being this omniscient, mystical being, we
 
 So what does this mean for this Pokemon AI? Well yes, there are many parts of this project that will be automated and will leverage on the power of neural networks. However AI and computers in general are dumb, and so there is definitely an element of providing supervision and foundational instructions to these algorithms. Nothing to be ashamed about, this is just the current state of AI.
 
-Anyways, I've rambled on for too long, lets dive into the technical details.
+Anyways, I've rambled on for too long, lets dive into the technical details. You can find most of the main code [right here.](object_detection/keras-retinanet/ai/)
 
 ## Proposed Features / Modules
 
