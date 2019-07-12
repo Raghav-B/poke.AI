@@ -38,10 +38,10 @@ def initialise(game_window_size, model_path):
 
     # Setting up windows
     cv2.namedWindow("Map", cv2.WINDOW_NORMAL)
-    cv2.resizeWindow("Map", game_window_size["width"], game_window_size["height"] + 100)
-    cv2.moveWindow("Map", 1810, 600)
+    cv2.resizeWindow("Map", game_window_size["width"], game_window_size["height"])
+    cv2.moveWindow("Map", 1100, 850)
     cv2.namedWindow("Screen")
-    cv2.moveWindow("Screen", 1050, 80)
+    cv2.moveWindow("Screen", 1100, 0)
     cv2.createTrackbar("ScoreThresh", "Screen", 70, 99, nothing)
 
     # Finding game window using included .png
