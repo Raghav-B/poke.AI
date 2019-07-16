@@ -1,7 +1,7 @@
 <annotation>
 	<folder>training_gameplay</folder>
 	<filename>236.jpg</filename>
-	<path>/home/raghavbhardwaj/Desktop/pokemon_ai/object_detection/training_gameplay/236.jpg</path>
+	<path>D:\App Development\pokemon_ai\object_detection\training_gameplay\236.jpg</path>
 	<source>
 		<database>Unknown</database>
 	</source>
@@ -45,6 +45,30 @@
 			<ymin>501</ymin>
 			<xmax>688</xmax>
 			<ymax>601</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>agent</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>342</xmin>
+			<ymin>320</ymin>
+			<xmax>387</xmax>
+			<ymax>388</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>house</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1</xmin>
+			<ymin>526</ymin>
+			<xmax>254</xmax>
+			<ymax>599</ymax>
 		</bndbox>
 	</object>
 </annotation>

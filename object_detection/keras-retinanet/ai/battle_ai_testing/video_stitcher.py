@@ -13,7 +13,7 @@ cur_frames.sort(key=sort_key_func)
 
 print(cur_frames)
 
-output_video = cv2.VideoWriter("battle_video45.mp4", 0x00000021, 45.0, (720, 720))
+output_video = cv2.VideoWriter("battle_video30_2.mp4", 0x00000021, 30.0, (720, 720))
     
 print("Stitching frames...")
 

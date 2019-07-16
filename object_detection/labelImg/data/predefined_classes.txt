@@ -1,6 +1,0 @@
-pokecen
-pokemart
-npc
-house
-gym
-exit

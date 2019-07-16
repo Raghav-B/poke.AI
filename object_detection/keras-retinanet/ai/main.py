@@ -47,10 +47,10 @@ def initialise(game_window_size, model_path):
     # Finding game window using included .png
     game_window_size["left"], game_window_size["top"], temp1, temp2 = pag.locateOnScreen("find_game_window_windows.png")
 
-    # Adding a 61 pixel offset to the y coordinate since the function above returns the x,y
+    # Adding a 76 pixel offset to the y coordinate since the function above returns the x,y
     # coordinates of the menu bar - we want the coords of the gameplay below this bar
     # Change this offset to 20 if you are running on ubuntu and are using find_game_window_ubuntu.png
-    game_window_size["top"] += 61
+    game_window_size["top"] += 76
 
     # Setup controller
     ctrl = controller(game_window_size["left"], game_window_size["top"])

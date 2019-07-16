@@ -1,7 +1,7 @@
 <annotation>
 	<folder>validation_gameplay</folder>
 	<filename>37.jpg</filename>
-	<path>/home/raghavbhardwaj/Desktop/pokemon_ai/object_detection/validation_gameplay/37.jpg</path>
+	<path>D:\App Development\pokemon_ai\object_detection\validation_gameplay\37.jpg</path>
 	<source>
 		<database>Unknown</database>
 	</source>
@@ -45,6 +45,18 @@
 			<ymin>417</ymin>
 			<xmax>525</xmax>
 			<ymax>465</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>npc</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>335</xmin>
+			<ymin>318</ymin>
+			<xmax>383</xmax>
+			<ymax>383</ymax>
 		</bndbox>
 	</object>
 </annotation>
