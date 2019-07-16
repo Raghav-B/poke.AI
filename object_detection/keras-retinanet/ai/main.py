@@ -151,6 +151,7 @@ if __name__ == "__main__":
 
     # Use to set pre-defined actions to send to controller (default is random)
     actions = []
+    actons = [0,0,1,1,2,2,3,3]
     action_index = -1 # Initialise this from -1
     
     # It takes about 5 frames for our player characte to perform a movement in any direction. Thus,
@@ -170,15 +171,15 @@ if __name__ == "__main__":
                 # No collision handler here since it is literally impossible to collide on the first frame
 
                 four_frame_count += 1
-                cv2.imshow("Map", map_grid[:,:,:1])
-                actions = mp.get_movelist()
+                cv2.imshow("Map", map_grid[:,:,:3])
+                #actions = mp.get_movelist()
 
             # All other 0 frames that are not the initial frame
             else:
                 # Used to iterate through pre-defined actions and break once actions have ended
                 action_index += 1
                 if (action_index >= len(actions)):
-                    actions = mp.get_movelist()
+                    #actions = mp.get_movelist()
                     action_index = 0
                 
                 print("Key pressed: " + keys[actions[action_index]])            
@@ -212,31 +213,36 @@ if __name__ == "__main__":
 
             # Check here if the latest frontier is now a building or another object. 
             # If it is, search for another frontier.
-            if (not (np.array_equal(map_grid[mp.pf.next_frontier[2]][mp.pf.next_frontier[1]][:3], [0, 0, 0]) or \
-                np.array_equal(map_grid[mp.pf.next_frontier[2]][mp.pf.next_frontier[1]][:3], [255, 255, 255]))):
-                print("Frontier obstructed, switching to new frontier...")
-                actions = mp.get_movelist()
-                action_index = -1
+            #if (not (np.array_equal(map_grid[mp.pf.next_frontier[2]][mp.pf.next_frontier[1]][:3], [0, 0, 0]) or \
+            #    np.array_equal(map_grid[mp.pf.next_frontier[2]][mp.pf.next_frontier[1]][:3], [255, 255, 255]))):
+            #    print("Frontier obstructed, switching to new frontier...")
+            #    actions = mp.get_movelist()
+            #    action_index = -1
 
             # Change actions to newly calculated path if a collision occurs
-            if (has_collided == True):
-                actions = mp.pf.frontier_path_collision_handler(map_grid, \
-                    (mp.map_offset_x - mp.map_min_offset_x), \
-                    (mp.map_offset_y - mp.map_min_offset_y))
-                if (actions == False): # If we have experienced 5 consecutive collisions
-                    # Find a new frontier to go towards
-                    actions = mp.get_movelist()
-                action_index = -1 # Either way we reset the index
+            #if (has_collided == True):
+            #    actions = mp.pf.frontier_path_collision_handler(map_grid, \
+            #        (mp.map_offset_x - mp.map_min_offset_x), \
+            #        (mp.map_offset_y - mp.map_min_offset_y))
+            #    if (actions == False): # If we have experienced 5 consecutive collisions
+            #        # Find a new frontier to go towards
+            #        actions = mp.get_movelist()
+            #    action_index = -1 # Either way we reset the index
 
             # Reset 5 frame cycle
             four_frame_count = 0
-
+        
             if (status == "quit"):
                 break
 
         # Init frame is over, change flag accordingly
         if (is_init_frame == True):
             is_init_frame = temp_bool      
+
+        if (len(predictions_for_map) == 0):
+            # Start battle ai
+            pass
+
 
     # Clean running processes and close program cleanly
     cv2.destroyAllWindows()
