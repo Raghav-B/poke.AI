@@ -3,7 +3,11 @@ import numpy as np
 from mss import mss
 import pyautogui as pag
 from PIL import Image
-import sys
+import time
+
+# Shift + F1 saves state
+# F1 Loads the same state
+# Use this when battle has been lost.
 
 class battle_ai:
     states = ["entered_battle", "intro_anim", "action_select", "ongoing_turn", "win", "lose"]
@@ -13,51 +17,60 @@ class battle_ai:
     action_select_img = None
 
     pokemon_hp = 141
-    opponent_hp = 0
+    opponent_hp = 141
 
     def __init__(self):
-        z_press_img = cv2.imread("z_press.png")
-        z_press_img = Image.fromarray(z_press_img)
+        self.z_press_img = cv2.imread("D:/App Development/pokemon_ai/object_detection/keras-retinanet/ai/battle_ai/z_press.png")
+        self.z_press_img = Image.fromarray(self.z_press_img)
+        #cv2.imshow("hm", z_press_img)
 
-        action_select_img = cv2.imread("action_select.png")
-        action_select_img = Image.fromarray(action_select_img)
-
-
+        self.action_select_img = cv2.imread("D:/App Development/pokemon_ai/object_detection/keras-retinanet/ai/battle_ai/action_select.png")
+        self.action_select_img = Image.fromarray(self.action_select_img)
 
     def main_battle_loop(self, ctrl, sct, game_window_size):
-        # Getting game screen as input
-        frame = np.array(sct.grab(game_window_size))
-        frame = frame[:, :, :3] # Splicing off alpha channel
-
-        # Making input a square by padding
-        game_width = game_window_size["width"]
-        game_height = game_window_size["height"]
-        padding = 0
-        if game_height < game_width:
-            padding = int((game_width - game_height) / 2)
-            frame = cv2.copyMakeBorder(frame, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
-        elif game_height > game_width:
-            padding = int((game_width - game_width) / 2)
-            frame = cv2.copyMakeBorder(frame, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
-
         while True:
-            cv2.imshow("Battle Screen", frame)
+            # Getting game screen as input
+            frame = np.array(sct.grab(game_window_size))
+            frame = frame[:, :, :3] # Splicing off alpha channel
+
+            # Making input a square by padding
+            game_width = game_window_size["width"]
+            game_height = game_window_size["height"]
+            padding = 0
+            if game_height < game_width:
+                padding = int((game_width - game_height) / 2)
+                frame = cv2.copyMakeBorder(frame, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
+            elif game_height > game_width:
+                padding = int((game_width - game_width) / 2)
+                frame = cv2.copyMakeBorder(frame, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
+
+            cv2.imshow("Screen", frame)
             print("Current state: " + str(self.cur_state))
             cv2.waitKey(1)
 
+            # This state introduces the enemy, for example Younger Allen would like to battle!
+            # or Wild Slugma appeared! Need to press Z to continue
             if (self.cur_state == "entered_battle"):
                 frame_pil = Image.fromarray(frame)
                 detected = pag.locate(self.z_press_img, frame_pil, grayscale=False, confidence=0.9)
+                print(detected)
                 if (detected != None):
                     self.cur_state = "intro_anim"
+                    time.sleep(0.1)
+                    ctrl.interact()
             
+            # This state shows our pokemon (and in a trainer battle, the opponent's pokemon being sent out)
+            # This leads us to the action select screen.
             elif (self.cur_state == "intro_anim"):
                 frame_pil = Image.fromarray(frame)
                 detected = pag.locate(self.action_select_img, frame_pil, grayscale=False, confidence=0.9)
                 if (detected != None):
                     self.cur_state = "action_select"
             
+            # This is the action select screen. This is the part that the model will really control.
             elif (self.cur_state == "action_select"):
+                time.sleep(0.1)
+
                 # Reset selector position to "FIGHT"
                 ctrl.move_up()
                 ctrl.move_left()
@@ -68,22 +81,26 @@ class battle_ai:
                 ctrl.move_up()
                 ctrl.move_left()
 
-                # First move
+                ### First move ###
                 ctrl.interact()
 
-                # Second move
+                ### Second move ###
                 #ctrl.move_right()
                 #ctrl.interact()
 
-                # Third move
+                ### Third move ###
                 #ctrl.move_down()
                 #ctrl.interact()
 
-                # Fourth move
+                ### Fourth move ###
                 #ctrl.move_down()
                 #ctrl.move_right()
                 #ctrl.interact()
 
+                self.cur_state = "ongoing_turn"
+
+            # This state is when we've selected an attack and both pokemon are performing their individual attacks
+            elif (self.cur_state == "ongoing_turn"):
                 # HP Detection
                 black_lower_bound = (87, 0, 0)
                 black_upper_bound = (164, 74, 91)
@@ -102,14 +119,12 @@ class battle_ai:
                             leftmost = tuple(cnt[cnt[:,:,0].argmin()][0])
                             rightmost = tuple(cnt[cnt[:,:,0].argmax()][0])
                             self.pokemon_hp = 141 - (rightmost[0] - leftmost[0])
-                            #cv2.drawContours(input_img, [cnt], 0, (0, 0, 255), 1)
 
                         # Opponenet's HP
                         elif (centroid_x >= 140 and centroid_x <= 310 and centroid_y >= 200 and centroid_y <= 250):
                             leftmost = tuple(cnt[cnt[:,:,0].argmin()][0])
                             rightmost = tuple(cnt[cnt[:,:,0].argmax()][0])
                             self.opponent_hp = 141 - (rightmost[0] - leftmost[0])
-                            #cv2.drawContours(input_img, [cnt], 0, (0, 0, 255), 1)
                 
                 if (self.pokemon_hp < 0):
                     self.pokemon_hp = 0
@@ -119,89 +134,45 @@ class battle_ai:
                 print("Pokemon HP: " + str(self.pokemon_hp))
                 print("Opponent HP: " + str(self.opponent_hp))
 
-                # If current opponent pokemon has been beaten
-                if (self.opponent_hp <= 0):
-                    self.cur_state = "enemy_fainted"
-                    # Check for red arrow ..fainted
-                    # Press Z
-                    # Check for red arrow ..exp points
-                    # Press Z
-                    # If red arrow, then won
-                    # If fight, then next pokemon
-                    pass
-
-                # If my pokemon has been beaten
-                elif (self.pokemon_hp <= 0):
-                    self.cur_state = "lose"
-                    # Check for red arrow
-                    # Press Z
-                    # Whited out...
-                    # Press Z
-                    pass
-
+                print("Finding next state...")
+                # If current opponent pokemon or my pokemon has been beaten
+                if (self.opponent_hp <= 0 or self.pokemon_hp <= 0):
+                    self.cur_state = "battle_ended"
                 # Only reaches here when enemy hasn't been beaten yet
                 # Action select screen once again
-                else:
-                    self.cur_state = "ongoing_turn"
+                else:                
+                    frame_pil = Image.fromarray(frame)
+                    detected = pag.locate(self.action_select_img, frame_pil, grayscale=False, confidence=0.9)
+                    if (detected != None):
+                        self.cur_state = "action_select"
+            
+            elif (self.cur_state == "battle_ended"):                
+                # HP Detection
+                end_lower_bound = (0, 0, 0)
+                end_upper_bound = (0, 0, 0)
+                end_detection_img = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+                end_detection_img = cv2.inRange(end_detection_img, end_lower_bound, end_upper_bound)
+                contours, hierarchy = cv2.findContours(end_detection_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-            elif (self.cur_state == "ongoing_turn"):
-                frame_pil = Image.fromarray(frame)
-                detected = pag.locate(self.action_select_img, frame_pil, grayscale=False, confidence=0.9)
-                if (detected != None):
-                    self.cur_state = "action_select"
-            
-            elif (self.cur_state == "enemy_fainted"):
-                frame_pil = Image.fromarray(frame)
-                # Check for "enemy fainted!" red arrow
-                detected = pag.locate(self.z_press_img, frame_pil, grayscale=False, confidence=0.9)
-                if (detected != None):
-                    self.cur_state = "gained_exp"
-                    ctrl.interact()
-            
-            elif (self.cur_state == "gained_exp"):
-                frame_pil = Image.fromarray(frame)
-                # Check for "enemy fainted!" red arrow
-                detected = pag.locate(self.z_press_img, frame_pil, grayscale=False, confidence=0.9)
-                if (detected != None):
-                    self.cur_state = "defeated_opponent"
-                    ctrl.interact()
-                    continue # If this happens, we do not have to check for action select
+                has_battle_ended = False
+                for cnt in contours:
+                    if (cv2.contourArea(cnt) > 300000):
+                        print("battle has actually ended")
+                        has_battle_ended = True
+                        self.cur_state = "entered_battle"
+                        self.opponent_hp = 141
+                        return
                 
-                next_pokemon_detected = pag.locate(self.action_select_img, frame_pil, grayscale=False, confidence=0.9)
-                if (next_pokemon_detected != None):
-                    self.opponent_hp = 141
-                    self.cur_state = "action_select"
-            
-            elif (self.cur_state == "defeated_opponent"):
-                frame_pil = Image.fromarray(frame)
-                # Check for "enemy fainted!" red arrow
-                detected = pag.locate(self.z_press_img, frame_pil, grayscale=False, confidence=0.9)
-                if (detected != None):
-                    self.cur_state = "defeat_dialogue"
-                    ctrl.interact()
-            
-            elif (self.cur_state == "defeat_dialogue"):
-                # Actually this doesn't involve checking for a red arrow.
-                #frame_pil = Image.fromarray(frame)
-                # Check for "enemy fainted!" red arrow
-                #detected = pag.locate(self.z_press_img, frame_pil, grayscale=False, confidence=0.9)
-                #if (detected != None):
-                time.sleep(1)
-                self.cur_state = "get_money"
-                ctrl.interact()
+                if (has_battle_ended == False):
+                    frame_pil = Image.fromarray(frame)
 
-            elif (self.cur_state == "get_money"):
-                frame_pil = Image.fromarray(frame)
-                # Check for "enemy fainted!" red arrow
-                detected = pag.locate(self.z_press_img, frame_pil, grayscale=False, confidence=0.9)
-                if (detected != None):
-                    ctrl.interact()
-                    time.sleep(2)
-                    return # This is when you quit to get to normal overworld
-            
-            elif (self.cur_state == "lose"):
-                print("oh no, you've lost!")
-                return
-                
-                
+                    # This happens when the trainer is sending out another pokemon
+                    action_select_detected = pag.locate(self.action_select_img, frame_pil, grayscale=False, confidence=0.9)
+                    if (action_select_detected != None):
+                        self.cur_state = "action_select"
+                        self.opponent_hp = 141
+                        continue
                     
+                    # This is to handle any required key presses due to levelling or other stuff
+                    time.sleep(0.1)
+                    ctrl.interact()

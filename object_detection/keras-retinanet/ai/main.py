@@ -17,6 +17,7 @@ import sys
 # Custom imports
 from mapper import live_map
 from auto_controller import controller
+from battle_ai.battle_ai import battle_ai
 
 
 # Dummy function, does nothing
@@ -65,7 +66,10 @@ def initialise(game_window_size, model_path):
     # x and y coordinates
     mp = live_map(game_window_size["width"], game_window_size["height"], padding)#, 4681, 0x55c106d0bf5c, 0x55c106d0bf5e)
 
-    return game_window_size, sct, ctrl, model, mp
+    # Initialising battle ai
+    bat_ai = battle_ai()
+
+    return game_window_size, sct, ctrl, bat_ai, model, mp
 
 
 # Gets single frame of gameplay as a numpy array on which object inference will be later ran
@@ -95,9 +99,11 @@ def run_detection(frame, model, labels_to_names, mp):
 
     # Process image and run inference
     image = preprocess_image(frame) # Retinanet specific preprocessing
-    image, scale = resize_image(image, min_side = 400) # This model was trianed with 400p images
+    image, scale = resize_image(image, min_side = 400) # This model was trained with 400p images
     boxes, scores, labels = model.predict_on_batch(np.expand_dims(image, axis=0)) # Run inference
     boxes /= scale # Ensures bounding boxes are of the correct scale
+
+    has_detections = False
 
     # Visualize detections from inferencing
     predictions_for_map = []
@@ -105,6 +111,8 @@ def run_detection(frame, model, labels_to_names, mp):
         # We can break here because the bounding boxes are in descending order in terms of confidence
         if score < (score_thresh / 100):
             break
+
+        has_detections = True
 
         # Drawing labels and bounding boxes on input frame
         color = label_color(label)
@@ -127,7 +135,7 @@ def run_detection(frame, model, labels_to_names, mp):
     if cv2.waitKey(1) == ord('q'):
         status = "quit"
 
-    return status, predictions_for_map, False
+    return status, has_detections, predictions_for_map, False
 
 # Main function
 if __name__ == "__main__":
@@ -137,9 +145,10 @@ if __name__ == "__main__":
     labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"} # Labels to draw
 
     # Initialising model, window, controller, and mapper
-    game_window_size, sct, ctrl, model, mp = initialise(game_window_size, model_path)
+    game_window_size, sct, ctrl, bat_ai, model, mp = initialise(game_window_size, model_path)
 
     is_init_frame = True
+    has_detections = False
     predictions_for_map = []
     temp_bool = None
     key_pressed = None
@@ -151,7 +160,7 @@ if __name__ == "__main__":
 
     # Use to set pre-defined actions to send to controller (default is random)
     actions = []
-    actons = [0,0,1,1,2,2,3,3]
+    actions = [0,0,1,1,2,2,3,3]
     action_index = -1 # Initialise this from -1
     
     # It takes about 5 frames for our player characte to perform a movement in any direction. Thus,
@@ -166,7 +175,7 @@ if __name__ == "__main__":
             if (is_init_frame == True):
                 key_pressed = None
                 frame, temp = get_screen(sct, game_window_size)
-                status, predictions_for_map, temp_init = run_detection(frame, model, labels_to_names, mp)
+                status, has_detections, predictions_for_map, temp_init = run_detection(frame, model, labels_to_names, mp)
                 map_grid, has_collided = mp.draw_map(key_pressed, predictions_for_map)
                 # No collision handler here since it is literally impossible to collide on the first frame
 
@@ -190,7 +199,7 @@ if __name__ == "__main__":
         # nothing to affect out mapping algorithm
         elif (four_frame_count < 4):
             frame, temp = get_screen(sct, game_window_size)
-            status, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
+            status, has_detections, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
             four_frame_count += 1
 
             if (status == "quit"):
@@ -200,7 +209,7 @@ if __name__ == "__main__":
         # mapping algorithm
         elif (four_frame_count == 4):
             frame, temp = get_screen(sct, game_window_size)
-            status, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
+            status, has_detections, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
 
             print("Map drawing frame")
 
@@ -238,12 +247,19 @@ if __name__ == "__main__":
         # Init frame is over, change flag accordingly
         if (is_init_frame == True):
             is_init_frame = temp_bool      
-
-        if (len(predictions_for_map) == 0):
-            # Start battle ai
-            pass
-
-
+        else:
+        #if (four_frame_count != 0 and four_frame_count != 1):
+            if (has_detections == False):
+                print("cur_frame: " + str(four_frame_count))
+                # Start battle ai
+                bat_ai.main_battle_loop(ctrl, sct, game_window_size)
+                while True:
+                    frame, temp = get_screen(sct, game_window_size)
+                    temp1, has_detections, temp2, temp3 = run_detection(frame, model, labels_to_names, mp)
+                    if (has_detections == True):
+                        four_frame_count = 0
+                        break
+    
     # Clean running processes and close program cleanly
     cv2.destroyAllWindows()
     sys.exit()

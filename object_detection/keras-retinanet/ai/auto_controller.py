@@ -19,6 +19,10 @@ W = 0x11
 A = 0x1E
 S = 0x1F
 D = 0x20
+Z = 0x2C
+
+#F1 = 0x3B
+#LSHIFT = 0x2A
 
 # C struct redefinitions 
 PUL = ctypes.POINTER(ctypes.c_ulong)
@@ -121,10 +125,10 @@ class controller:
 
     def interact(self):
         start_time = time.time()
-        PressKey("z")
+        PressKey(Z)
         while time.time() - start_time < key_hold_time:
             pass # Change to "x" on ubuntu
-        ReleaseKey("z") # Change to "x" on ubuntu
+        ReleaseKey(Z) # Change to "x" on ubuntu
         return 4 # Change to "x" on ubuntu
 
     # A nice test function, by default moves the character randomly, but a string of

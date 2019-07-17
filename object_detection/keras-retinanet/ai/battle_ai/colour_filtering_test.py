@@ -13,13 +13,14 @@ cv2.createTrackbar("low_v", "Output", 94, 255, nothing)
 cv2.createTrackbar("high_h", "Output", 68, 179, nothing)
 cv2.createTrackbar("high_s", "Output", 62, 255, nothing)
 cv2.createTrackbar("high_v", "Output", 108, 255, nothing)
-cv2.createTrackbar("area_thresh", "Output", 0, 20000, nothing)
+cv2.createTrackbar("area_thresh", "Output", 0, 600000, nothing)
 
 video = cv2.VideoCapture("gameplay_frames_video/battle_video30.mp4")
 ret, frame = video.read()
 
 while ret:
-    ret, frame = video.read() 
+    #ret, frame = video.read() 
+    frame = cv2.imread("gameplay_frames/8443.jpg")
     cv_frame = frame.copy()
 
     cv2.imshow("Screen", frame)
@@ -45,7 +46,7 @@ while ret:
         input_img = cv_frame.copy()
 
         contours, hierarchy = cv2.findContours(output_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        #cv2.drawContours(input_img, contours, -1, (0, 0, 255), 1)
+        cv2.drawContours(input_img, contours, -1, (0, 0, 255), 1)
 
         my_hp = 0
         opp_hp = 0
@@ -59,20 +60,20 @@ while ret:
                 centroid_y = int(M['m01']/M['m00'])
 
                 # My HP
-                if (centroid_x >= 510 and centroid_x <= 680 and centroid_y >= 370 and centroid_y <= 420):
-                    my_hp_detected = True
-                    leftmost = tuple(cnt[cnt[:,:,0].argmin()][0])
-                    rightmost = tuple(cnt[cnt[:,:,0].argmax()][0])
-                    cv2.drawContours(input_img, [cnt], 0, (0, 0, 255), 1)
-                    cv2.circle(input_img, (centroid_x, centroid_y), 20, (0, 0, 255), -1)
+                #if (centroid_x >= 510 and centroid_x <= 680 and centroid_y >= 370 and centroid_y <= 420):
+                    #my_hp_detected = True
+                    #leftmost = tuple(cnt[cnt[:,:,0].argmin()][0])
+                    #rightmost = tuple(cnt[cnt[:,:,0].argmax()][0])
+                cv2.drawContours(input_img, [cnt], 0, (0, 0, 255), 1)
+                cv2.circle(input_img, (centroid_x, centroid_y), 20, (0, 0, 255), -1)
 
                 # Opponenet's HP
-                elif (centroid_x >= 140 and centroid_x <= 310 and centroid_y >= 200 and centroid_y <= 250):
-                    opp_hp_detected = True
-                    leftmost = tuple(cnt[cnt[:,:,0].argmin()][0])
-                    rightmost = tuple(cnt[cnt[:,:,0].argmax()][0])
-                    cv2.drawContours(input_img, [cnt], 0, (0, 0, 255), 1)
-                    cv2.circle(input_img, (centroid_x, centroid_y), 20, (0, 0, 255), -1)
+                #elif (centroid_x >= 140 and centroid_x <= 310 and centroid_y >= 200 and centroid_y <= 250):
+                #    opp_hp_detected = True
+                #    leftmost = tuple(cnt[cnt[:,:,0].argmin()][0])
+                #    rightmost = tuple(cnt[cnt[:,:,0].argmax()][0])
+                #    cv2.drawContours(input_img, [cnt], 0, (0, 0, 255), 1)
+                #    cv2.circle(input_img, (centroid_x, centroid_y), 20, (0, 0, 255), -1)
 
         cv2.rectangle(input_img, (510, 370), (680, 420), (255, 0, 0))
         cv2.rectangle(input_img, (140, 200), (310, 250), (255, 0, 0))

@@ -7,7 +7,7 @@ from PIL import Image
 import pyautogui as pag
 import time
 
-test_img = cv2.imread("gameplay_frames/4636.jpg")
+test_img = cv2.imread("gameplay_frames/8443.jpg")
 #test_img = cv2.cvtColor(test_img, cv2.COLOR_BGR2RGB)
 test_img_pil = Image.fromarray(test_img)
 
