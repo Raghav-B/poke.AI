@@ -410,3 +410,17 @@ class live_map:
             self.cur_map_grid)
         
         return self.move_list
+
+    def clear_recent_collisions(self):
+        items_removed = 0
+        
+        while len(self.object_list) > 0:
+            if (self.object_list[-1][0] == 6):
+                del self.object_list[-1]
+                items_removed += 1
+            else:
+                break
+        
+        print("Incorrect collisions removed")
+
+        return items_removed

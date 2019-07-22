@@ -1,5 +1,8 @@
 
-3
+4
 00000	03005E5C	b	s	0	x_pos
 00001	03005E5E	b	s	0	y_pos
 00002	0203736C	b	s	0	direction+speed
+00003	02002DD5	b	s	0	battle_status
+e1
+00004	02002DD6	b	s	0	possible_battle2

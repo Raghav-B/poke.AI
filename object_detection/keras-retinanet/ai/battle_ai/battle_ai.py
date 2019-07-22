@@ -156,7 +156,7 @@ class battle_ai:
 
                 has_battle_ended = False
                 for cnt in contours:
-                    if (cv2.contourArea(cnt) > 300000):
+                    if (cv2.contourArea(cnt) > 100000):
                         print("battle has actually ended")
                         has_battle_ended = True
                         self.cur_state = "entered_battle"

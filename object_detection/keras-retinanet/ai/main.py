@@ -253,6 +253,12 @@ if __name__ == "__main__":
                 print("cur_frame: " + str(four_frame_count))
                 # Start battle ai
                 bat_ai.main_battle_loop(ctrl, sct, game_window_size)
+
+                # Removing incorrectly detected collisions and set actions back a few steps.
+                indexes_to_revert = mp.clear_recent_collisions()
+                action_index -= indexes_to_revert
+                action_index %= len(actions) # Ensuring that any negative values are cycled back to positive
+
                 while True:
                     frame, temp = get_screen(sct, game_window_size)
                     temp1, has_detections, temp2, temp3 = run_detection(frame, model, labels_to_names, mp)

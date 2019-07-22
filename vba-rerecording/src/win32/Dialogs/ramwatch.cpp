@@ -203,20 +203,26 @@ void Update_RAM_Watch()
 			}
 		}
 
-        int int_msg[3];
+        int int_msg[4];
         int_msg[0] = (rswatches[0].CurValue & 0xFF);
         int_msg[1] = (rswatches[1].CurValue & 0xFF);
         int_msg[2] = (rswatches[2].CurValue & 0xFF);
-        
+        int_msg[3] = (rswatches[3].CurValue & 0xFF);
+        //DBOUT("battle_status: " << (rswatches[3].CurValue & 0xFF) << std::endl)
+
         if (int_msg[2] == 255) {
             int_msg[2] = 120;
         }
+        if (int_msg[3] == 146) {
+            int_msg[3] = 121;
+        }
 
-        char msg[4];
+        char msg[5];
         msg[0] = int_msg[0]; //x_pos
         msg[1] = int_msg[1]; //y_pos
-        msg[2] = int_msg[2];
-        msg[3] = 0;
+        msg[2] = int_msg[2] + 1;
+        msg[3] = int_msg[3] + 1;
+        msg[4] = 0;
 
         //if ((int)(rswatches[1].CurValue & 0xFF) == -1) {
         //    msg[2] = 255;
@@ -227,9 +233,8 @@ void Update_RAM_Watch()
         //msg[2] = (rswatches[2].CurValue & 0xFF); //direction+speed
         //msg[3] = 0;
 
+        //DBOUT("Send: " << msg[0] << "," << msg[1] << "," << msg[2] << "," << msg[3] << std::endl);
         zmq_send(publisher, msg, strlen(msg), 0);
-        //DBOUT("Send: " << msg[0] << msg[1] << msg[2] << std::endl);
-        DBOUT("Send: " << msg[0] << "," << msg[1] << "," << msg[2] << std::endl);
 	}
 
 	// refresh any visible parts of the listview box that changed
