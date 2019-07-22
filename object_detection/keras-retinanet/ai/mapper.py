@@ -314,16 +314,16 @@ class live_map:
         self.cur_ram = self.ram_search.get_vals() # Player position from ram searcher
         
         key_performed = None
-        if (self.cur_ram[1] < self.prev_ram[1]): # Agent moved up
+        if (self.cur_ram[1] != self.prev_ram[1]) and key_pressed == 0: # Agent moved up
             key_performed = 0
         
-        elif (self.cur_ram[0] > self.prev_ram[0]): # Agent moved right
+        elif (self.cur_ram[0] != self.prev_ram[0]) and key_pressed == 1: # Agent moved right
             key_performed = 1
         
-        elif (self.cur_ram[1] > self.prev_ram[1]): # Agent moved down
+        elif (self.cur_ram[1] != self.prev_ram[1]) and key_pressed == 2: # Agent moved down
             key_performed = 2
         
-        elif (self.cur_ram[0] < self.prev_ram[0]): # Agent moved left
+        elif (self.cur_ram[0] != self.prev_ram[0]) and key_pressed == 3: # Agent moved left
             key_performed = 3
         
         else: # Collision has maybe occured
@@ -389,7 +389,7 @@ class live_map:
                 self.pf.consecutive_collisions = 0
 
             # Use bounding box list to add to our list of global objects
-            self.add_to_object_list(key_pressed, bounding_box_list)
+            self.add_to_object_list(key_performed, bounding_box_list)
 
             # This block handles drawing of tiles in the map with different colours on the grayscale spectrum
             symbol = None
