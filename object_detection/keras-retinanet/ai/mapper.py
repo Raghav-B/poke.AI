@@ -315,25 +315,29 @@ class live_map:
         # These conditionals handle the wall/collision detection by comparing the previous player position with the new
         # player position based on the most recent key press
         if (key_pressed == 0):
-            if (self.cur_pos[1] == self.prev_pos[1]):
+            #if (self.cur_pos[1] == self.prev_pos[1]):
+            if (self.cur_pos[2] - 26 == 1):
                 has_map_changed = False
                 if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 4][(self.map_offset_x - self.map_min_offset_x) + 7][:3], [255, 255, 255])):
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 4))
         
         elif (key_pressed == 1):
-            if (self.cur_pos[0] == self.prev_pos[0]):
+            #if (self.cur_pos[0] == self.prev_pos[0]):
+            if (self.cur_pos[2] - 26 == 3):
                 has_map_changed = False
                 if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 8][:3], [255, 255, 255])):
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 8, (self.map_offset_y - self.map_min_offset_y) + 5))
         
         elif (key_pressed == 2):
-            if (self.cur_pos[1] == self.prev_pos[1]):
+            #if (self.cur_pos[1] == self.prev_pos[1]):
+            if (self.cur_pos[2] - 26 == 0):
                 has_map_changed = False
                 if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 6][(self.map_offset_x - self.map_min_offset_x) + 7][:3], [255, 255, 255])):
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 6))
         
         elif (key_pressed == 3):
-            if (self.cur_pos[0] == self.prev_pos[0]):
+            #if (self.cur_pos[0] == self.prev_pos[0]):
+            if (self.cur_pos[2] - 26 == 2):
                 has_map_changed = False
                 if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 6][:3], [255, 255, 255])):
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 6, (self.map_offset_y - self.map_min_offset_y) + 5))
