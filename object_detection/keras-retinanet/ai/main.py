@@ -169,7 +169,7 @@ if __name__ == "__main__":
     while True:  
         # 0th frame handles key presses
         if (four_frame_count == 0):
-            time.sleep(5) # Adjust this to reduce frequency of actions sent by controller
+            #time.sleep(2) # Adjust this to reduce frequency of actions sent by controller
 
             # Initial startup frame to put detection and key presses in sync
             if (is_init_frame == True):
@@ -221,9 +221,10 @@ if __name__ == "__main__":
             print(collision_type)
             print("")
 
-            if (collision_type == "battle_collision"):
-                action_index -= 1
-                action_index %= len(actions) # Ensuring that any negative values are cycled back to positive
+            if (collision_type == "battle_collision_post" or collision_type == "battle_collision_pre"):
+                if (collision_type == "battle_collision_pre"):
+                    action_index -= 1
+                    action_index %= len(actions) # Ensuring that any negative values are cycled back to positive
 
                 while (has_detections == True):
                     frame, temp = get_screen(sct, game_window_size)
@@ -240,6 +241,7 @@ if __name__ == "__main__":
                     frame, temp = get_screen(sct, game_window_size)
                     temp1, has_detections, temp2, temp3 = run_detection(frame, model, labels_to_names, mp)
                     if (has_detections == True):
+                        time.sleep(2)
                         break
 
             # Check here if the latest frontier is now a building or another object. 

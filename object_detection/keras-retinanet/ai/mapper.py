@@ -36,8 +36,8 @@ class live_map:
 
     # Variables for ram_searcher.py
     ram_search = None
-    prev_pos = None
-    cur_pos = None
+    prev_ram = None
+    cur_ram = None
 
     # Path finder object
     pf = None
@@ -54,7 +54,7 @@ class live_map:
         
         # Setting up ram searcher
         self.ram_search = ram_searcher()
-        self.prev_pos = self.ram_search.get_vals() # Storing character's position
+        self.prev_ram = self.ram_search.get_vals() # Storing character's position
 
         # Setting up path finder
         self.pf = path_finder()
@@ -135,6 +135,7 @@ class live_map:
         
         return tiles
     
+
     def append_handler(self, key_pressed):
         is_appending = False # Flag for when player character is moving into unmapped regions
 
@@ -285,6 +286,7 @@ class live_map:
         # Add newly found objects to list
         self.object_list.extend(temp_object_list)
 
+
     def draw_frontiers(self, top_x, top_y):        
         self.local_top_x = top_x
         self.local_top_y = top_y
@@ -305,131 +307,133 @@ class live_map:
                     if (np.array_equal(self.cur_map_grid[i][j][:3], [0, 0, 0])):
                         self.cur_map_grid[i][j][:3] = [255, 255, 255]
 
+
     # This is called from main.py to draw our global map. Inputs are the bounding boxes raw data from
     # the frame inferencing and the most recent key pressed by the controller
     def draw_map(self, key_pressed, bounding_box_list):
-        self.cur_pos = self.ram_search.get_vals() # Player position from ram searcher
-        has_map_changed = True # Flag for wall/collision detection
-
-        self.boundary_points = []
-        # These conditionals handle the wall/collision detection by comparing the previous player position with the new
-        # player position based on the most recent key press
-        if (key_pressed == 0):
-            #if (self.cur_pos[1] == self.prev_pos[1]):
-            if (self.cur_pos[2] - 26 == 1):
-                has_map_changed = False
-                if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 4][(self.map_offset_x - self.map_min_offset_x) + 7][:3], [255, 255, 255])):
-                    self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 4))
+        self.cur_ram = self.ram_search.get_vals() # Player position from ram searcher
         
-        elif (key_pressed == 1):
-            #if (self.cur_pos[0] == self.prev_pos[0]):
-            if (self.cur_pos[2] - 26 == 3):
-                has_map_changed = False
-                if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 8][:3], [255, 255, 255])):
-                    self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 8, (self.map_offset_y - self.map_min_offset_y) + 5))
+        key_performed = None
+        if (self.cur_ram[1] < self.prev_ram[1]): # Agent moved up
+            key_performed = 0
         
-        elif (key_pressed == 2):
-            #if (self.cur_pos[1] == self.prev_pos[1]):
-            if (self.cur_pos[2] - 26 == 0):
-                has_map_changed = False
-                if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 6][(self.map_offset_x - self.map_min_offset_x) + 7][:3], [255, 255, 255])):
-                    self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 6))
+        elif (self.cur_ram[0] > self.prev_ram[0]): # Agent moved right
+            key_performed = 1
         
-        elif (key_pressed == 3):
-            #if (self.cur_pos[0] == self.prev_pos[0]):
-            if (self.cur_pos[2] - 26 == 2):
-                has_map_changed = False
-                if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 6][:3], [255, 255, 255])):
-                    self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 6, (self.map_offset_y - self.map_min_offset_y) + 5))
-        else:
-            pass
-
-        # Need this here because a battle can start in the middle of a new map movement
-        # Wild pokemon battle
-        if (self.cur_pos[4] == 1):
-            has_map_changed = False
-        # Trainer battle
-        if (self.cur_pos[3] == 1 or self.cur_pos[3] == 2):
-            has_map_changed = False
-
-        # If collision has been detected, we return from this function otherwise the map will be
-        # incorrectly drawn and this will mess everything up
-        if (has_map_changed == False):
-            #print("COLLISION!")
+        elif (self.cur_ram[1] > self.prev_ram[1]): # Agent moved down
+            key_performed = 2
+        
+        elif (self.cur_ram[0] < self.prev_ram[0]): # Agent moved left
+            key_performed = 3
+        
+        else: # Collision has maybe occured
+            has_collision_occured = False # Flag for wall/collision detection
+            self.boundary_points = []
+            # These conditionals handle the wall/collision detection by comparing the previous player position with the new
+            # player position based on the most recent key press
+            if (key_pressed == 0):
+                if (self.cur_ram[2] - 26 == 1):
+                    has_collision_occured = True
+                    if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 4][(self.map_offset_x - self.map_min_offset_x) + 7][:3], [255, 255, 255])):
+                        self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 4))
+            elif (key_pressed == 1):
+                if (self.cur_ram[2] - 26 == 3):
+                    has_collision_occured = True
+                    if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 8][:3], [255, 255, 255])):
+                        self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 8, (self.map_offset_y - self.map_min_offset_y) + 5))
+            elif (key_pressed == 2):
+                if (self.cur_ram[2] - 26 == 0):
+                    has_collision_occured = True
+                    if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 6][(self.map_offset_x - self.map_min_offset_x) + 7][:3], [255, 255, 255])):
+                        self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 6))
+            elif (key_pressed == 3):
+                if (self.cur_ram[2] - 26 == 2):
+                    has_collision_occured = True
+                    if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 6][:3], [255, 255, 255])):
+                        self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 6, (self.map_offset_y - self.map_min_offset_y) + 5))
+            else: # Any other button (like Z has been pressed)
+                pass
             
-            # Basically, if a detected collision is due to the start of a battle, we do not want to
-            # create a new collision tile in our self.object_list. The following lines will handle this
-            # by using the RAM values received from the emulator
-
-            is_wall_collision = True
-            # Wild pokemon battle
-            if (self.cur_pos[4] == 1):
-                is_wall_collision = False
-            # Trainer battle
-            if (self.cur_pos[3] == 1 or self.cur_pos[3] == 2):
-                is_wall_collision = False
-
-            if (is_wall_collision == True):
+            # Collision has been successfully detected
+            if (has_collision_occured == True):
                 for point in self.boundary_points:
                     coords = [point[0], point[1], point[0], point[1]]
                     if not ((6, coords) in self.object_list):
                         self.object_list.append((6, coords))
                     self.fill_area(coords, [105, 105, 105])
 
-            # Used for anything that needs to compare previous map state with new map state
-            self.prev_map_grid = self.cur_map_grid
-            self.prev_pos = self.cur_pos
-            
+                # Used for anything that needs to compare previous map state with new map state
+                self.prev_map_grid = self.cur_map_grid
+                self.prev_ram = self.cur_ram
+                
+                # Draw frontiers on map
+                self.draw_frontiers((self.map_offset_x - self.map_min_offset_x), \
+                    (self.map_offset_y - self.map_min_offset_y))
+                
+                return self.cur_map_grid, "normal_collision"
+
+            # No collision, either its a transient frame
+            else:
+                # Checking if we're in an animation
+                if (self.cur_ram[2] == 121):
+                    # Call controller interact here
+                    pass
+                else: # Its most likely a start frame, but for insurance purpose, we will call controller interact
+                    pass
+
+        if (key_performed != None): # Only triggers when a movement has been successfully registered.
+            # We will increase the consecutive normal movmenets by 1 since at this point no collision has occured
+            self.pf.consecutive_movements += 1
+            if (self.pf.consecutive_movements >= 2):
+                # We only reset the consecutive collisions once we have achieved two consecutive movements.
+                self.pf.consecutive_collisions = 0
+
+            # Use bounding box list to add to our list of global objects
+            self.add_to_object_list(key_pressed, bounding_box_list)
+
+            # This block handles drawing of tiles in the map with different colours on the grayscale spectrum
+            symbol = None
+            for label, box in self.object_list:
+                if (label == 0): # pokecen
+                    symbol = [0, 0, 255] # red
+                elif (label == 1): # pokemart
+                    symbol = [255, 0, 0] # blue
+                elif (label == 2): # npc
+                    symbol = [66, 135, 245] # orange
+                elif (label == 3): # house
+                    symbol = [30, 57, 102] # brown
+                elif (label == 4): # gym
+                    symbol = [96, 102, 30] # turqoise
+                elif (label == 5): # exit
+                    symbol = [33, 255, 185] # yellow
+                elif (label == 6): # wall/boundary
+                    symbol = [105, 105, 105] # grey
+                self.fill_area(box, symbol)
+            # Draw player character position for localization purpose # green
+            self.cur_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5]\
+                [(self.map_offset_x - self.map_min_offset_x) + 7][:3] = [33, 166, 28]
+
             # Draw frontiers on map
             self.draw_frontiers((self.map_offset_x - self.map_min_offset_x), \
                 (self.map_offset_y - self.map_min_offset_y))
 
-            # If collision is detected, move in adjusted manner
-            if (is_wall_collision == True):
-                return self.cur_map_grid, "normal_collision"
+            # Used for anything that needs to compare previous map state with new map state
+            self.prev_map_grid = self.cur_map_grid
+            self.prev_ram = self.cur_ram
+
+        # Control continues to check for any battle starting. Depending on whether battle starts on
+        # end or start of movement, the map will be updated by the conditional above.
+        # Wild pokemon battle or trainer battle detected
+        if (self.cur_ram[4] == 1) or (self.cur_ram[3] == 1 or self.cur_ram[3] == 2):
+            if (key_performed != None): # If battle starts after movement has been performed
+                return self.cur_map_grid, "battle_collision_post"
             else:
-                return self.cur_map_grid, "battle_collision"
+                return self.cur_map_grid, "battle_collision_pre"
         
-        # We will increase the consecutive normal movmenets by 1 since at this point no collision has occured
-        self.pf.consecutive_movements += 1
-        if (self.pf.consecutive_movements >= 2):
-            # We only reset the consecutive collisions once we have achieved two consecutive movements.
-            self.pf.consecutive_collisions = 0
-
-        # Use bounding box list to add to our list of global objects
-        self.add_to_object_list(key_pressed, bounding_box_list)
-
-        # This block handles drawing of tiles in the map with different colours on the grayscale spectrum
-        symbol = None
-        for label, box in self.object_list:
-            if (label == 0): # pokecen
-                symbol = [0, 0, 255] # red
-            elif (label == 1): # pokemart
-                symbol = [255, 0, 0] # blue
-            elif (label == 2): # npc
-                symbol = [66, 135, 245] # orange
-            elif (label == 3): # house
-                symbol = [30, 57, 102] # brown
-            elif (label == 4): # gym
-                symbol = [96, 102, 30] # turqoise
-            elif (label == 5): # exit
-                symbol = [33, 255, 185] # yellow
-            elif (label == 6): # wall/boundary
-                symbol = [105, 105, 105] # grey
-            self.fill_area(box, symbol)
-        # Draw player character position for localization purpose # green
-        self.cur_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5]\
-            [(self.map_offset_x - self.map_min_offset_x) + 7][:3] = [33, 166, 28]
-
-        # Draw frontiers on map
-        self.draw_frontiers((self.map_offset_x - self.map_min_offset_x), \
-            (self.map_offset_y - self.map_min_offset_y))
-
-        # Used for anything that needs to compare previous map state with new map state
-        self.prev_map_grid = self.cur_map_grid
-        self.prev_pos = self.cur_pos
-
         return self.cur_map_grid, "no_collision"
+
+
+        
 
     def get_movelist(self):
         # Get best frontier to move towards
@@ -438,17 +442,3 @@ class live_map:
             self.cur_map_grid)
         
         return self.move_list
-
-    #def clear_recent_collisions(self):
-    #    items_removed = 0
-        
-    #    while len(self.object_list) > 0:
-    #        if (self.object_list[-1][0] == 6):
-    #            del self.object_list[-1]
-    #            items_removed += 1
-    #        else:
-    #            break
-        
-    #    print("Incorrect collisions removed")
-
-    #    return items_removed

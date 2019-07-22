@@ -45,7 +45,7 @@ class battle_ai:
                 frame = cv2.copyMakeBorder(frame, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
 
             cv2.imshow("Screen", frame)
-            print("Current state: " + str(self.cur_state))
+            #print("Current state: " + str(self.cur_state))
             cv2.waitKey(1)
 
             # This state introduces the enemy, for example Younger Allen would like to battle!
@@ -53,7 +53,6 @@ class battle_ai:
             if (self.cur_state == "entered_battle"):
                 frame_pil = Image.fromarray(frame)
                 detected = pag.locate(self.z_press_img, frame_pil, grayscale=False, confidence=0.9)
-                print(detected)
                 if (detected != None):
                     self.cur_state = "intro_anim"
                     time.sleep(0.1)
@@ -131,10 +130,10 @@ class battle_ai:
                 if (self.opponent_hp < 0):
                     self.opponent_hp = 0
 
-                print("Pokemon HP: " + str(self.pokemon_hp))
-                print("Opponent HP: " + str(self.opponent_hp))
+                #print("Pokemon HP: " + str(self.pokemon_hp))
+                #print("Opponent HP: " + str(self.opponent_hp))
 
-                print("Finding next state...")
+                #print("Finding next state...")
                 # If current opponent pokemon or my pokemon has been beaten
                 if (self.opponent_hp <= 0 or self.pokemon_hp <= 0):
                     self.cur_state = "battle_ended"
@@ -157,7 +156,7 @@ class battle_ai:
                 has_battle_ended = False
                 for cnt in contours:
                     if (cv2.contourArea(cnt) > 100000):
-                        print("battle has actually ended")
+                        #print("battle has actually ended")
                         has_battle_ended = True
                         self.cur_state = "entered_battle"
                         self.opponent_hp = 141
