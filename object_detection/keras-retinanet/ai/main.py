@@ -169,14 +169,14 @@ if __name__ == "__main__":
     while True:  
         # 0th frame handles key presses
         if (four_frame_count == 0):
-            #time.sleep(1) # Adjust this to reduce frequency of actions sent by controller
+            time.sleep(5) # Adjust this to reduce frequency of actions sent by controller
 
             # Initial startup frame to put detection and key presses in sync
             if (is_init_frame == True):
                 key_pressed = None
                 frame, temp = get_screen(sct, game_window_size)
                 status, has_detections, predictions_for_map, temp_init = run_detection(frame, model, labels_to_names, mp)
-                map_grid, has_collided = mp.draw_map(key_pressed, predictions_for_map)
+                map_grid, collision_type = mp.draw_map(key_pressed, predictions_for_map)
                 # No collision handler here since it is literally impossible to collide on the first frame
 
                 four_frame_count += 1
@@ -216,9 +216,31 @@ if __name__ == "__main__":
             # Draw map in window
             # Take note that there is a one frame delay because of something in OpenCV itself. If you print
             # the map_grid, you'll see that the mapping is actually performed realtime
-            map_grid, has_collided = mp.draw_map(key_pressed, predictions_for_map)
+            map_grid, collision_type = mp.draw_map(key_pressed, predictions_for_map)
             cv2.imshow("Map", map_grid[:,:,:3])
+            print(collision_type)
             print("")
+
+            if (collision_type == "battle_collision"):
+                action_index -= 1
+                action_index %= len(actions) # Ensuring that any negative values are cycled back to positive
+
+                while (has_detections == True):
+                    frame, temp = get_screen(sct, game_window_size)
+                    status, has_detections, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
+                    
+                    # Spam Z until battle has properly started.
+                    ctrl.interact()
+
+                # Start battle ai
+                bat_ai.main_battle_loop(ctrl, sct, game_window_size)
+
+                # After battle ai has completed, returning back to normal movement
+                while True:
+                    frame, temp = get_screen(sct, game_window_size)
+                    temp1, has_detections, temp2, temp3 = run_detection(frame, model, labels_to_names, mp)
+                    if (has_detections == True):
+                        break
 
             # Check here if the latest frontier is now a building or another object. 
             # If it is, search for another frontier.
@@ -229,7 +251,7 @@ if __name__ == "__main__":
             #    action_index = -1
 
             # Change actions to newly calculated path if a collision occurs
-            #if (has_collided == True):
+            #if (collision_type == "normal_collision"):
             #    actions = mp.pf.frontier_path_collision_handler(map_grid, \
             #        (mp.map_offset_x - mp.map_min_offset_x), \
             #        (mp.map_offset_y - mp.map_min_offset_y))
@@ -246,25 +268,7 @@ if __name__ == "__main__":
 
         # Init frame is over, change flag accordingly
         if (is_init_frame == True):
-            is_init_frame = temp_bool      
-        else:
-        #if (four_frame_count != 0 and four_frame_count != 1):
-            if (has_detections == False):
-                print("cur_frame: " + str(four_frame_count))
-                # Start battle ai
-                bat_ai.main_battle_loop(ctrl, sct, game_window_size)
-
-                # Removing incorrectly detected collisions and set actions back a few steps.
-                indexes_to_revert = mp.clear_recent_collisions()
-                action_index -= indexes_to_revert
-                action_index %= len(actions) # Ensuring that any negative values are cycled back to positive
-
-                while True:
-                    frame, temp = get_screen(sct, game_window_size)
-                    temp1, has_detections, temp2, temp3 = run_detection(frame, model, labels_to_names, mp)
-                    if (has_detections == True):
-                        four_frame_count = 0
-                        break
+            is_init_frame = temp_bool
     
     # Clean running processes and close program cleanly
     cv2.destroyAllWindows()

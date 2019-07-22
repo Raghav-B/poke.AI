@@ -340,16 +340,37 @@ class live_map:
         else:
             pass
 
+        # Need this here because a battle can start in the middle of a new map movement
+        # Wild pokemon battle
+        if (self.cur_pos[4] == 1):
+            has_map_changed = False
+        # Trainer battle
+        if (self.cur_pos[3] == 1 or self.cur_pos[3] == 2):
+            has_map_changed = False
+
         # If collision has been detected, we return from this function otherwise the map will be
         # incorrectly drawn and this will mess everything up
         if (has_map_changed == False):
-            print("COLLISION!")
+            #print("COLLISION!")
             
-            for point in self.boundary_points:
-                coords = [point[0], point[1], point[0], point[1]]
-                if not ((6, coords) in self.object_list):
-                    self.object_list.append((6, coords))
-                self.fill_area(coords, [105, 105, 105])
+            # Basically, if a detected collision is due to the start of a battle, we do not want to
+            # create a new collision tile in our self.object_list. The following lines will handle this
+            # by using the RAM values received from the emulator
+
+            is_wall_collision = True
+            # Wild pokemon battle
+            if (self.cur_pos[4] == 1):
+                is_wall_collision = False
+            # Trainer battle
+            if (self.cur_pos[3] == 1 or self.cur_pos[3] == 2):
+                is_wall_collision = False
+
+            if (is_wall_collision == True):
+                for point in self.boundary_points:
+                    coords = [point[0], point[1], point[0], point[1]]
+                    if not ((6, coords) in self.object_list):
+                        self.object_list.append((6, coords))
+                    self.fill_area(coords, [105, 105, 105])
 
             # Used for anything that needs to compare previous map state with new map state
             self.prev_map_grid = self.cur_map_grid
@@ -360,7 +381,10 @@ class live_map:
                 (self.map_offset_y - self.map_min_offset_y))
 
             # If collision is detected, move in adjusted manner
-            return self.cur_map_grid, True
+            if (is_wall_collision == True):
+                return self.cur_map_grid, "normal_collision"
+            else:
+                return self.cur_map_grid, "battle_collision"
         
         # We will increase the consecutive normal movmenets by 1 since at this point no collision has occured
         self.pf.consecutive_movements += 1
@@ -401,7 +425,7 @@ class live_map:
         self.prev_map_grid = self.cur_map_grid
         self.prev_pos = self.cur_pos
 
-        return self.cur_map_grid, False
+        return self.cur_map_grid, "no_collision"
 
     def get_movelist(self):
         # Get best frontier to move towards
@@ -411,16 +435,16 @@ class live_map:
         
         return self.move_list
 
-    def clear_recent_collisions(self):
-        items_removed = 0
+    #def clear_recent_collisions(self):
+    #    items_removed = 0
         
-        while len(self.object_list) > 0:
-            if (self.object_list[-1][0] == 6):
-                del self.object_list[-1]
-                items_removed += 1
-            else:
-                break
+    #    while len(self.object_list) > 0:
+    #        if (self.object_list[-1][0] == 6):
+    #            del self.object_list[-1]
+    #            items_removed += 1
+    #        else:
+    #            break
         
-        print("Incorrect collisions removed")
+    #    print("Incorrect collisions removed")
 
-        return items_removed
+    #    return items_removed
