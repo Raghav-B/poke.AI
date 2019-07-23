@@ -22,11 +22,11 @@ class battle_ai:
 
     # DQNN Variables
     battle_model = None
-    battle_data = set() # Contains an unsorted history of all state and action pairs so far
+    battle_data = [] # Contains an unsorted history of all state and action pairs so far
     gamma = 0.95
     epsilon = 1.0
     epsilon_min = 0.01
-    epsilon_decay = 0.995
+    epsilon_decay = 0.8#0.995
     train_batch_size = 32
 
     num_episodes_completed = 0
@@ -80,13 +80,19 @@ class battle_ai:
 
 
     def action_performer(self, ctrl):
-        time.sleep(0.1)
-
         # Reset selector position to "FIGHT"
+        time.sleep(0.1)
         ctrl.move_up()
         ctrl.move_left()
         # If fight is selected (for now we are only sticking with selecting fight)
         ctrl.interact()
+
+        print("Move selected: " + str(self.move_index))
+
+        # Reset move selector to 0 (top_left move)
+        time.sleep(0.1)
+        ctrl.move_up()
+        ctrl.move_left()
 
         if (self.move_index == 0): # First move and so on
             ctrl.interact()
@@ -103,6 +109,8 @@ class battle_ai:
 
     
     def do_training_step(self):
+        print("Performing training...")
+
         # Get random sample of training data of batch_size 32
         training_batch = random.sample(self.battle_data, self.train_batch_size)
         train_state_arr = []
@@ -182,8 +190,10 @@ class battle_ai:
                 
                 self.move_index = 0
                 if (np.random.rand() <= self.epsilon):
+                    print("Exploration (randomness selected")
                     self.move_index = random.randint(0, 3)
                 else:
+                    print("Exploitation (model-based)")
                     action_predicted_rewards = self.battle_model.predict(self.init_state)
                     self.move_index = np.argmax(action_predicted_rewards[0])
                 
@@ -197,10 +207,10 @@ class battle_ai:
                 # will last. Thus we need to continue updating our stored HP values so they're ready to use once
                 # the next state has been detected.
                 self.update_hps(frame)
-                print("Pokemon HP: " + str(self.pokemon_hp))
-                print("Opponent HP: " + str(self.opponent_hp))
-                print("Finding next state...")
-                print("")
+                #print("Pokemon HP: " + str(self.pokemon_hp))
+                #print("Opponent HP: " + str(self.opponent_hp))
+                #print("Finding next state...")
+                #print("")
 
                 # If current opponent pokemon or my pokemon has been beaten
                 if (self.opponent_hp <= 0 or self.pokemon_hp <= 0): # Need to handle self-death in a nicer way eventually
@@ -216,10 +226,11 @@ class battle_ai:
                         base_reward = -200
                     reward = (self.next_state[0][1] - self.init_state[0][1]) - \
                         (self.next_state[0][0] - self.init_state[0][0]) + base_reward
-                    
+                    print("Action reward: " + str(reward))
+
                     # Adding this state/action pair to our dataset. Last element is True because 1v1 battle
                     # has ended in this conditional
-                    self.battle_data.add((self.init_state, self.move_index, reward, self.next_state, True))
+                    self.battle_data.append((self.init_state, self.move_index, reward, self.next_state, True))
                     self.cur_state = "battle_ended"
                 
                 # Only reaches here when enemy hasn't been beaten yet
@@ -235,27 +246,31 @@ class battle_ai:
                         # Performing reward calculation for our last used move
                         reward = (self.next_state[0][1] - self.init_state[0][1]) - \
                             (self.next_state[0][0] - self.init_state[0][0])
-                        
+                        print("Action reward: " + str(reward))
+
                         # Adding this state/action pair to our dataset. Last element is False because 1v1 battle
                         # is still going on
-                        self.battle_data.add((self.init_state, self.move_index, reward, self.next_state, False))
+                        self.battle_data.append((self.init_state, self.move_index, reward, self.next_state, False))
                         self.cur_state = "action_select"
                 
                 if (self.cur_state == "battle_ended"):
                     self.num_episodes_completed += 1
                     print(f"Episode: {self.num_episodes_completed}, Randomness: {self.epsilon}")
-                
+                    print("")
+                    # Save the model every 5 episodes
+                    if (self.num_episodes_completed % 5 == 0):
+                        print("Model saved!")
+                        print("")
+                        self.battle_model.save_weights(f"battle_ai/models/battle_model_{self.num_episodes_completed}.h5")
+
                 # This conditional basically allows the battle_model to perform its training after every state
                 # pair provided that the minimum batch_size in battle_data has been achieved.
                 if (self.cur_state == "battle_ended" or self.cur_state == "action_select"):
+                    print("Current batch size: " + str(len(self.battle_data)))
                     if (len(self.battle_data) > self.train_batch_size):
                         loss = self.do_training_step()
                         print(f"Episode: {self.num_episodes_completed}, Loss: {loss}")
-
-                # Save the model every 5 episodes
-                if (self.num_episodes_completed % 5 == 0):
-                    self.battle_model.save_weights(f"battle_model_{self.num_episodes_completed}.h5")
-            
+                        print("")
 
             elif (self.cur_state == "battle_ended"):                
                 # Fade to black detection
@@ -287,9 +302,4 @@ class battle_ai:
                     # This is to handle any required key presses due to levelling or other stuff
                     time.sleep(0.1)
                     ctrl.interact()
-
-
-    def reward_calculation(self):
-        pass
-
     
