@@ -1,4 +1,10 @@
 import keras
+
+# Imports for DQNN
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.optimizers import Adam
+
 from keras_retinanet import models
 from keras_retinanet.utils.image import read_image_bgr, preprocess_image, resize_image
 from keras_retinanet.utils.visualization import draw_box, draw_caption
@@ -35,7 +41,16 @@ def get_session():
 # Initializes model for detection, mapper, controller and finds game window
 def initialise(game_window_size, model_path):
     keras.backend.tensorflow_backend.set_session(get_session())
-    model = models.load_model(model_path, backbone_name='resnet101')
+    detection_model = models.load_model(model_path, backbone_name='resnet101')
+
+    # Load battle AI model here as well.
+    battle_model = Sequential()
+    battle_model.add(Dense(24, input_dim=2, activation='relu')) # 2 is the number of inputs into our model
+    battle_model.add(Dense(24, activation='relu'))
+    battle_model.add(Dense(4, activation='linear')) # 4 is the number of actions we can choose from
+    battle_model.compile(loss='mse', optimizer=Adam(lr=0.001)) # learning rate
+    # Initialising battle ai with battle_model
+    bat_ai = battle_ai(battle_model)
 
     # Setting up windows
     cv2.namedWindow("Map", cv2.WINDOW_NORMAL)
@@ -64,12 +79,9 @@ def initialise(game_window_size, model_path):
     
     # Initialising mapper object with retroarch pid and memory addresses to watch for player's
     # x and y coordinates
-    mp = live_map(game_window_size["width"], game_window_size["height"], padding)#, 4681, 0x55c106d0bf5c, 0x55c106d0bf5e)
+    mp = live_map(game_window_size["width"], game_window_size["height"], padding)
 
-    # Initialising battle ai
-    bat_ai = battle_ai()
-
-    return game_window_size, sct, ctrl, bat_ai, model, mp
+    return game_window_size, sct, ctrl, bat_ai, detection_model, mp
 
 
 # Gets single frame of gameplay as a numpy array on which object inference will be later ran
@@ -93,14 +105,14 @@ def get_screen(sct, game_window_size):
 
 
 # Runs inference on a single input frame and returns detected bounding boxes
-def run_detection(frame, model, labels_to_names, mp):
+def run_detection(frame, detection_model, labels_to_names, mp):
     # Get trackbar value for confidence score threshold
     score_thresh = cv2.getTrackbarPos("ScoreThresh", "Screen") 
 
     # Process image and run inference
     image = preprocess_image(frame) # Retinanet specific preprocessing
     image, scale = resize_image(image, min_side = 400) # This model was trained with 400p images
-    boxes, scores, labels = model.predict_on_batch(np.expand_dims(image, axis=0)) # Run inference
+    boxes, scores, labels = detection_model.predict_on_batch(np.expand_dims(image, axis=0)) # Run inference
     boxes /= scale # Ensures bounding boxes are of the correct scale
 
     has_detections = False
@@ -145,7 +157,7 @@ if __name__ == "__main__":
     labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"} # Labels to draw
 
     # Initialising model, window, controller, and mapper
-    game_window_size, sct, ctrl, bat_ai, model, mp = initialise(game_window_size, model_path)
+    game_window_size, sct, ctrl, bat_ai, detection_model, mp = initialise(game_window_size, model_path)
 
     is_init_frame = True
     has_detections = False
@@ -176,7 +188,7 @@ if __name__ == "__main__":
             if (is_init_frame == True):
                 key_pressed = None
                 frame, temp = get_screen(sct, game_window_size)
-                status, has_detections, predictions_for_map, temp_init = run_detection(frame, model, labels_to_names, mp)
+                status, has_detections, predictions_for_map, temp_init = run_detection(frame, detection_model, labels_to_names, mp)
                 map_grid, collision_type = mp.draw_map(key_pressed, predictions_for_map)
                 # No collision handler here since it is literally impossible to collide on the first frame
 
@@ -200,7 +212,7 @@ if __name__ == "__main__":
         # nothing to affect out mapping algorithm
         elif (four_frame_count < 4):
             frame, temp = get_screen(sct, game_window_size)
-            status, has_detections, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
+            status, has_detections, predictions_for_map, temp_bool = run_detection(frame, detection_model, labels_to_names, mp)
             four_frame_count += 1
 
             if (status == "quit"):
@@ -210,7 +222,7 @@ if __name__ == "__main__":
         # mapping algorithm
         elif (four_frame_count == 4):
             frame, temp = get_screen(sct, game_window_size)
-            status, has_detections, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
+            status, has_detections, predictions_for_map, temp_bool = run_detection(frame, detection_model, labels_to_names, mp)
 
             print("Map drawing frame")
 
@@ -229,7 +241,7 @@ if __name__ == "__main__":
 
                 while (has_detections == True):
                     frame, temp = get_screen(sct, game_window_size)
-                    status, has_detections, predictions_for_map, temp_bool = run_detection(frame, model, labels_to_names, mp)
+                    status, has_detections, predictions_for_map, temp_bool = run_detection(frame, detection_model, labels_to_names, mp)
                     
                     # Spam Z until battle has properly started.
                     ctrl.interact()
@@ -240,7 +252,7 @@ if __name__ == "__main__":
                 # After battle ai has completed, returning back to normal movement
                 while True:
                     frame, temp = get_screen(sct, game_window_size)
-                    temp1, has_detections, temp2, temp3 = run_detection(frame, model, labels_to_names, mp)
+                    temp1, has_detections, temp2, temp3 = run_detection(frame, detection_model, labels_to_names, mp)
                     if (has_detections == True):
                         time.sleep(2)
                         break

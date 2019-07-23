@@ -1,4 +1,5 @@
 import cv2
+import random
 import numpy as np
 from mss import mss
 import pyautogui as pag
@@ -19,13 +20,49 @@ class battle_ai:
     pokemon_hp = 141
     opponent_hp = 141
 
-    def __init__(self):
+    # DQNN Variables
+    battle_model = None
+    battle_data = set() # Contains an unsorted history of all state and action pairs so far
+    gamma = 0.95
+    epsilon = 1.0
+    epsilon_min = 0.01
+    epsilon_decay = 0.995
+    train_batch_size = 32
+
+
+    def __init__(self, battle_model):
         self.z_press_img = cv2.imread("D:/App Development/pokemon_ai/object_detection/keras-retinanet/ai/battle_ai/z_press.png")
         self.z_press_img = Image.fromarray(self.z_press_img)
         #cv2.imshow("hm", z_press_img)
 
         self.action_select_img = cv2.imread("D:/App Development/pokemon_ai/object_detection/keras-retinanet/ai/battle_ai/action_select.png")
         self.action_select_img = Image.fromarray(self.action_select_img)
+
+        self.battle_model = battle_model
+
+    
+    def action_performer(self, move_index):
+        time.sleep(0.1)
+
+        # Reset selector position to "FIGHT"
+        ctrl.move_up()
+        ctrl.move_left()
+        # If fight is selected (for now we are only sticking with selecting fight)
+        ctrl.interact()
+
+        if (move_index == 0): # First move and so on
+            ctrl.interact()
+        elif (move_index == 1):
+            ctrl.move_right()
+            ctrl.interact()
+        elif (move_index == 2):
+            ctrl.move_down()
+            ctrl.interact()
+        else: # 4th, last move
+            ctrl.move_down()
+            ctrl.move_right()
+            ctrl.interact()
+
 
     def main_battle_loop(self, ctrl, sct, game_window_size):
         while True:
@@ -68,33 +105,7 @@ class battle_ai:
             
             # This is the action select screen. This is the part that the model will really control.
             elif (self.cur_state == "action_select"):
-                time.sleep(0.1)
 
-                # Reset selector position to "FIGHT"
-                ctrl.move_up()
-                ctrl.move_left()
-                
-                # If fight is selected
-                ctrl.interact()
-                # Reset selector position to first move
-                ctrl.move_up()
-                ctrl.move_left()
-
-                ### First move ###
-                ctrl.interact()
-
-                ### Second move ###
-                #ctrl.move_right()
-                #ctrl.interact()
-
-                ### Third move ###
-                #ctrl.move_down()
-                #ctrl.interact()
-
-                ### Fourth move ###
-                #ctrl.move_down()
-                #ctrl.move_right()
-                #ctrl.interact()
 
                 self.cur_state = "ongoing_turn"
 
@@ -175,3 +186,9 @@ class battle_ai:
                     # This is to handle any required key presses due to levelling or other stuff
                     time.sleep(0.1)
                     ctrl.interact()
+
+
+    def reward_calculation(self):
+        pass
+
+    
