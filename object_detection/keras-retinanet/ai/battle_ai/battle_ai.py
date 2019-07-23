@@ -190,11 +190,12 @@ class battle_ai:
                 
                 self.move_index = 0
                 if (np.random.rand() <= self.epsilon):
-                    print("Exploration (randomness selected)")
+                    print("Exploration (random)")
                     self.move_index = random.randint(0, 3) #0, 3
                 else:
-                    print("Exploitation (model-based)")
+                    print("Exploitation (prediction)")
                     action_predicted_rewards = self.battle_model.predict(self.init_state)
+                    print(action_predicted_rewards[0])
                     self.move_index = np.argmax(action_predicted_rewards[0])
                 
                 # Performing actual, physical action now
@@ -206,6 +207,16 @@ class battle_ai:
                 # This state will be called multiple times since we don't know how long the pokemons' turns
                 # will last. Thus we need to continue updating our stored HP values so they're ready to use once
                 # the next state has been detected.
+                
+                # Checking if PP of move has ran out
+                # If this is the case, we will break out of this cycle and reset to previous save state
+                frame_pil = Image.fromarray(frame)
+                detected = pag.locate(self.z_press_img, frame_pil, grayscale=False, confidence=0.9)
+                if (detected != None):
+                    self.pokemon_hp = 141
+                    self.opponent_hp = 141
+                    return "reset"                    
+
                 self.update_hps(frame)
                 #print("Pokemon HP: " + str(self.pokemon_hp))
                 #print("Opponent HP: " + str(self.opponent_hp))
