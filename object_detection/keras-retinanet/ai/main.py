@@ -172,7 +172,7 @@ if __name__ == "__main__":
 
     # Use to set pre-defined actions to send to controller (default is random)
     actions = []
-    #actions = [0,0,1,1,2,2,3,3]
+    actions = [0,0,1,1,2,2,3,3]
     #actions = [2,2,0,0]
     action_index = -1 # Initialise this from -1
     
@@ -194,14 +194,14 @@ if __name__ == "__main__":
 
                 four_frame_count += 1
                 cv2.imshow("Map", map_grid[:,:,:3])
-                actions = mp.get_movelist()
+                #actions = mp.get_movelist()
 
             # All other 0 frames that are not the initial frame
             else:
                 # Used to iterate through pre-defined actions and break once actions have ended
                 action_index += 1
                 if (action_index >= len(actions)):
-                    actions = mp.get_movelist()
+                    #actions = mp.get_movelist()
                     action_index = 0
                 
                 print("Key pressed: " + keys[actions[action_index]])            
@@ -257,6 +257,7 @@ if __name__ == "__main__":
                         time.sleep(2)
                         break
 
+            """
             # Check here if the latest frontier is now a building or another object. 
             # If it is, search for another frontier.
             if (not (np.array_equal(map_grid[mp.pf.next_frontier[2]][mp.pf.next_frontier[1]][:3], [0, 0, 0]) or \
@@ -274,6 +275,7 @@ if __name__ == "__main__":
                     # Find a new frontier to go towards
                     actions = mp.get_movelist()
                 action_index = -1 # Either way we reset the index
+            """
 
             # Reset 5 frame cycle
             four_frame_count = 0
