@@ -26,7 +26,7 @@ class battle_ai:
     gamma = 0.95
     epsilon = 1.0
     epsilon_min = 0.01
-    epsilon_decay = 0.8#0.995
+    epsilon_decay = 0.995
     train_batch_size = 32
 
     num_episodes_completed = 0
@@ -190,8 +190,8 @@ class battle_ai:
                 
                 self.move_index = 0
                 if (np.random.rand() <= self.epsilon):
-                    print("Exploration (randomness selected")
-                    self.move_index = random.randint(0, 3)
+                    print("Exploration (randomness selected)")
+                    self.move_index = random.randint(0, 3) #0, 3
                 else:
                     print("Exploitation (model-based)")
                     action_predicted_rewards = self.battle_model.predict(self.init_state)
@@ -224,8 +224,8 @@ class battle_ai:
                         base_reward = 200
                     elif (self.pokemon_hp <= 0):
                         base_reward = -200
-                    reward = (self.next_state[0][1] - self.init_state[0][1]) - \
-                        (self.next_state[0][0] - self.init_state[0][0]) + base_reward
+                    reward = (self.init_state[0][1] - self.next_state[0][1]) - \
+                        (self.init_state[0][0] - self.next_state[0][0]) + base_reward
                     print("Action reward: " + str(reward))
 
                     # Adding this state/action pair to our dataset. Last element is True because 1v1 battle
@@ -244,8 +244,8 @@ class battle_ai:
                         self.next_state[0][1] = self.opponent_hp
                         
                         # Performing reward calculation for our last used move
-                        reward = (self.next_state[0][1] - self.init_state[0][1]) - \
-                            (self.next_state[0][0] - self.init_state[0][0])
+                        reward = (self.init_state[0][1] - self.next_state[0][1]) - \
+                            (self.init_state[0][0] - self.next_state[0][0])
                         print("Action reward: " + str(reward))
 
                         # Adding this state/action pair to our dataset. Last element is False because 1v1 battle
@@ -287,7 +287,11 @@ class battle_ai:
                         has_battle_ended = True
                         self.cur_state = "entered_battle"
                         self.opponent_hp = 141
-                        return
+                        
+                        if (self.pokemon_hp <= 0):
+                            return "reset"
+                        else:
+                            return "end"
                 
                 if (has_battle_ended == False):
                     frame_pil = Image.fromarray(frame)

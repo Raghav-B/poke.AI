@@ -247,7 +247,14 @@ if __name__ == "__main__":
                     ctrl.interact()
 
                 # Start battle ai
-                bat_ai.main_battle_loop(ctrl, sct, game_window_size)
+                battle_status = bat_ai.main_battle_loop(ctrl, sct, game_window_size)
+                if (battle_status == "reset"):
+                    action_index = -1
+                    ctrl.reload_state()
+
+                    bat_ai.pokemon_hp = 141 # Reset back to default
+                    temp3, padding = get_screen(sct, game_window_size)
+                    mp = live_map(game_window_size["width"], game_window_size["height"], padding)
 
                 # After battle ai has completed, returning back to normal movement
                 while True:

@@ -20,8 +20,7 @@ A = 0x1E
 S = 0x1F
 D = 0x20
 Z = 0x2C
-
-#F1 = 0x3B
+F1 = 0x3B
 #LSHIFT = 0x2A
 
 # C struct redefinitions 
@@ -130,6 +129,14 @@ class controller:
             pass # Change to "x" on ubuntu
         ReleaseKey(Z) # Change to "x" on ubuntu
         return 4 # Change to "x" on ubuntu
+
+    def reload_state(self):
+        start_time = time.time()
+        PressKey(F1)
+        while time.time() - start_time < key_hold_time:
+            pass # Change to "x" on ubuntu
+        ReleaseKey(F1) # Change to "x" on ubuntu
+        return 5 # Change to "x" on ubuntu
 
     # A nice test function, by default moves the character randomly, but a string of
     # actions to perform can be sent from main.py
