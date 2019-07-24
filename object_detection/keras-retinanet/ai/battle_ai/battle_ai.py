@@ -26,7 +26,7 @@ class battle_ai:
     gamma = 0.95
     epsilon = 1.0
     epsilon_min = 0.01
-    epsilon_decay = 0.995
+    epsilon_decay = 0.975 # Tune this to make decay faster 0.885?
     train_batch_size = 32
 
     num_episodes_completed = 0
@@ -46,6 +46,8 @@ class battle_ai:
         self.action_select_img = Image.fromarray(self.action_select_img)
 
         self.battle_model = battle_model
+        # Load pre-trained model weights
+        #self.battle_model.load_weights("battle_ai/models/battle_model_75.h5")
 
     def update_hps(self, frame):
         # HP Detection
@@ -191,7 +193,7 @@ class battle_ai:
                 self.move_index = 0
                 if (np.random.rand() <= self.epsilon):
                     print("Exploration (random)")
-                    self.move_index = random.randint(0, 3) #0, 3
+                    self.move_index = random.randint(0, 3)
                 else:
                     print("Exploitation (prediction)")
                     action_predicted_rewards = self.battle_model.predict(self.init_state)
@@ -215,6 +217,7 @@ class battle_ai:
                 if (detected != None):
                     self.pokemon_hp = 141
                     self.opponent_hp = 141
+                    self.cur_state = "entered_battle"
                     return "reset"                    
 
                 self.update_hps(frame)
