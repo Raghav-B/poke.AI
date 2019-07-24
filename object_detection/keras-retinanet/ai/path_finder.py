@@ -72,6 +72,8 @@ class path_finder:
             return 40
         elif (np.array_equal(query_pos[:3], [105, 105, 105])): # Wall/Boundary
             return -20
+        elif (np.array_equal(query_pos[:3], [66, 135, 245])): # NPC
+            return 65
 
     def find_frontier_bfs(self, cur_pos):
         frontier_breadth_list = []

@@ -131,6 +131,11 @@ class live_map:
             coords[2] += (self.map_offset_x - self.map_min_offset_x)
             coords[3] += (self.map_offset_y - self.map_min_offset_y)
 
+            # Skipping appending converted tile if it is just the main agent detected as a NPC
+            if (coords[2] == self.map_offset_x - self.map_min_offset_x + 7) and \
+                (coords[3] == self.map_offset_y - self.map_min_offset_y + 5):
+                continue
+
             tiles.append((label, coords))
         
         return tiles

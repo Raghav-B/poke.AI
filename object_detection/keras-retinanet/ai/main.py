@@ -126,6 +126,12 @@ def run_detection(frame, detection_model, labels_to_names, mp):
 
         has_detections = True
 
+        # Checkng if NPC detection is actually main character. If this is the case, we will skip
+        # adding this detection to our detected objects.
+        #if (label == 2):
+        #    midpoint = (int((box[0] + box[2]) / 2), int((box[1] + box[3]) / 2))
+        #    if (midpoint >= )
+
         # Drawing labels and bounding boxes on input frame
         color = label_color(label)
         b = box.astype(int)
@@ -134,8 +140,8 @@ def run_detection(frame, detection_model, labels_to_names, mp):
         draw_caption(frame, b, caption)
 
         # Skipping NPC detections
-        if (label == 2):
-            continue
+        #if (label == 2):
+        #    continue
 
         # Appending to output array
         predictions_for_map.append((label, box))
@@ -172,7 +178,7 @@ if __name__ == "__main__":
 
     # Use to set pre-defined actions to send to controller (default is random)
     actions = []
-    actions = [0,0,1,1,2,2,3,3]
+    #actions = [0,0,1,1,2,2,3,3]
     #actions = [2,2,0,0]
     action_index = -1 # Initialise this from -1
     
@@ -194,14 +200,14 @@ if __name__ == "__main__":
 
                 four_frame_count += 1
                 cv2.imshow("Map", map_grid[:,:,:3])
-                #actions = mp.get_movelist()
+                actions = mp.get_movelist()
 
             # All other 0 frames that are not the initial frame
             else:
                 # Used to iterate through pre-defined actions and break once actions have ended
                 action_index += 1
                 if (action_index >= len(actions)):
-                    #actions = mp.get_movelist()
+                    actions = mp.get_movelist()
                     action_index = 0
                 
                 print("Key pressed: " + keys[actions[action_index]])            
@@ -248,6 +254,7 @@ if __name__ == "__main__":
 
                 # Start battle ai
                 battle_status = bat_ai.main_battle_loop(ctrl, sct, game_window_size)
+                # Reset battle AI
                 if (battle_status == "reset"):
                     action_index = -1
                     ctrl.reload_state()
@@ -255,6 +262,10 @@ if __name__ == "__main__":
                     bat_ai.pokemon_hp = 141 # Reset back to default
                     temp3, padding = get_screen(sct, game_window_size)
                     mp = live_map(game_window_size["width"], game_window_size["height"], padding)
+                    is_init_frame = True
+                    four_frame_count = 0
+                    actions = []
+                    continue
 
                 # After battle ai has completed, returning back to normal movement
                 while True:
@@ -264,25 +275,24 @@ if __name__ == "__main__":
                         time.sleep(2)
                         break
 
-            """
-            # Check here if the latest frontier is now a building or another object. 
-            # If it is, search for another frontier.
-            if (not (np.array_equal(map_grid[mp.pf.next_frontier[2]][mp.pf.next_frontier[1]][:3], [0, 0, 0]) or \
-                np.array_equal(map_grid[mp.pf.next_frontier[2]][mp.pf.next_frontier[1]][:3], [255, 255, 255]))):
-                print("Frontier obstructed, switching to new frontier...")
-                actions = mp.get_movelist()
-                action_index = -1
-
-            # Change actions to newly calculated path if a collision occurs
-            if (collision_type == "normal_collision"):
-                actions = mp.pf.frontier_path_collision_handler(map_grid, \
-                    (mp.map_offset_x - mp.map_min_offset_x), \
-                    (mp.map_offset_y - mp.map_min_offset_y))
-                if (actions == False): # If we have experienced 5 consecutive collisions
-                    # Find a new frontier to go towards
+            else:
+                # Check here if the latest frontier is now a building or another object. 
+                # If it is, search for another frontier.
+                if (not (np.array_equal(map_grid[mp.pf.next_frontier[2]][mp.pf.next_frontier[1]][:3], [0, 0, 0]) or \
+                    np.array_equal(map_grid[mp.pf.next_frontier[2]][mp.pf.next_frontier[1]][:3], [255, 255, 255]))):
+                    print("Frontier obstructed, switching to new frontier...")
                     actions = mp.get_movelist()
-                action_index = -1 # Either way we reset the index
-            """
+                    action_index = -1
+
+                # Change actions to newly calculated path if a collision occurs
+                if (collision_type == "normal_collision"):
+                    actions = mp.pf.frontier_path_collision_handler(map_grid, \
+                        (mp.map_offset_x - mp.map_min_offset_x), \
+                        (mp.map_offset_y - mp.map_min_offset_y))
+                    if (actions == False): # If we have experienced 5 consecutive collisions
+                        # Find a new frontier to go towards
+                        actions = mp.get_movelist()
+                    action_index = -1 # Either way we reset the index
 
             # Reset 5 frame cycle
             four_frame_count = 0
