@@ -11,41 +11,34 @@ import time
 # Use this when battle has been lost.
 
 class battle_ai:
-    states = ["entered_battle", "intro_anim", "action_select", "ongoing_turn", "win", "lose"]
-    cur_state = "entered_battle"
-
-    z_press_img = None
-    action_select_img = None
-
-    pokemon_hp = 141
-    opponent_hp = 141
-
-    # DQNN Variables
-    battle_model = None
-    battle_data = [] # Contains an unsorted history of all state and action pairs so far
-    gamma = 0.95
-    epsilon = 1.0
-    epsilon_min = 0.01
-    epsilon_decay = 0.975 # Tune this to make decay faster 0.885?
-    train_batch_size = 32
-
-    num_episodes_completed = 0
-    
-    # Keeping track of state related variables
-    init_state = None
-    next_state = None
-    move_index = None
-
-
     def __init__(self, battle_model):
+        self.states = ["entered_battle", "intro_anim", "action_select", "ongoing_turn", "win", "lose"]
+        self.cur_state = "entered_battle"
+
         self.z_press_img = cv2.imread("D:/App Development/pokemon_ai/object_detection/keras-retinanet/ai/battle_ai/z_press.png")
         self.z_press_img = Image.fromarray(self.z_press_img)
-        #cv2.imshow("hm", z_press_img)
-
         self.action_select_img = cv2.imread("D:/App Development/pokemon_ai/object_detection/keras-retinanet/ai/battle_ai/action_select.png")
         self.action_select_img = Image.fromarray(self.action_select_img)
 
+        self.pokemon_hp = 141
+        self.opponent_hp = 141
+
+        # DQNN Variables
         self.battle_model = battle_model
+        self.battle_data = [] # Contains an unsorted history of all state and action pairs so far
+        self.gamma = 0.95
+        self.epsilon = 1.0
+        self.epsilon_min = 0.01
+        self.epsilon_decay = 0.975 # Tune this to make decay faster 0.885?
+        self.train_batch_size = 32
+
+        self.num_episodes_completed = 0
+        
+        # Keeping track of state related variables
+        self.init_state = None
+        self.next_state = None
+        self.move_index = None
+
         # Load pre-trained model weights
         #self.battle_model.load_weights("battle_ai/models/battle_model_75.h5")
 
@@ -320,4 +313,3 @@ class battle_ai:
                     # This is to handle any required key presses due to levelling or other stuff
                     time.sleep(0.1)
                     ctrl.interact()
-    

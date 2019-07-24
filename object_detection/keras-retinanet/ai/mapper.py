@@ -8,56 +8,41 @@ from path_finder import path_finder
 # localize the player character and map out its surroundings. This live map will be
 # used by the neural network that will control the player character
 class live_map:
-    # Variables to initialize
-    window_width = 0
-    window_height = 0 
-    padding = 0 # Black bars used to make input square
-    tile_size = 0 # real-world size of square tiles
-
-    # Internals used by mapper
-    prev_map_grid = None # The detected map represented as a 2D array
-    cur_map_grid = None
-    #score_grid = None # Basically a duplicate of map_grid, but stores score of tiles instead
-    # Num of tiles in x and y axies (+ 1) - the num of tiles is 1-indexed here btw
-    grid_x = 16
-    grid_y = 12
-    # Coordinates of top_left game view tile in relation to starting point in global map
-    map_offset_x = 0 
-    map_offset_y = 0
-    # Coordinates of top_left and bot_right tiles for global map, relative to starting point
-    map_min_offset_x = 0
-    map_max_offset_x = 14
-    map_min_offset_y = 0
-    map_max_offset_y = 10
-    # List of all detected in terms of their global coordinates
-    object_list = []
-    # List of tiles that are actually walls/boundaries
-    boundary_points = []
-
-    # Variables for ram_searcher.py
-    ram_search = None
-    prev_ram = None
-    cur_ram = None
-
-    # Path finder object
-    pf = None
-    move_list = []
-
-
     def __init__(self, w, h, pad):#, pid, xpa, ypa):
+        # Variables to initialize
         self.window_width = w
         self.window_height = h
-        self.padding = pad
-        self.tile_size = int(w / (self.grid_x - 1))
-        self.prev_map_grid = np.full((self.grid_y - 1, self.grid_x - 1, 4), [0, 0, 0, 0], dtype=np.uint8)
+        self.padding = pad # Black bars used to make input square
+        self.tile_size = int(w / (self.grid_x - 1)) # real-world size of square tiles
+
+        ### Internals used by mapper ###
+        # The detected map represented as a 2D array
+        self.prev_map_grid = np.full((self.grid_y - 1, self.grid_x - 1, 4), [0, 0, 0, 0], dtype=np.uint8) 
         self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1, 4), [0, 0, 0, 0], dtype=np.uint8)
-        
+        # Num of tiles in x and y axies (+ 1) - the num of tiles is 1-indexed here btw
+        self.grid_x = 16
+        self.grid_y = 12
+        # Coordinates of top_left game view tile in relation to starting point in global map
+        self.map_offset_x = 0 
+        self.map_offset_y = 0
+        # Coordinates of top_left and bot_right tiles for global map, relative to starting point
+        self.map_min_offset_x = 0
+        self.map_max_offset_x = 14
+        self.map_min_offset_y = 0
+        self.map_max_offset_y = 10
+        # List of all detected in terms of their global coordinates
+        self.object_list = []
+        # List of tiles that are actually walls/boundaries
+        self.boundary_points = []
+
         # Setting up ram searcher
         self.ram_search = ram_searcher()
         self.prev_ram = self.ram_search.get_vals() # Storing character's position
+        self.cur_ram = None
 
         # Setting up path finder
         self.pf = path_finder()
+        self.move_list = []
 
 
     # Not the fastest function, is essentially a O(n^2) solution that fills in
@@ -436,9 +421,6 @@ class live_map:
                 return self.cur_map_grid, "battle_collision_pre"
         
         return self.cur_map_grid, "no_collision"
-
-
-        
 
     def get_movelist(self):
         # Get best frontier to move towards

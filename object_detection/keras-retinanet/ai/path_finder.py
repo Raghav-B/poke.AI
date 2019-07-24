@@ -41,21 +41,19 @@ import random
 import heapq as pq
 
 class path_finder:
-    local_top_x = 0
-    local_top_y = 0
-    local_bot_x = 0
-    local_bot_y = 0
-
-    map_grid = None
-    frontier_list = []
-    unreachable_frontiers = set()
-    next_frontier = None
-
-    consecutive_movements = 0
-    consecutive_collisions = 0
-
     def __init__(self):
-        pass
+        self.local_top_x = 0
+        self.local_top_y = 0
+        self.local_bot_x = 0
+        self.local_bot_y = 0
+
+        self.map_grid = None
+        self.frontier_list = []
+        self.unreachable_frontiers = set()
+        self.next_frontier = None
+
+        self.consecutive_movements = 0
+        self.consecutive_collisions = 0
 
     def get_frontier_score(self, query_pos):
         if (np.array_equal(query_pos[:3], [0, 0, 0])): # Unvisited
