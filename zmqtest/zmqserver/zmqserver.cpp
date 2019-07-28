@@ -1,6 +1,5 @@
 #include "pch.h"
 #include <zmq.h>
-//#include <zhelpers.h>
 #include <cstdio>
 //#include <cstring>
 #include <cassert>
@@ -8,6 +7,8 @@
 #include <chrono>
 #include <iostream>
 #include <string>
+
+using namespace std;
 
 /*int main(void)
 {
@@ -32,24 +33,26 @@
 
 int main(void) {
     void *context = zmq_ctx_new();
-    void *publisher = zmq_socket(context, ZMQ_PUB);
-    int rc = zmq_bind(publisher, "tcp://*:5556");
-    assert(rc == 0);
+    void *requester = zmq_socket(context, ZMQ_SUB);
 
-    //std::string msg = "hello_there_boi";
-    //const char *msg = "helloboi";
     
-    char msg[10] = "helloboi";
-
+    
     while (true) {
-        printf("now sending\n");
-        zmq_send(publisher, msg, strlen(msg), 0);
-        printf("sent data\n");
-        //s_send(publisher, msg);
+        char buffer[2]; // Just 8 bits
+
+        zmq_connect(requester, "tcp://localhost:5555");
+
+        //cout << "Sending request..." << endl;
+        //zmq_send(requester, "data_req", 1, 0);
+        zmq_recv(requester, buffer, 1, 0);
+        buffer[1] = '\0';
+
+        zmq_disconnect(requester, "tcp://localhost:5555");
+
+        cout << "Received buttons: " << buffer[0] << endl;
+            //((int)buffer & 0b00000001) << " " << ((int)buffer & 0b00000010) << endl << endl;
     }
 
-    zmq_close(publisher);
+    zmq_close(requester);
     zmq_ctx_destroy(context);
-    return 0;
-
 }

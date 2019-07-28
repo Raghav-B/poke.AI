@@ -1,24 +1,20 @@
-#
-#   Weather update server
-#   Binds PUB socket to tcp://*:5556
-#   Publishes random weather updates
-#
-
 import zmq
-from random import randrange
+import time
 
 context = zmq.Context()
 socket = context.socket(zmq.PUB)
-socket.bind("tcp://*:5556")
-
-string = "helloboi"
+socket.bind("tcp://*:5555")
 
 while True:
-    #zipcode = randrange(1, 100000)
-    #temperature = randrange(-80, 135)
-    #relhumidity = randrange(10, 60)
+    #request = socket.recv()
 
+    controls = 0b10000000
+    
+    send = chr(controls).encode("utf-8")
+    
+    for i in range(10):
+        socket.send(send)
+        #socket.send(send)
+    #print("Data sent received.")
 
-    print("Now sending...")
-
-    socket.send_string("helloboi")
+    time.sleep(5)

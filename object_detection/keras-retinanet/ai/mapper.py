@@ -13,15 +13,18 @@ class live_map:
         self.window_width = w
         self.window_height = h
         self.padding = pad # Black bars used to make input square
+        
+        # Num of tiles in x and y axies (+ 1) - the num of tiles is 1-indexed here btw
+        self.grid_x = 16
+        self.grid_y = 12
+
         self.tile_size = int(w / (self.grid_x - 1)) # real-world size of square tiles
 
         ### Internals used by mapper ###
         # The detected map represented as a 2D array
         self.prev_map_grid = np.full((self.grid_y - 1, self.grid_x - 1, 4), [0, 0, 0, 0], dtype=np.uint8) 
         self.cur_map_grid = np.full((self.grid_y - 1, self.grid_x - 1, 4), [0, 0, 0, 0], dtype=np.uint8)
-        # Num of tiles in x and y axies (+ 1) - the num of tiles is 1-indexed here btw
-        self.grid_x = 16
-        self.grid_y = 12
+        
         # Coordinates of top_left game view tile in relation to starting point in global map
         self.map_offset_x = 0 
         self.map_offset_y = 0

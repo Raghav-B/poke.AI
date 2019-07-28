@@ -1,5 +1,15 @@
 //#define USE_GETASYNCKEYSTATE_FOR_KEYBOARD
 
+#include <iostream>	
+#include <sstream>
+#include <bitset>
+
+#define DBOUT(s) {\
+    std::ostringstream os_;\
+    os_ << s;\
+    OutputDebugString(os_.str().c_str());\
+}
+
 #include "stdafx.h"
 
 #define DIRECTINPUT_VERSION 0x0500
@@ -9,6 +19,7 @@
 #include "Input.h"
 #include "Reg.h"
 #include "WinResUtil.h"
+#include <zmq.h>
 
 // master keyboard translation table
 static const struct {
@@ -160,6 +171,9 @@ class DirectInput : public Input
 {
 private:
 	HINSTANCE dinputDLL;
+    void *context;
+    void *subscriber;
+
 public:
 	virtual void checkDevices();
 	DirectInput();
@@ -893,11 +907,21 @@ BOOL checkKey(LONG_PTR key)
 DirectInput::DirectInput()
 {
 	dinputDLL = NULL;
+
+    context = zmq_ctx_new();
+    subscriber = zmq_socket(context, ZMQ_SUB);
+    zmq_setsockopt(subscriber, ZMQ_SUBSCRIBE, "", 0);
+    int timeout = 1;
+    zmq_setsockopt(subscriber, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
+    zmq_connect(subscriber, "tcp://localhost:5555");
 }
 
 DirectInput::~DirectInput()
 {
-	saveSettings();
+    zmq_close(subscriber);
+    zmq_ctx_destroy(context);
+
+    saveSettings();
 	if (pDirectInput != NULL)
 	{
 		if (pDevices)
@@ -1066,6 +1090,25 @@ u32 DirectInput::readDevice(int i, bool sensor)
 		i = systemGetDefaultJoypad();
 
 	u32 res = 0;
+
+    char buffer[1];
+    buffer[0] = 0;
+
+    zmq_recv(subscriber, buffer, 1, 0);
+
+    // W, D, S, A, Z, (B), CONT.
+    if (buffer[0] & 0b10000000) // W
+        res |= BUTTON_MASK_UP;
+    if (buffer[0] & 0b01000000) // D
+        res |= BUTTON_MASK_RIGHT;
+    if (buffer[0] & 0b00100000) // S
+        res |= BUTTON_MASK_DOWN;
+    if (buffer[0] & 0b00010000) // A
+        res |= BUTTON_MASK_LEFT;
+    if (buffer[0] & 0b00001000) // Z
+        res |= BUTTON_MASK_A;
+    if (buffer[0] & 0b00000100) // (B)
+        res |= BUTTON_MASK_B;
 
 	// manual input
 	if (inputActive)

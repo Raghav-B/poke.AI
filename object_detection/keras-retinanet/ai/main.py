@@ -126,22 +126,12 @@ def run_detection(frame, detection_model, labels_to_names, mp):
 
         has_detections = True
 
-        # Checkng if NPC detection is actually main character. If this is the case, we will skip
-        # adding this detection to our detected objects.
-        #if (label == 2):
-        #    midpoint = (int((box[0] + box[2]) / 2), int((box[1] + box[3]) / 2))
-        #    if (midpoint >= )
-
         # Drawing labels and bounding boxes on input frame
         color = label_color(label)
         b = box.astype(int)
         draw_box(frame, b, color=color)
         caption = "{} {:.2f}".format(labels_to_names[label], score)
         draw_caption(frame, b, caption)
-
-        # Skipping NPC detections
-        #if (label == 2):
-        #    continue
 
         # Appending to output array
         predictions_for_map.append((label, box))
