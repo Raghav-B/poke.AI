@@ -1101,23 +1101,23 @@ u32 DirectInput::readDevice(int i, bool sensor)
 
     // W, D, S, A, Z, (B), CONT.
     if (buffer[0] & 0b01000000) {// W
-        DBOUT("up");
+        DBOUT("up\n");
         res |= BUTTON_MASK_UP;
     }
     if (buffer[0] & 0b00100000) {// D
-        DBOUT("right");
+        DBOUT("right\n");
         res |= BUTTON_MASK_RIGHT;
     }
     if (buffer[0] & 0b00010000) {// S
-        DBOUT("down");
+        DBOUT("down\n");
         res |= BUTTON_MASK_DOWN;
     }
     if (buffer[0] & 0b00001000) { // A
-        DBOUT("left");
+        DBOUT("left\n");
         res |= BUTTON_MASK_LEFT;
     }
     if (buffer[0] & 0b00000100) {// Z
-        DBOUT("z");
+        DBOUT("z\n");
         res |= BUTTON_MASK_A;
     }
     if (buffer[0] & 0b00000010) {// (B)

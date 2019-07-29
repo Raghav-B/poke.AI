@@ -57,11 +57,11 @@ class path_finder:
 
     def get_frontier_score(self, query_pos):
         if (np.array_equal(query_pos[:3], [0, 0, 0])): # Unvisited
-            return 100
+            return 20#100
         elif (np.array_equal(query_pos[:3], [255, 255, 255])): # Visited
             return 0
         elif (np.array_equal(query_pos[:3], [96, 102, 30])): # Gym
-            return 85
+            return 100#85
         elif (np.array_equal(query_pos[:3], [30, 57, 102])): # House
             return 70
         elif (np.array_equal(query_pos[:3], [0, 0, 255])): # Pokecen

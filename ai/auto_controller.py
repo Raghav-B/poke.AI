@@ -183,7 +183,7 @@ class backend_controller:
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.PUB)
         self.socket.bind("tcp://*:5555")
-        self.key_hold_time = 0.25
+        self.key_hold_time = 0.15
         self.ram_search = ram_searcher()
         self.cur_dir = 0
 
@@ -236,7 +236,8 @@ class backend_controller:
             else:
                 time.sleep(self.key_hold_time)
                 ram_vals = self.ram_search.get_vals()
-                ram_vals[5] = temp
+                if (ram_vals[5] != 1):
+                    ram_vals[5] = temp
 
             self.cur_dir = 0
 
@@ -254,7 +255,8 @@ class backend_controller:
             else:
                 time.sleep(self.key_hold_time)
                 ram_vals = self.ram_search.get_vals()
-                ram_vals[5] = temp
+                if (ram_vals[5] != 1):
+                    ram_vals[5] = temp
 
             self.cur_dir = 1
 
@@ -272,7 +274,8 @@ class backend_controller:
             else:
                 time.sleep(self.key_hold_time)
                 ram_vals = self.ram_search.get_vals()
-                ram_vals[5] = temp
+                if (ram_vals[5] != 1):
+                    ram_vals[5] = temp
                 
             self.cur_dir = 2
 
@@ -290,7 +293,8 @@ class backend_controller:
             else:
                 time.sleep(self.key_hold_time)
                 ram_vals = self.ram_search.get_vals()
-                ram_vals[5] = temp
+                if (ram_vals[5] != 1):
+                    ram_vals[5] = temp
 
             self.cur_dir = 3
 
