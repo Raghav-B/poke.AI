@@ -221,6 +221,8 @@ class backend_controller:
         if action == -1:
             action = random.randint(0, 3) # Currently removed 4 because it ends up getting stuck in dialogue
         key_pressed = None
+        # Getting correct direction value before moving off every frame. This is necessary post-trainer battle
+        temp_ram_vals = self.get_init_ram_vals()
 
         if action == 0:
             key_pressed = self.move_up()

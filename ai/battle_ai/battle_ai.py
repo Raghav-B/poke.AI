@@ -144,180 +144,180 @@ class battle_ai:
 
 
     def main_battle_loop(self, ctrl, sct, game_window_size):
-        while True:
-            # Getting game screen as input
-            frame = np.array(sct.grab(game_window_size))
-            frame = frame[:, :, :3] # Splicing off alpha channel
+        # Getting game screen as input
+        frame = np.array(sct.grab(game_window_size))
+        frame = frame[:, :, :3] # Splicing off alpha channel
 
-            # Making input a square by padding
-            game_width = game_window_size["width"]
-            game_height = game_window_size["height"]
-            padding = 0
-            if game_height < game_width:
-                padding = int((game_width - game_height) / 2)
-                frame = cv2.copyMakeBorder(frame, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
-            elif game_height > game_width:
-                padding = int((game_width - game_width) / 2)
-                frame = cv2.copyMakeBorder(frame, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
+        # Making input a square by padding
+        game_width = game_window_size["width"]
+        game_height = game_window_size["height"]
+        padding = 0
+        if game_height < game_width:
+            padding = int((game_width - game_height) / 2)
+            frame = cv2.copyMakeBorder(frame, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
+        elif game_height > game_width:
+            padding = int((game_height - game_width) / 2)
+            frame = cv2.copyMakeBorder(frame, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
 
-            cv2.imshow("Screen", frame)
-            #print("Current state: " + str(self.cur_state))
-            cv2.waitKey(1)
+        #cv2.imshow("Screen", frame)
+        #print("Current state: " + str(self.cur_state))
+        #cv2.waitKey(1)
 
-
-            # This state introduces the enemy, for example Younger Allen would like to battle!
-            # or Wild Slugma appeared! Need to press Z to continue
-            if (self.cur_state == "entered_battle"):
-                frame_pil = Image.fromarray(frame)
-                detected = pag.locate(self.z_press_img, frame_pil, grayscale=False, confidence=0.9)
-                if (detected != None):
-                    self.cur_state = "intro_anim"
-                    time.sleep(self.key_wait_time)
-                    ctrl.interact()
+        # This state introduces the enemy, for example Younger Allen would like to battle!
+        # or Wild Slugma appeared! Need to press Z to continue
+        if (self.cur_state == "entered_battle"):
+            frame_pil = Image.fromarray(frame)
+            detected = pag.locate(self.z_press_img, frame_pil, grayscale=False, confidence=0.9)
+            if (detected != None):
+                self.cur_state = "intro_anim"
+                time.sleep(self.key_wait_time)
+                ctrl.interact()
+        
+        
+        # This state shows our pokemon (and in a trainer battle, the opponent's pokemon being sent out)
+        # This leads us to the action select screen.
+        elif (self.cur_state == "intro_anim"):
+            frame_pil = Image.fromarray(frame)
+            detected = pag.locate(self.action_select_img, frame_pil, grayscale=False, confidence=0.9)
+            if (detected != None):
+                self.cur_state = "action_select"
+        
+        # This is the action select screen. This is the part that the model will really control.
+        elif (self.cur_state == "action_select"):
+            self.init_state = np.zeros((1, 2))
+            self.update_hps(frame)
+            self.init_state[0][0] = self.pokemon_hp
+            self.init_state[0][1] = self.opponent_hp
             
+            self.move_index = 0
+            if (np.random.rand() <= self.epsilon):
+                print("Exploration (random)")
+                self.move_index = random.randint(0, 3)
+            else:
+                print("Exploitation (prediction)")
+                action_predicted_rewards = self.battle_model.predict(self.init_state)
+                print(action_predicted_rewards[0])
+                self.move_index = np.argmax(action_predicted_rewards[0])
             
-            # This state shows our pokemon (and in a trainer battle, the opponent's pokemon being sent out)
-            # This leads us to the action select screen.
-            elif (self.cur_state == "intro_anim"):
+            # Performing actual, physical action now
+            self.action_performer(ctrl)
+            self.cur_state = "ongoing_turn"
+
+        # This state is when we've selected an attack and both pokemon are performing their individual attacks
+        elif (self.cur_state == "ongoing_turn"):
+            # This state will be called multiple times since we don't know how long the pokemons' turns
+            # will last. Thus we need to continue updating our stored HP values so they're ready to use once
+            # the next state has been detected.
+            
+            # Checking if PP of move has ran out
+            # If this is the case, we will break out of this cycle and reset to previous save state
+            frame_pil = Image.fromarray(frame)
+            detected = pag.locate(self.z_press_img, frame_pil, grayscale=False, confidence=0.9)
+            if (detected != None):
+                self.pokemon_hp = 141
+                self.opponent_hp = 141
+                self.cur_state = "entered_battle"
+                return "reset"                    
+
+            self.update_hps(frame)
+            #print("Pokemon HP: " + str(self.pokemon_hp))
+            #print("Opponent HP: " + str(self.opponent_hp))
+            #print("Finding next state...")
+            #print("")
+
+            # If current opponent pokemon or my pokemon has been beaten
+            if (self.opponent_hp <= 0 or self.pokemon_hp <= 0): # Need to handle self-death in a nicer way eventually
+                self.next_state = np.zeros((1, 2))
+                self.next_state[0][0] = self.pokemon_hp
+                self.next_state[0][1] = self.opponent_hp
+
+                # Performing reward calculation
+                base_reward = 0
+                if (self.opponent_hp <= 0):
+                    base_reward = 200
+                elif (self.pokemon_hp <= 0):
+                    base_reward = -200
+                reward = (self.init_state[0][1] - self.next_state[0][1]) - \
+                    (self.init_state[0][0] - self.next_state[0][0]) + base_reward
+                print("Action reward: " + str(reward))
+
+                # Adding this state/action pair to our dataset. Last element is True because 1v1 battle
+                # has ended in this conditional
+                self.battle_data.append((self.init_state, self.move_index, reward, self.next_state, True))
+                self.cur_state = "battle_ended"
+            
+            # Only reaches here when enemy hasn't been beaten yet
+            # Action select screen once again
+            else:                
                 frame_pil = Image.fromarray(frame)
                 detected = pag.locate(self.action_select_img, frame_pil, grayscale=False, confidence=0.9)
                 if (detected != None):
-                    self.cur_state = "action_select"
-            
-            # This is the action select screen. This is the part that the model will really control.
-            elif (self.cur_state == "action_select"):
-                self.init_state = np.zeros((1, 2))
-                self.update_hps(frame)
-                self.init_state[0][0] = self.pokemon_hp
-                self.init_state[0][1] = self.opponent_hp
-                
-                self.move_index = 0
-                if (np.random.rand() <= self.epsilon):
-                    print("Exploration (random)")
-                    self.move_index = random.randint(0, 3)
-                else:
-                    print("Exploitation (prediction)")
-                    action_predicted_rewards = self.battle_model.predict(self.init_state)
-                    print(action_predicted_rewards[0])
-                    self.move_index = np.argmax(action_predicted_rewards[0])
-                
-                # Performing actual, physical action now
-                self.action_performer(ctrl)
-                self.cur_state = "ongoing_turn"
-
-            # This state is when we've selected an attack and both pokemon are performing their individual attacks
-            elif (self.cur_state == "ongoing_turn"):
-                # This state will be called multiple times since we don't know how long the pokemons' turns
-                # will last. Thus we need to continue updating our stored HP values so they're ready to use once
-                # the next state has been detected.
-                
-                # Checking if PP of move has ran out
-                # If this is the case, we will break out of this cycle and reset to previous save state
-                frame_pil = Image.fromarray(frame)
-                detected = pag.locate(self.z_press_img, frame_pil, grayscale=False, confidence=0.9)
-                if (detected != None):
-                    self.pokemon_hp = 141
-                    self.opponent_hp = 141
-                    self.cur_state = "entered_battle"
-                    return "reset"                    
-
-                self.update_hps(frame)
-                #print("Pokemon HP: " + str(self.pokemon_hp))
-                #print("Opponent HP: " + str(self.opponent_hp))
-                #print("Finding next state...")
-                #print("")
-
-                # If current opponent pokemon or my pokemon has been beaten
-                if (self.opponent_hp <= 0 or self.pokemon_hp <= 0): # Need to handle self-death in a nicer way eventually
                     self.next_state = np.zeros((1, 2))
                     self.next_state[0][0] = self.pokemon_hp
                     self.next_state[0][1] = self.opponent_hp
-
-                    # Performing reward calculation
-                    base_reward = 0
-                    if (self.opponent_hp <= 0):
-                        base_reward = 200
-                    elif (self.pokemon_hp <= 0):
-                        base_reward = -200
+                    
+                    # Performing reward calculation for our last used move
                     reward = (self.init_state[0][1] - self.next_state[0][1]) - \
-                        (self.init_state[0][0] - self.next_state[0][0]) + base_reward
+                        (self.init_state[0][0] - self.next_state[0][0])
                     print("Action reward: " + str(reward))
 
-                    # Adding this state/action pair to our dataset. Last element is True because 1v1 battle
-                    # has ended in this conditional
-                    self.battle_data.append((self.init_state, self.move_index, reward, self.next_state, True))
-                    self.cur_state = "battle_ended"
-                
-                # Only reaches here when enemy hasn't been beaten yet
-                # Action select screen once again
-                else:                
-                    frame_pil = Image.fromarray(frame)
-                    detected = pag.locate(self.action_select_img, frame_pil, grayscale=False, confidence=0.9)
-                    if (detected != None):
-                        self.next_state = np.zeros((1, 2))
-                        self.next_state[0][0] = self.pokemon_hp
-                        self.next_state[0][1] = self.opponent_hp
-                        
-                        # Performing reward calculation for our last used move
-                        reward = (self.init_state[0][1] - self.next_state[0][1]) - \
-                            (self.init_state[0][0] - self.next_state[0][0])
-                        print("Action reward: " + str(reward))
-
-                        # Adding this state/action pair to our dataset. Last element is False because 1v1 battle
-                        # is still going on
-                        self.battle_data.append((self.init_state, self.move_index, reward, self.next_state, False))
-                        self.cur_state = "action_select"
-                
-                if (self.cur_state == "battle_ended"):
-                    self.num_episodes_completed += 1
-                    print(f"Episode: {self.num_episodes_completed}, Randomness: {self.epsilon}")
+                    # Adding this state/action pair to our dataset. Last element is False because 1v1 battle
+                    # is still going on
+                    self.battle_data.append((self.init_state, self.move_index, reward, self.next_state, False))
+                    self.cur_state = "action_select"
+            
+            if (self.cur_state == "battle_ended"):
+                self.num_episodes_completed += 1
+                print(f"Episode: {self.num_episodes_completed}, Randomness: {self.epsilon}")
+                print("")
+                # Save the model every 5 episodes
+                if (self.num_episodes_completed % 5 == 0):
+                    print("Model saved!")
                     print("")
-                    # Save the model every 5 episodes
-                    if (self.num_episodes_completed % 5 == 0):
-                        print("Model saved!")
-                        print("")
-                        self.battle_model.save_weights(f"battle_ai/models/battle_model_{self.num_episodes_completed}.h5")
+                    self.battle_model.save_weights(f"battle_ai/models/battle_model_{self.num_episodes_completed}.h5")
 
-                # This conditional basically allows the battle_model to perform its training after every state
-                # pair provided that the minimum batch_size in battle_data has been achieved.
-                if (self.cur_state == "battle_ended" or self.cur_state == "action_select"):
-                    print("Current batch size: " + str(len(self.battle_data)))
-                    if (len(self.battle_data) > self.train_batch_size):
-                        loss = self.do_training_step()
-                        print(f"Episode: {self.num_episodes_completed}, Loss: {loss}")
-                        print("")
+            # This conditional basically allows the battle_model to perform its training after every state
+            # pair provided that the minimum batch_size in battle_data has been achieved.
+            if (self.cur_state == "battle_ended" or self.cur_state == "action_select"):
+                print("Current batch size: " + str(len(self.battle_data)))
+                if (len(self.battle_data) > self.train_batch_size):
+                    loss = self.do_training_step()
+                    print(f"Episode: {self.num_episodes_completed}, Loss: {loss}")
+                    print("")
 
-            elif (self.cur_state == "battle_ended"):                
-                # Fade to black detection
-                end_lower_bound = (0, 0, 0)
-                end_upper_bound = (0, 0, 0)
-                end_detection_img = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-                end_detection_img = cv2.inRange(end_detection_img, end_lower_bound, end_upper_bound)
-                contours, hierarchy = cv2.findContours(end_detection_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        elif (self.cur_state == "battle_ended"):                
+            # Fade to black detection
+            end_lower_bound = (0, 0, 0)
+            end_upper_bound = (0, 0, 0)
+            end_detection_img = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+            end_detection_img = cv2.inRange(end_detection_img, end_lower_bound, end_upper_bound)
+            contours, hierarchy = cv2.findContours(end_detection_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-                has_battle_ended = False
-                for cnt in contours:
-                    if (cv2.contourArea(cnt) > 100000):
-                        #print("battle has actually ended")
-                        has_battle_ended = True
-                        self.cur_state = "entered_battle"
-                        self.opponent_hp = 141
-                        
-                        if (self.pokemon_hp <= 0):
-                            return "reset"
-                        else:
-                            return "end"
-                
-                if (has_battle_ended == False):
-                    frame_pil = Image.fromarray(frame)
-
-                    # This happens when the trainer is sending out another pokemon
-                    action_select_detected = pag.locate(self.action_select_img, frame_pil, grayscale=False, confidence=0.9)
-                    if (action_select_detected != None):
-                        self.cur_state = "action_select"
-                        self.opponent_hp = 141
-                        continue
+            has_battle_ended = False
+            for cnt in contours:
+                if (cv2.contourArea(cnt) > 100000):
+                    #print("battle has actually ended")
+                    has_battle_ended = True
+                    self.cur_state = "entered_battle"
+                    self.opponent_hp = 141
                     
-                    # This is to handle any required key presses due to levelling or other stuff
-                    time.sleep(self.key_wait_time)
-                    ctrl.interact()
+                    if (self.pokemon_hp <= 0):
+                        return frame, "reset"
+                    else:
+                        return frame, "end"
+            
+            if (has_battle_ended == False):
+                frame_pil = Image.fromarray(frame)
+
+                # This happens when the trainer is sending out another pokemon
+                action_select_detected = pag.locate(self.action_select_img, frame_pil, grayscale=False, confidence=0.9)
+                if (action_select_detected != None):
+                    self.cur_state = "action_select"
+                    self.opponent_hp = 141
+                    return frame, "continue"
+                
+                # This is to handle any required key presses due to levelling or other stuff
+                time.sleep(self.key_wait_time)
+                ctrl.interact()
+        
+        return frame, "continue"

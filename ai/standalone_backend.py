@@ -42,13 +42,6 @@ class poke_ai:
         # Initialising battle ai with battle_model
         self.bat_ai = battle_ai(self.battle_model)
 
-        # Setting up windows
-        cv2.namedWindow("Map", cv2.WINDOW_NORMAL)
-        cv2.resizeWindow("Map", self.game_window_size["width"], self.game_window_size["height"])
-        cv2.moveWindow("Map", 750, 850)
-        cv2.namedWindow("Screen")
-        cv2.moveWindow("Screen", 750, 0)
-
         # Finding game window using included .png
         self.game_window_size["left"], self.game_window_size["top"], temp1, temp2 = pag.locateOnScreen("find_game_window_windows.png", confidence=0.8)
         # Adding a 76 pixel offset to the y coordinate since the function above returns the x,y
@@ -81,6 +74,7 @@ class poke_ai:
         self.actions = []
         self.action_index = -1
 
+        self.in_battle = False
         self.map_grid = np.full((2, 2), 255, dtype=np.uint8)
 
     # Dummy function, does nothing
@@ -107,7 +101,7 @@ class poke_ai:
             padding = int((game_width - game_height) / 2)
             frame = cv2.copyMakeBorder(frame, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
         elif game_height > game_width:
-            padding = int((game_width - game_width) / 2)
+            padding = int((game_height - game_width) / 2)
             frame = cv2.copyMakeBorder(frame, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
         
         return frame, padding
@@ -146,114 +140,124 @@ class poke_ai:
     def run_step(self):
         temp_bool = None
         frame = None
-
-        if (self.step_count == 0):
-            if (self.is_init_step == True):
-                self.key_pressed = None
-                frame, temp = self.get_screen()
-                frame, temp_init = self.run_detection(frame)
-                self.map_grid, collision_type = self.mp.draw_map(self.key_pressed, self.predictions_for_map, self.ram_vals)
-                # No collision handler here since it is literally impossible to collide on the first frame
-
-                self.step_count += 1
-                self.actions = self.mp.get_movelist()
-
-            # All other 0 frames that are not the initial frame
-            else:
-                frame, temp = self.get_screen()
-                frame, temp_init = self.run_detection(frame)
-                
-                # Used to iterate through pre-defined actions and break once actions have ended
-                self.action_index += 1
-                if (self.action_index >= len(self.actions)):
-                    self.actions = self.mp.get_movelist()
-                    self.action_index = 0
-                
-                print("Key pressed: " + self.keys[self.actions[self.action_index]])            
-                self.key_pressed, self.ram_vals = self.ctrl.perform_movement(action=self.actions[self.action_index])
-                self.step_count += 1
-
-        # All other frames just deal with normal inferencing for nicer visualization purposes, but this does
-        # nothing to affect out mapping algorithm
-        elif (self.step_count < 4):
-            frame, temp = self.get_screen()
-            frame, temp_bool = self.run_detection(frame)
-            self.step_count += 1
-
-        # Last frame is when the new detections are properly taken from the inferencing, and are used as inputs in the
-        # mapping algorithm
-        elif (self.step_count == 4):
-            frame, temp = self.get_screen()
-            frame, temp_bool = self.run_detection(frame)
-
-            # Draw map in window
-            # Take note that there is a one frame delay because of something in OpenCV itself. If you print
-            # the map_grid, you'll see that the mapping is actually performed realtime
-            self.map_grid, collision_type = self.mp.draw_map(self.key_pressed, self.predictions_for_map, self.ram_vals)
-            print(collision_type)
-            print("")
-
-            if (collision_type == "battle_collision_post" or collision_type == "battle_collision_pre"):
-                if (collision_type == "battle_collision_pre"):
-                    self.action_index -= 1
-                    self.action_index %= len(self.actions) # Ensuring that any negative values are cycled back to positive
-
-                while (self.has_detections == True):
+        
+        if (self.in_battle == False):
+            if (self.step_count == 0):
+                if (self.is_init_step == True):
+                    self.key_pressed = None
                     frame, temp = self.get_screen()
-                    frame, temp_bool = self.run_detection(frame)
+                    frame, temp_init = self.run_detection(frame)
+                    self.map_grid, collision_type = self.mp.draw_map(self.key_pressed, self.predictions_for_map, self.ram_vals)
+                    # No collision handler here since it is literally impossible to collide on the first frame
+
+                    self.step_count += 1
+                    self.actions = self.mp.get_movelist()
+
+                # All other 0 frames that are not the initial frame
+                else:
+                    frame, temp = self.get_screen()
+                    frame, temp_init = self.run_detection(frame)
                     
-                    # Spam Z until battle has properly started.
-                    self.ctrl.interact()
-
-                # Start battle ai
-                battle_status = self.bat_ai.main_battle_loop(self.ctrl, self.sct, self.game_window_size)
-                # Reset battle AI
-                if (battle_status == "reset"):
-                    self.action_index = -1
-                    self.ctrl.reload_state()
-
-                    self.bat_ai.pokemon_hp = 141 # Reset back to default
-                    temp3, padding = self.get_screen()
-                    self.mp = live_map(self.game_window_size["width"], self.game_window_size["height"], padding, self.ram_vals)
-                    self.is_init_step = True
-                    self.step_count = 0
-                    self.actions = []
-
-                    return frame, self.map_grid
-
-                # After battle ai has completed, returning back to normal movement
-                while True:
-                    frame, temp = self.get_screen()
-                    frame, temp3 = self.run_detection(frame)
-                    if (self.has_detections == True):
-                        time.sleep(0.5)
-                        break
-
-            else:
-                # Check here if the latest frontier is now a building or another object. 
-                # If it is, search for another frontier.
-                if (not (np.array_equal(self.map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3], [0, 0, 0]) or \
-                    np.array_equal(self.map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3], [255, 255, 255]))):
-                    print("Frontier obstructed, switching to new frontier...")
-                    self.actions = self.mp.get_movelist()
-                    self.action_index = -1
-
-                # Change actions to newly calculated path if a collision occurs
-                if (collision_type == "normal_collision"):
-                    self.actions = self.mp.pf.frontier_path_collision_handler(self.map_grid, \
-                        (self.mp.map_offset_x - self.mp.map_min_offset_x), \
-                        (self.mp.map_offset_y - self.mp.map_min_offset_y))
-                    if (self.actions == False): # If we have experienced 5 consecutive collisions
-                        # Find a new frontier to go towards
+                    # Used to iterate through pre-defined actions and break once actions have ended
+                    self.action_index += 1
+                    if (self.action_index >= len(self.actions)):
                         self.actions = self.mp.get_movelist()
-                    self.action_index = -1 # Either way we reset the index
+                        self.action_index = 0
+                    
+                    print("Key pressed: " + self.keys[self.actions[self.action_index]])            
+                    self.key_pressed, self.ram_vals = self.ctrl.perform_movement(action=self.actions[self.action_index])
+                    self.step_count += 1
 
-            # Reset 5 frame cycle
-            self.step_count = 0
+            # All other frames just deal with normal inferencing for nicer visualization purposes, but this does
+            # nothing to affect out mapping algorithm
+            elif (self.step_count < 4):
+                frame, temp = self.get_screen()
+                frame, temp_bool = self.run_detection(frame)
+                self.step_count += 1
 
-        # Init frame is over, change flag accordingly
-        if (self.is_init_step == True):
-            self.is_init_step = temp_bool
+            # Last frame is when the new detections are properly taken from the inferencing, and are used as inputs in the
+            # mapping algorithm
+            elif (self.step_count == 4):
+                frame, temp = self.get_screen()
+                frame, temp_bool = self.run_detection(frame)
+
+                # Draw map in window
+                # Take note that there is a one frame delay because of something in OpenCV itself. If you print
+                # the map_grid, you'll see that the mapping is actually performed realtime
+                self.map_grid, collision_type = self.mp.draw_map(self.key_pressed, self.predictions_for_map, self.ram_vals)
+                print(collision_type)
+                print("")
+
+                if (collision_type == "battle_collision_post" or collision_type == "battle_collision_pre"):
+                    if (collision_type == "battle_collision_pre"):
+                        self.action_index -= 1
+                        self.action_index %= len(self.actions) # Ensuring that any negative values are cycled back to positive
+
+                    while (self.has_detections == True):
+                        frame, temp = self.get_screen()
+                        frame, temp_bool = self.run_detection(frame)
+                        
+                        # Spam Z until battle has properly started.
+                        self.ctrl.interact()
+                    self.in_battle = True
+
+                else:
+                    # Check here if the latest frontier is now a building or another object. 
+                    # If it is, search for another frontier.
+                    if (not (np.array_equal(self.map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3], [0, 0, 0]) or \
+                        np.array_equal(self.map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3], [255, 255, 255]))):
+                        print("Frontier obstructed, switching to new frontier...")
+                        self.actions = self.mp.get_movelist()
+                        self.action_index = -1
+
+                    # Change actions to newly calculated path if a collision occurs
+                    if (collision_type == "normal_collision"):
+                        self.actions = self.mp.pf.frontier_path_collision_handler(self.map_grid, \
+                            (self.mp.map_offset_x - self.mp.map_min_offset_x), \
+                            (self.mp.map_offset_y - self.mp.map_min_offset_y))
+                        if (self.actions == False): # If we have experienced 5 consecutive collisions
+                            # Find a new frontier to go towards
+                            self.actions = self.mp.get_movelist()
+                        self.action_index = -1 # Either way we reset the index
+
+                # Reset 5 frame cycle
+                self.step_count = 0
+
+            # Init frame is over, change flag accordingly
+            if (self.is_init_step == True):
+                self.is_init_step = temp_bool
+        
+        else:
+            # Start battle ai
+            frame, battle_status = self.bat_ai.main_battle_loop(self.ctrl, self.sct, self.game_window_size)
+            # Reset battle AI
+            if (battle_status == "reset"):
+                self.action_index = -1
+                self.ctrl.reload_state()
+
+                self.bat_ai.pokemon_hp = 141 # Reset back to default
+                temp3, padding = self.get_screen()
+                self.mp = live_map(self.game_window_size["width"], self.game_window_size["height"], padding, self.ram_vals)
+                self.is_init_step = True
+                self.step_count = 0
+                self.actions = []
+                self.in_battle = False
+                return frame, self.map_grid
+
+            elif (battle_status == "continue"):
+                self.in_battle = True
+                return frame, self.map_grid
+            
+            else:
+                self.in_battle = False
+
+            # After battle ai has completed, returning back to normal movement
+            while True:
+                frame, temp = self.get_screen()
+                frame, temp3 = self.run_detection(frame)
+                if (self.has_detections == True):
+                    time.sleep(0.5)
+                    break
 
         return frame, self.map_grid
 
@@ -268,6 +272,14 @@ if __name__ == "__main__":
     game_window_size = {"top": 0, "left": 0, "width": 720, "height": 480}
     model_path = "../object_detection/keras-retinanet/inference_graphs/map_detector.h5" # Model to be used for detection
     labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"} # Labels to draw
+
+    # Setting up windows
+    cv2.namedWindow("Map", cv2.WINDOW_NORMAL)
+    cv2.resizeWindow("Map", game_window_size["width"], game_window_size["height"])
+    cv2.moveWindow("Map", 750, 850)
+    cv2.namedWindow("Screen")
+    cv2.moveWindow("Screen", 750, 0)
+    
     my_poke_ai = poke_ai(model_path, labels_to_names, game_window_size)
 
     while True:  
