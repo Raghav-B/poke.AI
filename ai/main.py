@@ -14,7 +14,6 @@ import tensorflow as tf
 import cv2
 import numpy as np
 np.set_printoptions(linewidth=500) # For map debugging (view map array in terminal)
-#from fastgrab._linux_x11 import screenshot
 from mss import mss
 import pyautogui as pag
 import time
@@ -25,268 +24,256 @@ from mapper import live_map
 from auto_controller import backend_controller as controller
 from battle_ai.battle_ai import battle_ai
 
+class poke_ai:
+    def __init__(self, model_path, labels_to_names, game_window_size):
+        self.game_window_size = game_window_size
+        self.model_path = model_path
+        self.labels_to_names = labels_to_names
 
-# Dummy function, does nothing
-def nothing(x):
-    pass
+        keras.backend.tensorflow_backend.set_session(self.get_session())
+        self.detection_model = models.load_model(self.model_path, backbone_name='resnet101')
 
+        # Load battle AI model here as well.
+        self.battle_model = Sequential()
+        self.battle_model.add(Dense(24, input_dim=2, activation='relu')) # 2 is the number of inputs into our model
+        self.battle_model.add(Dense(24, activation='relu'))
+        self.battle_model.add(Dense(4, activation='linear')) # 4 is the number of actions we can choose from
+        self.battle_model.compile(loss='mse', optimizer=Adam(lr=0.001)) # learning rate
+        # Initialising battle ai with battle_model
+        self.bat_ai = battle_ai(self.battle_model)
 
-# Some keras/tensorflow related stuff, even I'm not entirely sure what it does exactly
-def get_session():
-    config = tf.ConfigProto()
-    config.gpu_options.allow_growth = True
-    return tf.Session(config=config)
+        # Setting up windows
+        cv2.namedWindow("Map", cv2.WINDOW_NORMAL)
+        cv2.resizeWindow("Map", self.game_window_size["width"], self.game_window_size["height"])
+        cv2.moveWindow("Map", 750, 850)
+        cv2.namedWindow("Screen")
+        cv2.moveWindow("Screen", 750, 0)
 
+        # Finding game window using included .png
+        self.game_window_size["left"], self.game_window_size["top"], temp1, temp2 = pag.locateOnScreen("find_game_window_windows.png", confidence=0.8)
+        # Adding a 76 pixel offset to the y coordinate since the function above returns the x,y
+        # coordinates of the menu bar - we want the coords of the gameplay below this bar
+        # Change this offset to 20 if you are running on ubuntu and are using find_game_window_ubuntu.png
+        self.game_window_size["top"] += 76
 
-# Initializes model for detection, mapper, controller and finds game window
-def initialise(game_window_size, model_path):
-    keras.backend.tensorflow_backend.set_session(get_session())
-    detection_model = models.load_model(model_path, backbone_name='resnet101')
+        # Setup controller
+        self.ctrl = controller()
+        temp_init_ram_vals = self.ctrl.get_init_ram_vals()
 
-    # Load battle AI model here as well.
-    battle_model = Sequential()
-    battle_model.add(Dense(24, input_dim=2, activation='relu')) # 2 is the number of inputs into our model
-    battle_model.add(Dense(24, activation='relu'))
-    battle_model.add(Dense(4, activation='linear')) # 4 is the number of actions we can choose from
-    battle_model.compile(loss='mse', optimizer=Adam(lr=0.001)) # learning rate
-    # Initialising battle ai with battle_model
-    bat_ai = battle_ai(battle_model)
+        # Initialise screen capturer
+        self.sct = mss()
+        # Get padding for converting 720:480 aspect ratio to 1:1
+        temp3, padding = self.get_screen()
 
-    # Setting up windows
-    cv2.namedWindow("Map", cv2.WINDOW_NORMAL)
-    cv2.resizeWindow("Map", game_window_size["width"], game_window_size["height"])
-    cv2.moveWindow("Map", 1100, 850)
-    cv2.namedWindow("Screen")
-    cv2.moveWindow("Screen", 1100, 0)
-    cv2.createTrackbar("ScoreThresh", "Screen", 70, 99, nothing)
+        # Initialising mapper object with retroarch pid and memory addresses to watch for player's
+        # x and y coordinates
+        self.mp = live_map(self.game_window_size["width"], self.game_window_size["height"], padding, temp_init_ram_vals)
 
-    # Finding game window using included .png
-    game_window_size["left"], game_window_size["top"], temp1, temp2 = pag.locateOnScreen("find_game_window_windows.png", confidence=0.8)
+        # Variables used for running each step of AI
+        self.step_count = 0
+        self.is_init_step = True
+        self.has_detections = False
+        self.predictions_for_map = []
+        self.ram_vals = self.mp.prev_ram
 
-    # Adding a 76 pixel offset to the y coordinate since the function above returns the x,y
-    # coordinates of the menu bar - we want the coords of the gameplay below this bar
-    # Change this offset to 20 if you are running on ubuntu and are using find_game_window_ubuntu.png
-    game_window_size["top"] += 76
+        self.key_pressed = None
+        self.keys = ["up", "right", "down", "left"]
+        self.actions = []
+        self.action_index = -1
 
-    # Setup controller
-    ctrl = controller()#game_window_size["left"], game_window_size["top"])
-    temp_init_ram_vals = ctrl.get_init_ram_vals()
+        self.map_grid = np.full((2, 2), 255, dtype=np.uint8)
 
-    # Initialise screen capturer
-    sct = mss()
-    
-    # Get padding for converting 720:480 aspect ratio to 1:1
-    temp3, padding = get_screen(sct, game_window_size)
-    
-    # Initialising mapper object with retroarch pid and memory addresses to watch for player's
-    # x and y coordinates
-    mp = live_map(game_window_size["width"], game_window_size["height"], padding, temp_init_ram_vals)
+    # Dummy function, does nothing
+    def nothing(self, x):
+        pass
 
-    return game_window_size, sct, ctrl, bat_ai, detection_model, mp
+    # Some keras/tensorflow related stuff, even I'm not entirely sure what it does exactly
+    def get_session(self):
+        config = tf.ConfigProto()
+        config.gpu_options.allow_growth = True
+        return tf.Session(config=config)
 
+    # Gets single frame of gameplay as a numpy array on which object inference will be later ran
+    def get_screen(self):
+        # Getting game screen as input
+        frame = np.array(self.sct.grab(self.game_window_size))
+        frame = frame[:, :, :3] # Splicing off alpha channel
 
-# Gets single frame of gameplay as a numpy array on which object inference will be later ran
-def get_screen(sct, game_window_size):
-    # Getting game screen as input
-    frame = np.array(sct.grab(game_window_size))
-    frame = frame[:, :, :3] # Splicing off alpha channel
+        # Making input a square by padding
+        game_width = self.game_window_size["width"]
+        game_height = self.game_window_size["height"]
+        padding = 0
+        if game_height < game_width:
+            padding = int((game_width - game_height) / 2)
+            frame = cv2.copyMakeBorder(frame, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
+        elif game_height > game_width:
+            padding = int((game_width - game_width) / 2)
+            frame = cv2.copyMakeBorder(frame, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
+        
+        return frame, padding
 
-    # Making input a square by padding
-    game_width = game_window_size["width"]
-    game_height = game_window_size["height"]
-    padding = 0
-    if game_height < game_width:
-        padding = int((game_width - game_height) / 2)
-        frame = cv2.copyMakeBorder(frame, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
-    elif game_height > game_width:
-        padding = int((game_width - game_width) / 2)
-        frame = cv2.copyMakeBorder(frame, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
-    
-    return frame, padding
+    # Runs inference on a single input frame and returns detected bounding boxes
+    def run_detection(self, frame):
+        # Process image and run inference
+        image = preprocess_image(frame) # Retinanet specific preprocessing
+        image, scale = resize_image(image, min_side = 400) # This model was trained with 400p images
+        boxes, scores, labels = self.detection_model.predict_on_batch(np.expand_dims(image, axis=0)) # Run inference
+        boxes /= scale # Ensures bounding boxes are of the correct scale
 
+        self.has_detections = False
 
-# Runs inference on a single input frame and returns detected bounding boxes
-def run_detection(frame, detection_model, labels_to_names, mp):
-    # Get trackbar value for confidence score threshold
-    score_thresh = cv2.getTrackbarPos("ScoreThresh", "Screen") 
+        # Visualize detections from inferencing
+        self.predictions_for_map = []
+        for box, score, label in zip(boxes[0], scores[0], labels[0]):
+            # We can break here because the bounding boxes are in descending order in terms of confidence
+            if score < (85 / 100):
+                break
 
-    # Process image and run inference
-    image = preprocess_image(frame) # Retinanet specific preprocessing
-    image, scale = resize_image(image, min_side = 400) # This model was trained with 400p images
-    boxes, scores, labels = detection_model.predict_on_batch(np.expand_dims(image, axis=0)) # Run inference
-    boxes /= scale # Ensures bounding boxes are of the correct scale
+            self.has_detections = True
 
-    has_detections = False
+            # Drawing labels and bounding boxes on input frame
+            color = label_color(label)
+            b = box.astype(int)
+            draw_box(frame, b, color=color)
+            caption = "{} {:.2f}".format(self.labels_to_names[label], score)
+            draw_caption(frame, b, caption)
 
-    # Visualize detections from inferencing
-    predictions_for_map = []
-    for box, score, label in zip(boxes[0], scores[0], labels[0]):
-        # We can break here because the bounding boxes are in descending order in terms of confidence
-        if score < (score_thresh / 100):
-            break
+            # Appending to output array
+            self.predictions_for_map.append((label, box))
 
-        has_detections = True
+        return frame, False
 
-        # Drawing labels and bounding boxes on input frame
-        color = label_color(label)
-        b = box.astype(int)
-        draw_box(frame, b, color=color)
-        caption = "{} {:.2f}".format(labels_to_names[label], score)
-        draw_caption(frame, b, caption)
+    def run_step(self):
+        temp_bool = None
+        frame = None
 
-        # Appending to output array
-        predictions_for_map.append((label, box))
-
-    return frame, has_detections, predictions_for_map, False
-
-# Main function
-if __name__ == "__main__":
-    # Setup variables here
-    game_window_size = {"top": 0, "left": 0, "width": 720, "height": 480}
-    model_path = "../object_detection/keras-retinanet/inference_graphs/resnet101_csv_07.h5" # Model to be used for detection
-    labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"} # Labels to draw
-
-    # Initialising model, window, controller, and mapper
-    game_window_size, sct, ctrl, bat_ai, detection_model, mp = initialise(game_window_size, model_path)
-
-    is_init_frame = True
-    has_detections = False
-    predictions_for_map = []
-    temp_bool = None
-    key_pressed = None
-    key_to_press = None
-    map_grid = np.full((2, 2), 255, dtype=np.uint8)
-    four_frame_count = 0
-    ram_vals = mp.prev_ram
-
-    keys = ["up", "right", "down", "left"]
-
-    # Use to set pre-defined actions to send to controller (default is random)
-    actions = []
-    #actions = [0,0,1,1,2,2,3,3]
-    action_index = -1 # Initialise this from -1
-    
-    # It takes about 5 frames for our player characte to perform a movement in any direction. Thus,
-    # it makes no sense to update the map during each of these frames, especially because the character
-    # will be stuck between two tiles in some frames and this will throw off our mapping algorithm
-    while True:  
-        # 0th frame handles key presses
-        if (four_frame_count == 0):
-            # Initial startup frame to put detection and key presses in sync
-            if (is_init_frame == True):
-                key_pressed = None
-                frame, temp = get_screen(sct, game_window_size)
-                frame, has_detections, predictions_for_map, temp_init = run_detection(frame, detection_model, labels_to_names, mp)
-                map_grid, collision_type = mp.draw_map(key_pressed, predictions_for_map, ram_vals)
+        if (self.step_count == 0):
+            if (self.is_init_step == True):
+                self.key_pressed = None
+                frame, temp = self.get_screen()
+                frame, temp_init = self.run_detection(frame)
+                self.map_grid, collision_type = self.mp.draw_map(self.key_pressed, self.predictions_for_map, self.ram_vals)
                 # No collision handler here since it is literally impossible to collide on the first frame
 
-                four_frame_count += 1
-                cv2.imshow("Map", map_grid[:,:,:3])
-                cv2.imshow("Screen", frame)
-                actions = mp.get_movelist()
+                self.step_count += 1
+                self.actions = self.mp.get_movelist()
 
             # All other 0 frames that are not the initial frame
             else:
-                # Used to iterate through pre-defined actions and break once actions have ended
-                action_index += 1
-                if (action_index >= len(actions)):
-                    actions = mp.get_movelist()
-                    action_index = 0
+                frame, temp = self.get_screen()
+                frame, temp_init = self.run_detection(frame)
                 
-                print("Key pressed: " + keys[actions[action_index]])            
-                key_pressed, ram_vals = ctrl.perform_movement(action=actions[action_index])
-                four_frame_count += 1
+                # Used to iterate through pre-defined actions and break once actions have ended
+                self.action_index += 1
+                if (self.action_index >= len(self.actions)):
+                    self.actions = self.mp.get_movelist()
+                    self.action_index = 0
+                
+                print("Key pressed: " + self.keys[self.actions[self.action_index]])            
+                self.key_pressed, self.ram_vals = self.ctrl.perform_movement(action=self.actions[self.action_index])
+                self.step_count += 1
 
         # All other frames just deal with normal inferencing for nicer visualization purposes, but this does
         # nothing to affect out mapping algorithm
-        elif (four_frame_count < 4):
-            frame, temp = get_screen(sct, game_window_size)
-            frame, has_detections, predictions_for_map, temp_bool = run_detection(frame, detection_model, labels_to_names, mp)
-            predictions_for_map = []
-
-            cv2.imshow("Map", map_grid[:,:,:3])
-            cv2.imshow("Screen", frame)
-
-            four_frame_count += 1
+        elif (self.step_count < 4):
+            frame, temp = self.get_screen()
+            frame, temp_bool = self.run_detection(frame)
+            self.step_count += 1
 
         # Last frame is when the new detections are properly taken from the inferencing, and are used as inputs in the
         # mapping algorithm
-        elif (four_frame_count == 4):
-            frame, temp = get_screen(sct, game_window_size)
-            frame, has_detections, predictions_for_map, temp_bool = run_detection(frame, detection_model, labels_to_names, mp)
-
-            #print("Map drawing frame")
+        elif (self.step_count == 4):
+            frame, temp = self.get_screen()
+            frame, temp_bool = self.run_detection(frame)
 
             # Draw map in window
             # Take note that there is a one frame delay because of something in OpenCV itself. If you print
             # the map_grid, you'll see that the mapping is actually performed realtime
-            map_grid, collision_type = mp.draw_map(key_pressed, predictions_for_map, ram_vals)
-            cv2.imshow("Map", map_grid[:,:,:3])
-            cv2.imshow("Screen", frame)
+            self.map_grid, collision_type = self.mp.draw_map(self.key_pressed, self.predictions_for_map, self.ram_vals)
             print(collision_type)
             print("")
 
             if (collision_type == "battle_collision_post" or collision_type == "battle_collision_pre"):
                 if (collision_type == "battle_collision_pre"):
-                    action_index -= 1
-                    action_index %= len(actions) # Ensuring that any negative values are cycled back to positive
+                    self.action_index -= 1
+                    self.action_index %= len(self.actions) # Ensuring that any negative values are cycled back to positive
 
-                while (has_detections == True):
-                    frame, temp = get_screen(sct, game_window_size)
-                    frame, has_detections, predictions_for_map, temp_bool = run_detection(frame, detection_model, labels_to_names, mp)
+                while (self.has_detections == True):
+                    frame, temp = self.get_screen()
+                    frame, temp_bool = self.run_detection(frame)
                     
                     # Spam Z until battle has properly started.
-                    ctrl.interact()
+                    self.ctrl.interact()
 
                 # Start battle ai
-                battle_status = bat_ai.main_battle_loop(ctrl, sct, game_window_size)
+                battle_status = self.bat_ai.main_battle_loop(self.ctrl, self.sct, self.game_window_size)
                 # Reset battle AI
                 if (battle_status == "reset"):
-                    action_index = -1
-                    ctrl.reload_state()
+                    self.action_index = -1
+                    self.ctrl.reload_state()
 
-                    bat_ai.pokemon_hp = 141 # Reset back to default
-                    temp3, padding = get_screen(sct, game_window_size)
-                    mp = live_map(game_window_size["width"], game_window_size["height"], padding)
-                    is_init_frame = True
-                    four_frame_count = 0
-                    actions = []
-                    continue
+                    self.bat_ai.pokemon_hp = 141 # Reset back to default
+                    temp3, padding = self.get_screen()
+                    self.mp = live_map(self.game_window_size["width"], self.game_window_size["height"], padding, self.ram_vals)
+                    self.is_init_step = True
+                    self.step_count = 0
+                    self.actions = []
+
+                    return frame, self.map_grid
 
                 # After battle ai has completed, returning back to normal movement
                 while True:
-                    frame, temp = get_screen(sct, game_window_size)
-                    frame, has_detections, temp2, temp3 = run_detection(frame, detection_model, labels_to_names, mp)
-                    if (has_detections == True):
+                    frame, temp = self.get_screen()
+                    frame, temp3 = self.run_detection(frame)
+                    if (self.has_detections == True):
                         time.sleep(0.5)
                         break
 
             else:
                 # Check here if the latest frontier is now a building or another object. 
                 # If it is, search for another frontier.
-                if (not (np.array_equal(map_grid[mp.pf.next_frontier[2]][mp.pf.next_frontier[1]][:3], [0, 0, 0]) or \
-                    np.array_equal(map_grid[mp.pf.next_frontier[2]][mp.pf.next_frontier[1]][:3], [255, 255, 255]))):
+                if (not (np.array_equal(self.map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3], [0, 0, 0]) or \
+                    np.array_equal(self.map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3], [255, 255, 255]))):
                     print("Frontier obstructed, switching to new frontier...")
-                    actions = mp.get_movelist()
-                    action_index = -1
+                    self.actions = self.mp.get_movelist()
+                    self.action_index = -1
 
                 # Change actions to newly calculated path if a collision occurs
                 if (collision_type == "normal_collision"):
-                    actions = mp.pf.frontier_path_collision_handler(map_grid, \
-                        (mp.map_offset_x - mp.map_min_offset_x), \
-                        (mp.map_offset_y - mp.map_min_offset_y))
-                    if (actions == False): # If we have experienced 5 consecutive collisions
+                    self.actions = self.mp.pf.frontier_path_collision_handler(self.map_grid, \
+                        (self.mp.map_offset_x - self.mp.map_min_offset_x), \
+                        (self.mp.map_offset_y - self.mp.map_min_offset_y))
+                    if (self.actions == False): # If we have experienced 5 consecutive collisions
                         # Find a new frontier to go towards
-                        actions = mp.get_movelist()
-                    action_index = -1 # Either way we reset the index
+                        self.actions = self.mp.get_movelist()
+                    self.action_index = -1 # Either way we reset the index
 
             # Reset 5 frame cycle
-            four_frame_count = 0
+            self.step_count = 0
 
         # Init frame is over, change flag accordingly
-        if (is_init_frame == True):
-            is_init_frame = temp_bool
+        if (self.is_init_step == True):
+            self.is_init_step = temp_bool
 
+        return frame, self.map_grid
+
+    def show_windows(self, frame, map_grid):
+        cv2.imshow("Screen", frame)
+        cv2.imshow("Map", map_grid[:,:,:3])
+
+
+# Main function
+if __name__ == "__main__":
+    # Setup variables here
+    game_window_size = {"top": 0, "left": 0, "width": 720, "height": 480}
+    model_path = "../object_detection/keras-retinanet/inference_graphs/map_detector.h5" # Model to be used for detection
+    labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"} # Labels to draw
+    my_poke_ai = poke_ai(model_path, labels_to_names, game_window_size)
+
+    while True:  
+        frame, map_grid = my_poke_ai.run_step()
+        my_poke_ai.show_windows(frame, map_grid)
+        
         key = cv2.waitKey(1)
         if (key == ord('q')):
             break
