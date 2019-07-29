@@ -1,7 +1,8 @@
 
-5
+6
 00000	03005E5C	b	s	0	x_pos
 00001	03005E5E	b	s	0	y_pos
 00002	0203736C	b	s	0	direction+speed
 00003	03000E38	b	s	0	trainer_battle_status
 00004	02002DD5	b	s	0	wild_battle_status
+00005	03007653	b	s	0	collision

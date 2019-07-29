@@ -203,28 +203,28 @@ void Update_RAM_Watch()
 			}
 		}
 
-        int int_msg[5];
+        int int_msg[6];
         int_msg[0] = (rswatches[0].CurValue & 0xFF);
         int_msg[1] = (rswatches[1].CurValue & 0xFF);
         int_msg[2] = (rswatches[2].CurValue & 0xFF);
         int_msg[3] = (rswatches[3].CurValue & 0xFF);
         int_msg[4] = (rswatches[4].CurValue & 0xFF);
+        int_msg[5] = (rswatches[5].CurValue & 0xFF);
         //DBOUT("battle_status: " << (rswatches[3].CurValue & 0xFF) << std::endl)
 
-        if (int_msg[2] == 255) {
+        if (int_msg[2] == 255)
             int_msg[2] = 120; // This is equivalent to -1
-        }
-        if (int_msg[4] == 146) {
-            int_msg[4] = 121; // This is equivalent to -110, 
-        }
+        if (int_msg[4] == 146)
+            int_msg[4] = 121; // This is equivalent to -110
 
-        char msg[6];
+        char msg[7];
         msg[0] = int_msg[0]; // x_pos
         msg[1] = int_msg[1]; // y_pos
         msg[2] = int_msg[2] + 1; // direction + speed
         msg[3] = int_msg[3] + 1; // trainer battle status
         msg[4] = int_msg[4] + 1; // wild battle status
-        msg[5] = 0; // null character to end string
+        msg[5] = int_msg[5] + 1; // collision status
+        msg[6] = 0; // null character to end string
 
         //if ((int)(rswatches[1].CurValue & 0xFF) == -1) {
         //    msg[2] = 255;
