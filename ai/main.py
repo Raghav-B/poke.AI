@@ -230,8 +230,6 @@ if __name__ == "__main__":
                 if (collision_type == "battle_collision_pre"):
                     action_index -= 1
                     action_index %= len(actions) # Ensuring that any negative values are cycled back to positive
-                #else:
-                    #map_grid, collision_type = mp.draw_map(key_pressed, predictions_for_map, ram_vals)
 
                 while (has_detections == True):
                     frame, temp = get_screen(sct, game_window_size)
@@ -260,7 +258,7 @@ if __name__ == "__main__":
                     frame, temp = get_screen(sct, game_window_size)
                     frame, has_detections, temp2, temp3 = run_detection(frame, detection_model, labels_to_names, mp)
                     if (has_detections == True):
-                        time.sleep(2)
+                        time.sleep(0.5)
                         break
 
             #else:

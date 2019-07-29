@@ -77,11 +77,6 @@ class battle_ai:
 
 
     def action_performer(self, ctrl):
-        # Reset selector position to "FIGHT"
-        time.sleep(self.key_wait_time)
-        ctrl.move_up()
-        time.sleep(self.key_wait_time)
-        ctrl.move_left()
         # If fight is selected (for now we are only sticking with selecting fight)
         time.sleep(self.key_wait_time)
         ctrl.interact()

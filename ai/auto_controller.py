@@ -200,19 +200,19 @@ class backend_controller:
         return ram_vals
 
     def move_up(self):
-        self.socket.send(chr(0b10000000).encode("utf-8"))
+        self.socket.send(chr(0b01000000).encode("utf-8"))
         return 0
     def move_right(self):
-        self.socket.send(chr(0b01000000).encode("utf-8"))
+        self.socket.send(chr(0b00100000).encode("utf-8"))
         return 1
     def move_down(self):
-        self.socket.send(chr(0b00100000).encode("utf-8"))
+        self.socket.send(chr(0b00010000).encode("utf-8"))
         return 2
     def move_left(self):
-        self.socket.send(chr(0b00010000).encode("utf-8"))
+        self.socket.send(chr(0b00001000).encode("utf-8"))
         return 3
     def interact(self):
-        self.socket.send(chr(0b00001000).encode("utf-8"))
+        self.socket.send(chr(0b00000100).encode("utf-8"))
         return 4
 
     # A nice test function, by default moves the character randomly, but a string of

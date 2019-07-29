@@ -911,7 +911,7 @@ DirectInput::DirectInput()
     context = zmq_ctx_new();
     subscriber = zmq_socket(context, ZMQ_SUB);
     zmq_setsockopt(subscriber, ZMQ_SUBSCRIBE, "", 0);
-    int timeout = 1;
+    int timeout = 2;
     zmq_setsockopt(subscriber, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
     zmq_connect(subscriber, "tcp://localhost:5555");
 }
@@ -1091,24 +1091,41 @@ u32 DirectInput::readDevice(int i, bool sensor)
 
 	u32 res = 0;
 
-    char buffer[1];
+    char buffer[2];
     buffer[0] = 0;
+    buffer[1] = '/0';
 
+    //zmq_connect(subscriber, "tcp://localhost:5555");
     zmq_recv(subscriber, buffer, 1, 0);
+    buffer[1] = '/0';
 
     // W, D, S, A, Z, (B), CONT.
-    if (buffer[0] & 0b10000000) // W
+    if (buffer[0] & 0b01000000) {// W
+        DBOUT("up");
         res |= BUTTON_MASK_UP;
-    if (buffer[0] & 0b01000000) // D
+    }
+    if (buffer[0] & 0b00100000) {// D
+        DBOUT("right");
         res |= BUTTON_MASK_RIGHT;
-    if (buffer[0] & 0b00100000) // S
+    }
+    if (buffer[0] & 0b00010000) {// S
+        DBOUT("down");
         res |= BUTTON_MASK_DOWN;
-    if (buffer[0] & 0b00010000) // A
+    }
+    if (buffer[0] & 0b00001000) { // A
+        DBOUT("left");
         res |= BUTTON_MASK_LEFT;
-    if (buffer[0] & 0b00001000) // Z
+    }
+    if (buffer[0] & 0b00000100) {// Z
+        DBOUT("z");
         res |= BUTTON_MASK_A;
-    if (buffer[0] & 0b00000100) // (B)
+    }
+    if (buffer[0] & 0b00000010) {// (B)
+        DBOUT("x");
         res |= BUTTON_MASK_B;
+    }
+
+    //zmq_disconnect(subscriber, "tcp://localhost:5555");
 
 	// manual input
 	if (inputActive)
