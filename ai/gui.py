@@ -71,7 +71,7 @@ class gui:
             self.map_frame.configure(image=map_grid)
 
         self.initial = False
-        self.main_frame.after(1, self.update)
+        self.main_frame.after(3000, self.update)
     
     def pause_ai(self):
         self.is_paused = not self.is_paused

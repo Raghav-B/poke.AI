@@ -23,8 +23,9 @@
 }
 
 // Socket variables
-void *context;
+void *context2;
 void *publisher;
+//void *responder;
 
 /*
 #include <commctrl.h>
@@ -225,6 +226,12 @@ void Update_RAM_Watch()
         msg[4] = int_msg[4] + 1; // wild battle status
         msg[5] = int_msg[5] + 1; // collision status
         msg[6] = 0; // null character to end string
+
+        //char buffer[1];
+        //zmq_recv(responder, buffer, 1, 0);
+        //if (buffer[0] == 's') {
+        //zmq_send(responder, msg, strlen(msg), 0);
+        //}
 
         //if ((int)(rswatches[1].CurValue & 0xFF) == -1) {
         //    msg[2] = 255;
@@ -974,8 +981,12 @@ LRESULT CALLBACK RamWatchProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam
 			SetWindowPos(GetDlgItem(hDlg,ID_WATCHES_UPDOWN), 0,0,0, 30,60, SWP_NOMOVE);
 
             // Add socket initialization code here
-            context = zmq_ctx_new();
-            publisher = zmq_socket(context, ZMQ_PUB);
+            context2 = zmq_ctx_new();
+            //responder = zmq_socket(context2, ZMQ_REP);
+            //int timeout = 1;
+            //zmq_setsockopt(responder, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
+            //int rc = zmq_bind(responder, "tcp://*:5556");
+            publisher = zmq_socket(context2, ZMQ_PUB);
             int rc = zmq_bind(publisher, "tcp://*:5556");
             //DBOUT("Socket initialized.");
 

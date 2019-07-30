@@ -181,7 +181,7 @@ class ubuntu_controller:
 class backend_controller:
     def __init__(self):
         self.context = zmq.Context()
-        self.socket = self.context.socket(zmq.PUB)
+        self.socket = self.context.socket(zmq.REP)
         self.socket.bind("tcp://*:5555")
         self.key_hold_time = 0.15
         self.ram_search = ram_searcher()
@@ -200,18 +200,23 @@ class backend_controller:
         return ram_vals
 
     def move_up(self):
+        data_req = self.socket.recv()
         self.socket.send(chr(0b01000000).encode("utf-8"))
         return 0
     def move_right(self):
+        data_req = self.socket.recv()
         self.socket.send(chr(0b00100000).encode("utf-8"))
         return 1
     def move_down(self):
+        data_req = self.socket.recv()
         self.socket.send(chr(0b00010000).encode("utf-8"))
         return 2
     def move_left(self):
+        data_req = self.socket.recv()
         self.socket.send(chr(0b00001000).encode("utf-8"))
         return 3
     def interact(self):
+        data_req = self.socket.recv()
         self.socket.send(chr(0b00000100).encode("utf-8"))
         return 4
 
@@ -226,17 +231,17 @@ class backend_controller:
 
         if action == 0:
             key_pressed = self.move_up()
-            time.sleep(self.key_hold_time)
+            #time.sleep(self.key_hold_time)
             ram_vals = self.ram_search.get_vals()
             temp = ram_vals[5]
-            time.sleep(self.key_hold_time)
+            #time.sleep(self.key_hold_time)
 
             if (self.cur_dir != 0):
                 key_pressed = self.move_up()
-                time.sleep(self.key_hold_time)
+                #time.sleep(self.key_hold_time)
                 ram_vals = self.ram_search.get_vals()
             else:
-                time.sleep(self.key_hold_time)
+                #time.sleep(self.key_hold_time)
                 ram_vals = self.ram_search.get_vals()
                 if (ram_vals[5] != 1):
                     ram_vals[5] = temp
@@ -245,17 +250,17 @@ class backend_controller:
 
         elif action == 1:
             key_pressed = self.move_right()
-            time.sleep(self.key_hold_time)
+            #time.sleep(self.key_hold_time)
             ram_vals = self.ram_search.get_vals()
             temp = ram_vals[5]
-            time.sleep(self.key_hold_time)
+            #time.sleep(self.key_hold_time)
             
             if (self.cur_dir != 1):
                 key_pressed = self.move_right()
-                time.sleep(self.key_hold_time)
+                #time.sleep(self.key_hold_time)
                 ram_vals = self.ram_search.get_vals()
             else:
-                time.sleep(self.key_hold_time)
+                #time.sleep(self.key_hold_time)
                 ram_vals = self.ram_search.get_vals()
                 if (ram_vals[5] != 1):
                     ram_vals[5] = temp
@@ -264,17 +269,17 @@ class backend_controller:
 
         elif action == 2:
             key_pressed = self.move_down()
-            time.sleep(self.key_hold_time)
+            #time.sleep(self.key_hold_time)
             ram_vals = self.ram_search.get_vals()
             temp = ram_vals[5]
-            time.sleep(self.key_hold_time)
+            #time.sleep(self.key_hold_time)
 
             if (self.cur_dir != 2):
                 key_pressed = self.move_down()
-                time.sleep(self.key_hold_time)
+                #time.sleep(self.key_hold_time)
                 ram_vals = self.ram_search.get_vals()
             else:
-                time.sleep(self.key_hold_time)
+                #time.sleep(self.key_hold_time)
                 ram_vals = self.ram_search.get_vals()
                 if (ram_vals[5] != 1):
                     ram_vals[5] = temp
@@ -283,17 +288,17 @@ class backend_controller:
 
         elif action == 3:
             key_pressed = self.move_left()
-            time.sleep(self.key_hold_time)
+            #time.sleep(self.key_hold_time)
             ram_vals = self.ram_search.get_vals()
-            time.sleep(self.key_hold_time)
+            #time.sleep(self.key_hold_time)
             temp = ram_vals[5]
             
             if (self.cur_dir != 3):
                 key_pressed = self.move_left()
-                time.sleep(self.key_hold_time)
+                #time.sleep(self.key_hold_time)
                 ram_vals = self.ram_search.get_vals()
             else:
-                time.sleep(self.key_hold_time)
+                #time.sleep(self.key_hold_time)
                 ram_vals = self.ram_search.get_vals()
                 if (ram_vals[5] != 1):
                     ram_vals[5] = temp
@@ -304,5 +309,5 @@ class backend_controller:
             key_pressed = self.interact()
 
         print("Current direction: " + str(self.cur_dir))
-        time.sleep(self.key_hold_time)
+        #time.sleep(self.key_hold_time)
         return key_pressed, ram_vals

@@ -173,6 +173,8 @@ private:
 	HINSTANCE dinputDLL;
     void *context;
     void *subscriber;
+    void *requester;
+    int move_count = 0;
 
 public:
 	virtual void checkDevices();
@@ -909,16 +911,23 @@ DirectInput::DirectInput()
 	dinputDLL = NULL;
 
     context = zmq_ctx_new();
-    subscriber = zmq_socket(context, ZMQ_SUB);
-    zmq_setsockopt(subscriber, ZMQ_SUBSCRIBE, "", 0);
-    int timeout = 2;
-    zmq_setsockopt(subscriber, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
-    zmq_connect(subscriber, "tcp://localhost:5555");
+    
+    requester = zmq_socket(context, ZMQ_REQ);
+    int timeout = 1;
+    zmq_setsockopt(requester, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
+    zmq_connect(requester, "tcp://localhost:5555");
+
+    //subscriber = zmq_socket(context, ZMQ_SUB);
+    //zmq_setsockopt(subscriber, ZMQ_SUBSCRIBE, "", 0);
+    //int timeout = 2;
+    //zmq_setsockopt(subscriber, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
+    //zmq_connect(subscriber, "tcp://localhost:5555");
 }
 
 DirectInput::~DirectInput()
 {
-    zmq_close(subscriber);
+    zmq_close(requester);
+    //zmq_close(subscriber);
     zmq_ctx_destroy(context);
 
     saveSettings();
@@ -1095,8 +1104,15 @@ u32 DirectInput::readDevice(int i, bool sensor)
     buffer[0] = 0;
     buffer[1] = '/0';
 
+    zmq_send(requester, "check_move", 10, 0);
+    zmq_recv(requester, buffer, 1, 0);
+
+    if (buffer[0] != 0) {
+        move_count += 1;
+        DBOUT(move_count << std::endl);
+    }
     //zmq_connect(subscriber, "tcp://localhost:5555");
-    zmq_recv(subscriber, buffer, 1, 0);
+    //zmq_recv(subscriber, buffer, 1, 0);
     buffer[1] = '/0';
 
     // W, D, S, A, Z, (B), CONT.
