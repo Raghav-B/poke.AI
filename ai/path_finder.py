@@ -57,11 +57,11 @@ class path_finder:
 
     def get_frontier_score(self, query_pos):
         if (np.array_equal(query_pos[:3], [0, 0, 0])): # Unvisited
-            return 20#100
+            return 20
         elif (np.array_equal(query_pos[:3], [255, 255, 255])): # Visited
             return 0
         elif (np.array_equal(query_pos[:3], [96, 102, 30])): # Gym
-            return 100#85
+            return 100
         elif (np.array_equal(query_pos[:3], [30, 57, 102])): # House
             return 70
         elif (np.array_equal(query_pos[:3], [0, 0, 255])): # Pokecen
@@ -176,7 +176,8 @@ class path_finder:
             if (self.map_grid[cur_pos[1] - 1][cur_pos[0]][3] != 3):
                 # Point needs to be a black or white unvisited point. Otherwise we will collide into a building
                 if (np.array_equal(self.map_grid[cur_pos[1] - 1][cur_pos[0]][:3], [255, 255, 255]) or \
-                    np.array_equal(self.map_grid[cur_pos[1] - 1][cur_pos[0]][:3], [0, 0, 0])):
+                    np.array_equal(self.map_grid[cur_pos[1] - 1][cur_pos[0]][:3], [0, 0, 0])):# or \
+                    #np.array_equal(self.map_grid[cur_pos[1] - 1][cur_pos[0]][:3], [234, 0, 255])):
                     self.map_grid[cur_pos[1] - 1][cur_pos[0]][3] = 3
                     temp_move_list = move_list.copy()
                     temp_move_list.append(0)
@@ -186,7 +187,8 @@ class path_finder:
         if (cur_pos[0] + 1 <= self.map_grid.shape[1] - 1):
             if (self.map_grid[cur_pos[1]][cur_pos[0] + 1][3] != 3):
                 if (np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] + 1][:3], [255, 255, 255]) or \
-                    np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] + 1][:3], [0, 0, 0])):
+                    np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] + 1][:3], [0, 0, 0])):# or \
+                    #np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] + 1][:3], [234, 0, 255])):
                     self.map_grid[cur_pos[1]][cur_pos[0] + 1][3] = 3
                     temp_move_list = move_list.copy()
                     temp_move_list.append(1)
@@ -196,7 +198,8 @@ class path_finder:
         if (cur_pos[1] + 1 <= self.map_grid.shape[0] - 1):
             if (self.map_grid[cur_pos[1] + 1][cur_pos[0]][3] != 3):
                 if (np.array_equal(self.map_grid[cur_pos[1] + 1][cur_pos[0]][:3], [255, 255, 255]) or \
-                    np.array_equal(self.map_grid[cur_pos[1] + 1][cur_pos[0]][:3], [0, 0, 0])):
+                    np.array_equal(self.map_grid[cur_pos[1] + 1][cur_pos[0]][:3], [0, 0, 0])):# or \
+                    #np.array_equal(self.map_grid[cur_pos[1] + 1][cur_pos[0]][:3], [234, 0, 255])):
                     self.map_grid[cur_pos[1] + 1][cur_pos[0]][3] = 3
                     temp_move_list = move_list.copy()
                     temp_move_list.append(2)
@@ -206,7 +209,8 @@ class path_finder:
         if (cur_pos[0] - 1 >= 0):
             if (self.map_grid[cur_pos[1]][cur_pos[0] - 1][3] != 3):
                 if (np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] - 1][:3], [255, 255, 255]) or \
-                    np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] - 1][:3], [0, 0, 0])):
+                    np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] - 1][:3], [0, 0, 0])):# or \
+                    #np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] - 1][:3], [234, 0, 255])):
                     self.map_grid[cur_pos[1]][cur_pos[0] - 1][3] = 3
                     temp_move_list = move_list.copy()
                     temp_move_list.append(3)
@@ -252,7 +256,6 @@ class path_finder:
         self.frontier_list = []
         # Getting pq of best frontiers to go to
         self.ffb_wrapper(cur_pos)
-        #print(self.frontier_list)
         
         # Getting frontier with highest score
         # We introduce a bit of randomness here because otherwise the pq makes the root the top left corner point always.
@@ -262,7 +265,6 @@ class path_finder:
         else:
             frontier_index = random.randint(0, 7)
         self.next_frontier = self.frontier_list[frontier_index] 
-        #end_pos = [self.next_frontier[1], self.next_frontier[2]]
         print("Next frontier found at: " + str(self.next_frontier))
 
         # Get list of moves required to reach our selected frontier

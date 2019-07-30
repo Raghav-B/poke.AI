@@ -4,7 +4,7 @@ import time
 import random
 import zmq
 
-from ram_searcher import ram_searcher
+#from ram_searcher import ram_searcher
 
 W = 0x11
 A = 0x1E
@@ -180,44 +180,56 @@ class ubuntu_controller:
 
 class backend_controller:
     def __init__(self):
-        self.context = zmq.Context()
-        self.socket = self.context.socket(zmq.REP)
-        self.socket.bind("tcp://*:5555")
-        self.key_hold_time = 0.15
-        self.ram_search = ram_searcher()
+        self.consecutive_cmd_delay = 0.25
+
+        self.move_context = zmq.Context()
+        self.move_socket = self.move_context.socket(zmq.REP)
+        self.move_socket.bind("tcp://*:5555")
+        
+        self.ram_context = zmq.Context()
+        self.ram_socket = self.ram_context.socket(zmq.SUB)
+        self.ram_socket.setsockopt_string(zmq.SUBSCRIBE, "")
+        self.ram_socket.setsockopt(zmq.CONFLATE, 1)
+        self.ram_socket.connect("tcp://localhost:5556")
+
         self.cur_dir = 0
 
-    def get_init_ram_vals(self):
-        ram_vals = self.ram_search.get_vals()
-        if ram_vals[2] == 1:
-            self.cur_dir = 2
-        elif ram_vals[2] == 2:
-            self.cur_dir = 0
-        elif ram_vals[2] == 3:
-            self.cur_dir = 3
-        elif ram_vals[3] == 4:
-            self.cur_dir = 1
-        return ram_vals
+    def get_ram_vals(self):
+        #self.ram_socket.connect("tcp://localhost:5556")
+        string = None
+        for i in range(0,10):
+            string = self.ram_socket.recv_string()
+
+        vals = [0,0,0,0,0,0]
+
+        for i in range(0,6):
+            if (i + 1) > len(string):
+                break
+            vals[i] = ord(string[i])
+        print(vals)
+
+        #self.ram_socket.disconnect("tcp://localhost:5556")
+        return vals
 
     def move_up(self):
-        data_req = self.socket.recv()
-        self.socket.send(chr(0b01000000).encode("utf-8"))
+        data_req = self.move_socket.recv()
+        self.move_socket.send(chr(0b01000000).encode("utf-8"))
         return 0
     def move_right(self):
-        data_req = self.socket.recv()
-        self.socket.send(chr(0b00100000).encode("utf-8"))
+        data_req = self.move_socket.recv()
+        self.move_socket.send(chr(0b00100000).encode("utf-8"))
         return 1
     def move_down(self):
-        data_req = self.socket.recv()
-        self.socket.send(chr(0b00010000).encode("utf-8"))
+        data_req = self.move_socket.recv()
+        self.move_socket.send(chr(0b00010000).encode("utf-8"))
         return 2
     def move_left(self):
-        data_req = self.socket.recv()
-        self.socket.send(chr(0b00001000).encode("utf-8"))
+        data_req = self.move_socket.recv()
+        self.move_socket.send(chr(0b00001000).encode("utf-8"))
         return 3
     def interact(self):
-        data_req = self.socket.recv()
-        self.socket.send(chr(0b00000100).encode("utf-8"))
+        data_req = self.move_socket.recv()
+        self.move_socket.send(chr(0b00000100).encode("utf-8"))
         return 4
 
     # A nice test function, by default moves the character randomly, but a string of
@@ -226,88 +238,50 @@ class backend_controller:
         if action == -1:
             action = random.randint(0, 3) # Currently removed 4 because it ends up getting stuck in dialogue
         key_pressed = None
+        
         # Getting correct direction value before moving off every frame. This is necessary post-trainer battle
-        temp_ram_vals = self.get_init_ram_vals()
+        ram_vals = self.get_ram_vals()
+        if ram_vals[2] == 1:
+            self.cur_dir = 2
+        elif ram_vals[2] == 2:
+            self.cur_dir = 0
+        elif ram_vals[2] == 3:
+            self.cur_dir = 3
+        elif ram_vals[2] == 4:
+            self.cur_dir = 1
 
         if action == 0:
             key_pressed = self.move_up()
-            #time.sleep(self.key_hold_time)
-            ram_vals = self.ram_search.get_vals()
-            temp = ram_vals[5]
-            #time.sleep(self.key_hold_time)
-
             if (self.cur_dir != 0):
+                time.sleep(self.consecutive_cmd_delay)
                 key_pressed = self.move_up()
-                #time.sleep(self.key_hold_time)
-                ram_vals = self.ram_search.get_vals()
-            else:
-                #time.sleep(self.key_hold_time)
-                ram_vals = self.ram_search.get_vals()
-                if (ram_vals[5] != 1):
-                    ram_vals[5] = temp
-
             self.cur_dir = 0
 
         elif action == 1:
             key_pressed = self.move_right()
-            #time.sleep(self.key_hold_time)
-            ram_vals = self.ram_search.get_vals()
-            temp = ram_vals[5]
-            #time.sleep(self.key_hold_time)
-            
             if (self.cur_dir != 1):
+                time.sleep(self.consecutive_cmd_delay)
                 key_pressed = self.move_right()
-                #time.sleep(self.key_hold_time)
-                ram_vals = self.ram_search.get_vals()
-            else:
-                #time.sleep(self.key_hold_time)
-                ram_vals = self.ram_search.get_vals()
-                if (ram_vals[5] != 1):
-                    ram_vals[5] = temp
-
             self.cur_dir = 1
 
         elif action == 2:
             key_pressed = self.move_down()
-            #time.sleep(self.key_hold_time)
-            ram_vals = self.ram_search.get_vals()
-            temp = ram_vals[5]
-            #time.sleep(self.key_hold_time)
-
             if (self.cur_dir != 2):
+                time.sleep(self.consecutive_cmd_delay)
                 key_pressed = self.move_down()
-                #time.sleep(self.key_hold_time)
-                ram_vals = self.ram_search.get_vals()
-            else:
-                #time.sleep(self.key_hold_time)
-                ram_vals = self.ram_search.get_vals()
-                if (ram_vals[5] != 1):
-                    ram_vals[5] = temp
-                
             self.cur_dir = 2
 
         elif action == 3:
-            key_pressed = self.move_left()
-            #time.sleep(self.key_hold_time)
-            ram_vals = self.ram_search.get_vals()
-            #time.sleep(self.key_hold_time)
-            temp = ram_vals[5]
-            
+            key_pressed = self.move_left()      
             if (self.cur_dir != 3):
+                time.sleep(self.consecutive_cmd_delay)
                 key_pressed = self.move_left()
-                #time.sleep(self.key_hold_time)
-                ram_vals = self.ram_search.get_vals()
-            else:
-                #time.sleep(self.key_hold_time)
-                ram_vals = self.ram_search.get_vals()
-                if (ram_vals[5] != 1):
-                    ram_vals[5] = temp
-
             self.cur_dir = 3
 
         elif action == 4:
             key_pressed = self.interact()
 
+        ram_vals = self.get_ram_vals()
+
         print("Current direction: " + str(self.cur_dir))
-        #time.sleep(self.key_hold_time)
         return key_pressed, ram_vals

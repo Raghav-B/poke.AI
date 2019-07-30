@@ -1111,8 +1111,7 @@ u32 DirectInput::readDevice(int i, bool sensor)
         move_count += 1;
         DBOUT(move_count << std::endl);
     }
-    //zmq_connect(subscriber, "tcp://localhost:5555");
-    //zmq_recv(subscriber, buffer, 1, 0);
+
     buffer[1] = '/0';
 
     // W, D, S, A, Z, (B), CONT.
@@ -1140,8 +1139,6 @@ u32 DirectInput::readDevice(int i, bool sensor)
         DBOUT("x");
         res |= BUTTON_MASK_B;
     }
-
-    //zmq_disconnect(subscriber, "tcp://localhost:5555");
 
 	// manual input
 	if (inputActive)

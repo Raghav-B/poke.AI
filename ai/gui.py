@@ -54,14 +54,15 @@ class gui:
             # Padding map to make it square
             width = map_grid.shape[1]
             height = map_grid.shape[0]
+            
             map_grid = map_grid[:,:,:3]
             padding = 0
             if height < width:
                 padding = int((width - height) / 2)
-                frame = cv2.copyMakeBorder(map_grid, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
+                map_grid = cv2.copyMakeBorder(map_grid, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
             elif height > width:
                 padding = int((height - width) / 2)
-                frame = cv2.copyMakeBorder(map_grid, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
+                map_grid = cv2.copyMakeBorder(map_grid, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
 
             map_grid = cv2.resize(map_grid, (720,720), interpolation=cv2.INTER_NEAREST)
             map_grid = cv2.cvtColor(map_grid, cv2.COLOR_BGR2RGBA)
@@ -71,7 +72,7 @@ class gui:
             self.map_frame.configure(image=map_grid)
 
         self.initial = False
-        self.main_frame.after(3000, self.update)
+        self.main_frame.after(1, self.update)
     
     def pause_ai(self):
         self.is_paused = not self.is_paused

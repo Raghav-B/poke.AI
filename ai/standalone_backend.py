@@ -49,15 +49,14 @@ class poke_ai:
         # Change this offset to 20 if you are running on ubuntu and are using find_game_window_ubuntu.png
         self.game_window_size["top"] += 76
 
-        # Setup controller
-        self.ctrl = controller()
-        temp_init_ram_vals = self.ctrl.get_init_ram_vals()
-
         # Initialise screen capturer
         self.sct = mss()
         # Get padding for converting 720:480 aspect ratio to 1:1
         temp3, padding = self.get_screen()
 
+        # Setup controller
+        self.ctrl = controller()
+        temp_init_ram_vals = self.ctrl.get_ram_vals()
         # Initialising mapper object with retroarch pid and memory addresses to watch for player's
         # x and y coordinates
         self.mp = live_map(self.game_window_size["width"], self.game_window_size["height"], padding, temp_init_ram_vals)
@@ -142,6 +141,8 @@ class poke_ai:
         frame = None
         
         if (self.in_battle == False):
+            
+            
             if (self.step_count == 0):
                 if (self.is_init_step == True):
                     self.key_pressed = None
@@ -161,12 +162,14 @@ class poke_ai:
                     # Used to iterate through pre-defined actions and break once actions have ended
                     self.action_index += 1
                     if (self.action_index >= len(self.actions)):
-                        self.actions = self.mp.get_movelist()
                         self.action_index = 0
+                        self.actions = self.mp.get_movelist()
                     
                     print("Key pressed: " + self.keys[self.actions[self.action_index]])            
                     self.key_pressed, self.ram_vals = self.ctrl.perform_movement(action=self.actions[self.action_index])
                     self.step_count += 1
+
+
 
             # All other frames just deal with normal inferencing for nicer visualization purposes, but this does
             # nothing to affect out mapping algorithm
@@ -174,6 +177,8 @@ class poke_ai:
                 frame, temp = self.get_screen()
                 frame, temp_bool = self.run_detection(frame)
                 self.step_count += 1
+
+
 
             # Last frame is when the new detections are properly taken from the inferencing, and are used as inputs in the
             # mapping algorithm
@@ -205,10 +210,11 @@ class poke_ai:
                     # Check here if the latest frontier is now a building or another object. 
                     # If it is, search for another frontier.
                     if (not (np.array_equal(self.map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3], [0, 0, 0]) or \
-                        np.array_equal(self.map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3], [255, 255, 255]))):
+                        np.array_equal(self.map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3], [255, 255, 255]))):# or \
+                        #np.array_equal(self.map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3], [234, 0, 255]))):
                         print("Frontier obstructed, switching to new frontier...")
-                        self.actions = self.mp.get_movelist()
                         self.action_index = -1
+                        self.actions = self.mp.get_movelist()
 
                     # Change actions to newly calculated path if a collision occurs
                     if (collision_type == "normal_collision"):
@@ -259,7 +265,10 @@ class poke_ai:
                     time.sleep(0.5)
                     break
 
-        return frame, self.map_grid
+        # Drawing centroid on map
+        ret_map_grid = self.map_grid.copy()
+        ret_map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3] = [234, 0, 255]
+        return frame, ret_map_grid
 
     def show_windows(self, frame, map_grid):
         cv2.imshow("Screen", frame)

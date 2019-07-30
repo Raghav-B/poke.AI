@@ -1,7 +1,5 @@
 import numpy as np
 import math
-
-from ram_searcher import ram_searcher
 from path_finder import path_finder
 
 # Think of this object as something akin to SLAM. This will basically simultaenously
@@ -285,9 +283,6 @@ class live_map:
         self.local_top_y = top_y
         self.local_bot_x = top_x + 14
         self.local_bot_y = top_y + 10
-
-        #print(self.local_top_x, self.local_top_y)
-        #print(self.local_bot_x, self.local_bot_y)
         
         for i in range(0, len(self.cur_map_grid)):
             for j in range(0, len(self.cur_map_grid[i])):
@@ -338,50 +333,6 @@ class live_map:
                     self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 6, (self.map_offset_y - self.map_min_offset_y) + 5))
             else:
                 pass
-        
-        #else:
-            """
-            if (self.cur_ram[1] != self.prev_ram[1]) and key_pressed == 0: # Agent moved up
-                key_performed = 0
-            elif (self.cur_ram[0] != self.prev_ram[0]) and key_pressed == 1: # Agent moved right
-                key_performed = 1
-            elif (self.cur_ram[1] != self.prev_ram[1]) and key_pressed == 2: # Agent moved down
-                key_performed = 2
-            elif (self.cur_ram[0] != self.prev_ram[0]) and key_pressed == 3: # Agent moved left
-                key_performed = 3
-            """
-            #if (key_pressed == 0):
-                #key_performed 
-        
-        """
-        else: # Collision has maybe occured
-            has_collision_occured = False # Flag for wall/collision detection
-            self.boundary_points = []
-            # These conditionals handle the wall/collision detection by comparing the previous player position with the new
-            # player position based on the most recent key press
-            if (key_pressed == 0):
-                if (self.cur_ram[2] - 26 == 1):
-                    has_collision_occured = True
-                    if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 4][(self.map_offset_x - self.map_min_offset_x) + 7][:3], [255, 255, 255])):
-                        self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 4))
-            elif (key_pressed == 1):
-                if (self.cur_ram[2] - 26 == 3):
-                    has_collision_occured = True
-                    if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 8][:3], [255, 255, 255])):
-                        self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 8, (self.map_offset_y - self.map_min_offset_y) + 5))
-            elif (key_pressed == 2):
-                if (self.cur_ram[2] - 26 == 0):
-                    has_collision_occured = True
-                    if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 6][(self.map_offset_x - self.map_min_offset_x) + 7][:3], [255, 255, 255])):
-                        self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 7, (self.map_offset_y - self.map_min_offset_y) + 6))
-            elif (key_pressed == 3):
-                if (self.cur_ram[2] - 26 == 2):
-                    has_collision_occured = True
-                    if (np.array_equal(self.prev_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5][(self.map_offset_x - self.map_min_offset_x) + 6][:3], [255, 255, 255])):
-                        self.boundary_points.append(((self.map_offset_x - self.map_min_offset_x) + 6, (self.map_offset_y - self.map_min_offset_y) + 5))
-            else: # Any other button (like Z has been pressed)
-                pass
-        """
 
         # Collision has been successfully detected
         if (has_collision_occured == True):
@@ -402,17 +353,6 @@ class live_map:
             return self.cur_map_grid, "normal_collision"
         
         else:
-            """
-            # No collision, either its a transient frame
-            else:
-                # Checking if we're in an animation
-                if (self.cur_ram[2] == 121):
-                    # Call controller interact here
-                    pass
-                else: # Its most likely a start frame, but for insurance purpose, we will call controller interact
-                    pass
-            """
-        #if (key_performed != None): # Only triggers when a movement has been successfully registered.
             # We will increase the consecutive normal movmenets by 1 since at this point no collision has occured
             self.pf.consecutive_movements += 1
             if (self.pf.consecutive_movements >= 2):
