@@ -24,6 +24,8 @@ from mapper import live_map
 from auto_controller import backend_controller as controller
 from battle_ai.battle_ai import battle_ai
 
+import threading
+
 class poke_ai:
     def __init__(self, model_path, labels_to_names, game_window_size):
         self.game_window_size = game_window_size
@@ -210,8 +212,7 @@ class poke_ai:
                     # Check here if the latest frontier is now a building or another object. 
                     # If it is, search for another frontier.
                     if (not (np.array_equal(self.map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3], [0, 0, 0]) or \
-                        np.array_equal(self.map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3], [255, 255, 255]))):# or \
-                        #np.array_equal(self.map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3], [234, 0, 255]))):
+                        np.array_equal(self.map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3], [255, 255, 255]))):
                         print("Frontier obstructed, switching to new frontier...")
                         self.action_index = -1
                         self.actions = self.mp.get_movelist()

@@ -54,6 +54,7 @@ class path_finder:
 
         self.consecutive_movements = 0
         self.consecutive_collisions = 0
+        self.consecutive_collisions_limit = 5
 
     def get_frontier_score(self, query_pos):
         if (np.array_equal(query_pos[:3], [0, 0, 0])): # Unvisited
@@ -176,8 +177,7 @@ class path_finder:
             if (self.map_grid[cur_pos[1] - 1][cur_pos[0]][3] != 3):
                 # Point needs to be a black or white unvisited point. Otherwise we will collide into a building
                 if (np.array_equal(self.map_grid[cur_pos[1] - 1][cur_pos[0]][:3], [255, 255, 255]) or \
-                    np.array_equal(self.map_grid[cur_pos[1] - 1][cur_pos[0]][:3], [0, 0, 0])):# or \
-                    #np.array_equal(self.map_grid[cur_pos[1] - 1][cur_pos[0]][:3], [234, 0, 255])):
+                    np.array_equal(self.map_grid[cur_pos[1] - 1][cur_pos[0]][:3], [0, 0, 0])):
                     self.map_grid[cur_pos[1] - 1][cur_pos[0]][3] = 3
                     temp_move_list = move_list.copy()
                     temp_move_list.append(0)
@@ -187,8 +187,7 @@ class path_finder:
         if (cur_pos[0] + 1 <= self.map_grid.shape[1] - 1):
             if (self.map_grid[cur_pos[1]][cur_pos[0] + 1][3] != 3):
                 if (np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] + 1][:3], [255, 255, 255]) or \
-                    np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] + 1][:3], [0, 0, 0])):# or \
-                    #np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] + 1][:3], [234, 0, 255])):
+                    np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] + 1][:3], [0, 0, 0])):
                     self.map_grid[cur_pos[1]][cur_pos[0] + 1][3] = 3
                     temp_move_list = move_list.copy()
                     temp_move_list.append(1)
@@ -198,8 +197,7 @@ class path_finder:
         if (cur_pos[1] + 1 <= self.map_grid.shape[0] - 1):
             if (self.map_grid[cur_pos[1] + 1][cur_pos[0]][3] != 3):
                 if (np.array_equal(self.map_grid[cur_pos[1] + 1][cur_pos[0]][:3], [255, 255, 255]) or \
-                    np.array_equal(self.map_grid[cur_pos[1] + 1][cur_pos[0]][:3], [0, 0, 0])):# or \
-                    #np.array_equal(self.map_grid[cur_pos[1] + 1][cur_pos[0]][:3], [234, 0, 255])):
+                    np.array_equal(self.map_grid[cur_pos[1] + 1][cur_pos[0]][:3], [0, 0, 0])):
                     self.map_grid[cur_pos[1] + 1][cur_pos[0]][3] = 3
                     temp_move_list = move_list.copy()
                     temp_move_list.append(2)
@@ -209,8 +207,7 @@ class path_finder:
         if (cur_pos[0] - 1 >= 0):
             if (self.map_grid[cur_pos[1]][cur_pos[0] - 1][3] != 3):
                 if (np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] - 1][:3], [255, 255, 255]) or \
-                    np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] - 1][:3], [0, 0, 0])):# or \
-                    #np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] - 1][:3], [234, 0, 255])):
+                    np.array_equal(self.map_grid[cur_pos[1]][cur_pos[0] - 1][:3], [0, 0, 0])):
                     self.map_grid[cur_pos[1]][cur_pos[0] - 1][3] = 3
                     temp_move_list = move_list.copy()
                     temp_move_list.append(3)
@@ -288,7 +285,7 @@ class path_finder:
         self.consecutive_movements = 0
         print("Consecutive collisions: " + str(self.consecutive_collisions))
 
-        if (self.consecutive_collisions >= 5):
+        if (self.consecutive_collisions >= self.consecutive_collisions_limit):
             self.consecutive_collisions = 0
             print("Too many consecutive collisions!")
             print("Switching focus to new frontier...")
