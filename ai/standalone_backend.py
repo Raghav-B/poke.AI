@@ -74,6 +74,7 @@ class poke_ai:
         self.keys = ["up", "right", "down", "left"]
         self.actions = []
         self.action_index = -1
+        self.collision_type = "no_collision"
 
         self.in_battle = False
         self.map_grid = np.full((2, 2), 255, dtype=np.uint8)
@@ -150,7 +151,7 @@ class poke_ai:
                     self.key_pressed = None
                     frame, temp = self.get_screen()
                     frame, temp_init = self.run_detection(frame)
-                    self.map_grid, collision_type = self.mp.draw_map(self.key_pressed, self.predictions_for_map, self.ram_vals)
+                    self.map_grid, self.collision_type = self.mp.draw_map(self.key_pressed, self.predictions_for_map, self.ram_vals)
                     # No collision handler here since it is literally impossible to collide on the first frame
 
                     self.step_count += 1
@@ -191,12 +192,12 @@ class poke_ai:
                 # Draw map in window
                 # Take note that there is a one frame delay because of something in OpenCV itself. If you print
                 # the map_grid, you'll see that the mapping is actually performed realtime
-                self.map_grid, collision_type = self.mp.draw_map(self.key_pressed, self.predictions_for_map, self.ram_vals)
-                print(collision_type)
+                self.map_grid, self.collision_type = self.mp.draw_map(self.key_pressed, self.predictions_for_map, self.ram_vals)
+                print(self.collision_type)
                 print("")
 
-                if (collision_type == "battle_collision_post" or collision_type == "battle_collision_pre"):
-                    if (collision_type == "battle_collision_pre"):
+                if (self.collision_type == "battle_collision_post" or self.collision_type == "battle_collision_pre"):
+                    if (self.collision_type == "battle_collision_pre"):
                         self.action_index -= 1
                         self.action_index %= len(self.actions) # Ensuring that any negative values are cycled back to positive
 
@@ -218,7 +219,7 @@ class poke_ai:
                         self.actions = self.mp.get_movelist()
 
                     # Change actions to newly calculated path if a collision occurs
-                    if (collision_type == "normal_collision"):
+                    if (self.collision_type == "normal_collision"):
                         self.actions = self.mp.pf.frontier_path_collision_handler(self.map_grid, \
                             (self.mp.map_offset_x - self.mp.map_min_offset_x), \
                             (self.mp.map_offset_y - self.mp.map_min_offset_y))

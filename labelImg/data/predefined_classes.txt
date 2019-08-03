@@ -1,0 +1,8 @@
+pokecen
+pokemart
+npc
+house
+gym
+exit
+wall
+grass

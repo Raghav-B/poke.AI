@@ -410,3 +410,6 @@ class live_map:
             self.cur_map_grid)
         
         return self.move_list
+
+    def move_list_to_target(self, target_type, mode="closest"):
+        pass

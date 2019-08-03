@@ -2,7 +2,7 @@
 python keras_retinanet/bin/debug.py --random-transform --loop --annotations csv ../training_csvs/keras_train.csv ../training_csvs/labels.csv
 
 # Training the model
-python keras_retinanet/bin/train.py --imagenet-weights --backbone=resnet101 --batch-size=2 --epochs=50 --steps=2000 --image-min-side=400 --compute-val-loss csv ../training_csvs/keras_train.csv ../training_csvs/labels.csv --val-annotations=../training_csvs/keras_validation.csv
+python keras_retinanet/bin/train.py --imagenet-weights --backbone=resnet50 --batch-size=2 --epochs=100 --steps=1000 --image-min-side=400 --compute-val-loss csv ../training_csvs/keras_train.csv ../training_csvs/labels.csv --val-annotations=../training_csvs/keras_validation.csv
 
 python keras_retinanet/bin/train.py --imagenet-weights --backbone=mobilenet224_1 --batch-size=2 --epochs=50 --steps=2000 --image-min-side=400 --compute-val-loss csv ../training_csvs/keras_train.csv ../training_csvs/labels.csv --val-annotations=../training_csvs/keras_validation.csv
 

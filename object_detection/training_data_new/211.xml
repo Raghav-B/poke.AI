@@ -1,0 +1,14 @@
+<annotation>
+	<folder>training_data_new</folder>
+	<filename>211.jpg</filename>
+	<path>D:\App Development\pokemon_ai\object_detection\training_data_new\211.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>720</width>
+		<height>720</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+</annotation>

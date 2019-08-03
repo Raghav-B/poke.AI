@@ -32,6 +32,8 @@ class battle_ai:
         self.epsilon_decay = 0.975 # Tune this to make decay faster 0.885?
         self.train_batch_size = 32
 
+        self.continue_training = True
+        self.action_predicted_rewards = []
         self.num_episodes_completed = 0
         
         # Keeping track of state related variables
@@ -159,10 +161,6 @@ class battle_ai:
             padding = int((game_height - game_width) / 2)
             frame = cv2.copyMakeBorder(frame, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
 
-        #cv2.imshow("Screen", frame)
-        #print("Current state: " + str(self.cur_state))
-        #cv2.waitKey(1)
-
         # This state introduces the enemy, for example Younger Allen would like to battle!
         # or Wild Slugma appeared! Need to press Z to continue
         if (self.cur_state == "entered_battle"):
@@ -190,14 +188,15 @@ class battle_ai:
             self.init_state[0][1] = self.opponent_hp
             
             self.move_index = 0
-            if (np.random.rand() <= self.epsilon):
+            self.action_predicted_rewards = self.battle_model.predict(self.init_state)
+            print(self.action_predicted_rewards[0])
+            
+            if (np.random.rand() <= self.epsilon and self.continue_training == True):
                 print("Exploration (random)")
                 self.move_index = random.randint(0, 3)
             else:
                 print("Exploitation (prediction)")
-                action_predicted_rewards = self.battle_model.predict(self.init_state)
-                print(action_predicted_rewards[0])
-                self.move_index = np.argmax(action_predicted_rewards[0])
+                self.move_index = np.argmax(self.action_predicted_rewards[0])
             
             # Performing actual, physical action now
             self.action_performer(ctrl)
@@ -271,7 +270,7 @@ class battle_ai:
                 print(f"Episode: {self.num_episodes_completed}, Randomness: {self.epsilon}")
                 print("")
                 # Save the model every 5 episodes
-                if (self.num_episodes_completed % 5 == 0):
+                if (self.num_episodes_completed % 5 == 0 and self.continue_training == True):
                     print("Model saved!")
                     print("")
                     self.battle_model.save_weights(f"battle_ai/models/battle_model_{self.num_episodes_completed}.h5")
@@ -281,7 +280,9 @@ class battle_ai:
             if (self.cur_state == "battle_ended" or self.cur_state == "action_select"):
                 print("Current batch size: " + str(len(self.battle_data)))
                 if (len(self.battle_data) > self.train_batch_size):
-                    loss = self.do_training_step()
+                    loss = None
+                    if (self.continue_training == True):
+                        loss = self.do_training_step()
                     print(f"Episode: {self.num_episodes_completed}, Loss: {loss}")
                     print("")
 
