@@ -39,7 +39,7 @@ Anyways, I've rambled on for too long, lets dive into the technical details. You
 
 ### Localization and Mapping of Game World
 
-This is at the absolute core of our AI. Without being able to localize itself in the game and without storing locations of objects and places of interest in memory, our agent won't be able to do anything apart from moving around randomly. (Interestingly, given how probability works, there probably exists a parallel universe somewhere where my AI has finished the game from start to finish purely on randomness alone) Hence we have to figure out a way to give our agent access to this information, because this is exactly that a human player does when playing any game.
+This is at the absolute core of our AI. Without being able to localize itself in the game and without storing locations of objects and places of interest in memory, our agent won't be able to do anything apart from moving around randomly. (Interestingly, given how probability works, there probably exists a parallel universe somewhere where the AI has finished the game from start to finish purely on randomness alone). Hence we have to figure out a way to give our agent access to this information, because this is exactly what a human player does when playing any game.
 
 Bringing the analogy of a human player further, we can use a Convolutional Neural Network (CNN) to perform object detection on every frame of gameplay to detect objects (also because believe it or not, finding the locations of these objects through the ROMs RAM is significantly harder. Also object detection is really cool to look at! - when it works).
 
@@ -64,29 +64,33 @@ This is where I took a bit of inspiration from [SLAM (Simultaneous Localization 
     <img src="readme_src/mapping2.png" alt="Drawing out a map of the game world on the global scale while moving around randomly">
 </p>
 
-Eventually I'll go into more detail about how the algorithm works. For now, you can dive right into my hopefully adequately documented code!
+The [mapper.py](ai/mapper.py) script handles most of the mapping and localization process.
 
 ### Automated Movement in the Game World
 
-**NOTE: Will update this soon, I've changed the mapping algorithm to something called frontier based exploration. Here's a preview of the results!**
+Now that we have a mapping algorithm, our AI will know exactly where to go! - which might be what you're thinking, but that's wrong. Currently the agent follows a pre-defined set of sequential instructions, [or can move around randomly](https://www.youtube.com/watch?v=PQ_kMoVHZYc). How do we teach the AI how to move around?
+
+After a bit of thinking, it dawned on me that there was no need to really use an AI for this part. This is yet another time when we take inspiration from the field of robotics, specially, something known as Frontier-Based Exploration. This algorithm introduces the concept of *frontiers*, which are points on the boundary of the explored and unexplored regions of an area that a robot/agent is present in. Approaching these frontiers will allow more of the region to be explored. The agent chooses a frontier based on the score assigned to it. In our case, a frontier's score is determined by the types of tiles around it. For example, a frontier next to a boundary will be given a negative score, while a frontier next to the part of a detected house or NPC will be given a higher score.
 
 <p align = "center">
     <img src="readme_src/frontier_mapping_prototype.png" alt="Drawing out a map of the game world on the global scale while moving around randomly">
 </p>
 
-Now that we have a mapping algorithm, our AI will know exactly where to go! - which might be what you're thinking, but that's wrong. Currently the agent follows a pre-defined set of sequential instructions, [or can move around randomly](https://www.youtube.com/watch?v=PQ_kMoVHZYc). How do we teach the AI how to move around?
+We run a simple Breadth First Search (BFS) on the unexplored region (shown by the black tiles) to find a frontier with the highest score. Next, we run another BFS from our agent's current global position to the frontier's position, getting a sequence of actions that will take us to the frontier. The agent will correct its path accordingly if it runs into a collision or detects any new objects blocking its initial path to the frontier.
 
-After a bit of thinking, it dawned on me that there was no need to really use an AI for this part. We can simply create a policy for the agent to follow which aims to greedily move around the map, detecting new objects. I took a bit of inspiration from Reinforcement Learning for this portion - where our agent is instructed to move in a particular direction based on a greedy search policy, such that it always moves in directions with the highest density of high-value objects (gyms, NPCs) and away from regions that it has already explored.
-
-Currently developing this part, will update once I've come up with a concrete solution.
+The [path_finder.py](ai/path_finder.py) script handles the exploration part of the AI. This is used in tandem with the aforementioned [mapper.py](ai/mapper.py).
 
 ### Learning to Battle Pokemon (And Win)
 
-So far you might feel like you've been cheated. Our AI didn't really *learn* how to play Pokemon - I'm just giving it a general idea about what to do. If you feel this way too then you should find this section a lot more interesting. This is where I plan to incorporate Deep Q-Learning to the Pokemon battle system to get our agent to learn what to do in a fight to get the highest winrate possible.
+So far you might feel like you've been cheated. Our AI didn't really *learn* how to play Pokemon - I'm just giving it a general idea about what to do. If you feel this way too then you should find this section a lot more interesting. This is where we plan to incorporate Deep Q-Learning to the Pokemon battle system to get our agent to learn what to do in a fight to get the highest winrate possible. I would suggest [reading up about Deep Q-Learning](https://www.intel.ai/demystifying-deep-reinforcement-learning/#gs.w14f96) to gain a better understanding of how it works.
 
-This will be done based on a custom reward function and repeated Pokemon battles to train our neural network.
+The reward function used is extremely simplistic, 
 
-Again, seeing my time contraints and skill level, the battle system won't be fully explored, instead it will focus on training an agent to get as high a winrate as possible with a particular Pokemon with 4 fixed moves and the ability to heal. Think of this as a proof of concept - given enough battles with a particular Pokemon, our agent can learn the strongest and most reliable moves. For the sake of simplicity, we won't be looking into Pokemon type differences for now, though this is a clear area of exploration going into the future.
+Admittedly, there isin't really a need to use a DQNN (Deep Q Neural Network) to figure out the strongest moves, instead we can just keep a total of the damage we've done with each move
+
+This will be done based on a custom reward function and repeated Pokemon battles to train our neural network. Again, seeing my time contraints and skill level, the battle system won't be fully explored, instead it will focus on training an agent to get as high a winrate as possible with a particular Pokemon with 4 fixed moves. Think of this as a proof of concept - given enough battles with a particular Pokemon, our agent can learn the strongest and most reliable moves. For the sake of simplicity, we won't be looking into Pokemon type differences for now, though this is a definite area of exploration going into the future.
+
+The [battle_ai.py](ai/battle_ai/battle_ai.py) script handles most of this training process.
 
 ### Further Mechanics
 
@@ -186,5 +190,4 @@ Now restart your PC
 ### Getting Infernece Graph and Video Files
 
 These files are too large to be uploaded to GitHub, so you'll have to download them yourself and place them inside the cloned repository.
-* [Inference Graph]() - Place `.h5` file under `keras-retinanet/inference_graphs/`
-* [Test Video Files]() - Place `.mp4` files under `videos/`
+* [Inference Graph](https://mega.nz/#F!AtcH1IbL!u7M8O2FXcsdyLc53pwCORA) - Place `.h5` files under `object_detection/keras-retinanet/inference_graphs/`
