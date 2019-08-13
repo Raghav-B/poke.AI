@@ -1,0 +1,112 @@
+SUBTASKS:
+- Get live map of environment - Object detection
+- Explore environment efficiently - Decision Tree-esque solution
+- Engage in pokemon battles - Reinforcement Learning
+
+GET LIVE MAP OF ENVIRONMENT
+- How do I know when to turn off my object detection and switch to my pokemon battle RL model?
+
+
+EXPLORE ENVIRONMENT EFFICIENTLY
+- I basically need to create my own policy function that chooses the next best action from a particular starting state based on the perceived values of the future states.
+- Perceived value is a score that is calculated based on the current global map. 
+
+Edits to make to ROM:
+- Remove all warp points since our prototype will only work with moving around in the overworld.
+- Remove all scripts so that no cutscenes are played (We want the AI to be in control the whole time)
+- Make all NPCs stationary
+- Remove dual battles
+- Train starter pokemon with basic 4 moves
+- Mod the game to have infinite potions
+
+Metric for perceived value (purely for map exploration, no interactivity with map)
+- Different objects are assigned different base scores.
+- Higher scores are given to detected objects that are further away from the player.
+    - This encourages to agent to explore more and draw out more of the map.
+    - However keeping the score for distant objects fixed means that the agent could simply circle around infinitely in order to increase its score.
+    - To counteract this, we have a multiplier for decay for score of a certain object. This works because the list of global objects we have is fixed. Depending on the time passed (or number of frames passed) since the initial detection of the object. This multiplier could be an exponential function 1/e^(tn - td) which causes the score to drop tremendously the longer that object is on the screen. This means that the agent will tend to move towards newly detected objects. 
+    - Essentially, this policy dictates that older objects will tend towards a score of 0, ensuring that we always try to move towards the region with the highest possible score. 
+- We need some sort of penalty as well. Every step that the agent takes is -1? This might encourage the agent to continue moving towards newer objects in the fastest time possible. 
+- Do I want to assign a higher reward for larger objects? No I don't think there's a need. 
+- Perhaps every time should have a score. Because there will definitely be parts of the map where there are no objects to be detected, and we simply need to rely on moving towards new tiles.
+- I only decay tiles that are currently in my view. 
+- Do I want to move by two steps or one step each time? No this should definitely be one step. 
+
+Reward ranking (highest reward to lowest)
+- Gym (Because we want to progress as much as possible) Reaching this is the end of an entire episode essentially. This object does not have a score decay, because we want our 
+- NPC (These are fixed, we want our agent to move towards new NPCs as this will definitely lead us to newer areas in the map)
+- House (Because these are the most common objects apart from NPCs)
+- Pokemon Center (The score for this can dynamically increase inversely proportional to the health of our pokemon, such that this will eventually take top priority if our pokemon's health is fairly low.)
+- 
+
+Calculation of score metric:
+- Based on some sort of density of scores. We want our agent to move towards a higher score density per tile.
+- Map is split into 4 quadrants such that the corners intersect with each other. A score density is calculated for each quadrant and the quadrant with the highest score is selected.
+- Score Density = Score per tile in particular direction = 
+- Variables:
+    Base tile score: +5.0
+        NOR: +5.0
+        - This score reduces based on the age of the tile.
+        - NOR * (1/((tn - td) + 1))^bool (where td is the time detected, and tn is the time now) where bool is whether or not the tile has been interacted with. 
+    Base scores for objects:
+        NPC: +20.0 (Decay on NPC tile only starts once it has been interacted with)
+        HOS: 
+        GYM: +100.0
+        PKC:
+        PKM:
+        NOR: +1.0
+- For every quadrant:
+    For every tile:
+        1. Get base score
+        2. Multiply base score with appropriate decay multiplier if tile is currently in view.
+        3. Assign this new score to the tile
+        4. Depending on which quadrant the tile is in, add this score to the current score of the appropriate quadrant.
+   Based on quadrant with highest score, perform movement in that direction. 
+
+What to do in the event of a collision:
+- Store that object in memory. We cannot give this a negative score because increasing this negative score exponentially would mean that we would never ever move towards a region with a 
+
+Exploration vs Exploitation:
+- The way the algorithm is currently implemented, it seems that it encourages exploitation via exploration. 
+- In the event that the 4 scores are very similar to each other, we will allow a random movement in a particular direction.
+- Do this, or movement in the direction that has the least number of walls. 
+
+Mapgrid is a 3d array, or rather, a 2d array of tuples. Each tuple contains the type of the tile, and the score assigned to that tile. Updating the score in each tile per frame is a n^2 operation.
+
+The way this algorithm works is that finding a new area will cause the character's movement to snowball in the direction in which the area is found. This is a very greedy algorithm which could potentially work? The decay should prevent us from getting stuck somewhere so hmm.
+
+
+
+
+
+ENGAGE IN POKEMON BATTLES
+- This is what a separate simple neural network will learn to play.
+- I'll basically be using deep q-learning for this
+- My variables to get: 
+    My pokemon's health in arbitrary units - OpenCV colour filter in fixed position
+    Opponent's health n arbitrary units - OpenCV colour filter in fixed position
+    Whether I have won, or lost - Binary value, based on OCR?
+- What does my markov chain look like?
+    Every turn I have 5 different actions to choose from:
+    - 1st attack
+    - 2nd attack
+    - 3rd attack
+    - 4th attack
+    - Use potion
+    - (6th potential action: run) Nah.
+- Scoring function:
+    Reward for doing damage
+    Massive reward for winning a one on one battle (So basically one episode is when in a 1v1 situation, one of the pokemons faint)
+    (Or just +1 for a win, and -1 for a loss)
+    Penalty for losing health (This essentially translates to getting a lower score the longer my pokemon stays in battle)
+    Penanlty for every turn longer the agent spends in the battle.
+    Note that we do not reward gaining HP, as this is a last resort and is not a behaviour that should be encouraged.
+- What is my input into the neural network:
+    My pokemon's health
+    Opponent pokemon's health
+- Output: Probability of success for each of the 5 options. 
+
+
+- Training the model:
+    Have the agent basically run around in glass for an infinite amount of time, slowly gathering more and more data and training itself.
+    When the screen flashes black, I know that a battle has started. 

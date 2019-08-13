@@ -30,5 +30,7 @@ while True:
         padding = int((game_width - game_width) / 2)
         frame = cv2.copyMakeBorder(frame, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
 
-    cv2.imwrite("gameplay_frames/" + str(frame_num) + ".jpg", frame)
+    cv2.imshow("Screen", frame)
+
+    #cv2.imwrite("gameplay_frames/" + str(frame_num) + ".jpg", frame)
     frame_num += 1

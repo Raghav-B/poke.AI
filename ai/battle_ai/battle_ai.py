@@ -33,7 +33,7 @@ class battle_ai:
         self.train_batch_size = 32
 
         self.continue_training = True
-        self.action_predicted_rewards = []
+        self.action_predicted_rewards = [0,0]
         self.num_episodes_completed = 0
         
         # Keeping track of state related variables

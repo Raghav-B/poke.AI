@@ -70,7 +70,7 @@ class path_finder:
         elif (np.array_equal(query_pos[:3], [255, 0, 0])): # Pokemart
             return 40
         elif (np.array_equal(query_pos[:3], [105, 105, 105])): # Wall/Boundary
-            return -20
+            return -40
         elif (np.array_equal(query_pos[:3], [66, 135, 245])): # NPC
             return 65
 
@@ -170,6 +170,7 @@ class path_finder:
             return True, [[cur_pos, move_list]]
 
         breadth_list = []
+        #can_continue = False
 
         # Up direction
         if (cur_pos[1] - 1 >= 0): # Checking if not out of bounds of 2d array
@@ -182,7 +183,8 @@ class path_finder:
                     temp_move_list = move_list.copy()
                     temp_move_list.append(0)
                     breadth_list.append([[cur_pos[0], cur_pos[1] - 1], temp_move_list])
-        
+                    #can_continue = True
+
         # Right direction
         if (cur_pos[0] + 1 <= self.map_grid.shape[1] - 1):
             if (self.map_grid[cur_pos[1]][cur_pos[0] + 1][3] != 3):
@@ -192,6 +194,7 @@ class path_finder:
                     temp_move_list = move_list.copy()
                     temp_move_list.append(1)
                     breadth_list.append([[cur_pos[0] + 1, cur_pos[1]], temp_move_list])
+                    #can_continue = True
 
         # Down direction
         if (cur_pos[1] + 1 <= self.map_grid.shape[0] - 1):
@@ -202,6 +205,7 @@ class path_finder:
                     temp_move_list = move_list.copy()
                     temp_move_list.append(2)
                     breadth_list.append([[cur_pos[0], cur_pos[1] + 1], temp_move_list])
+                    #can_continue = True
 
         # Left direction
         if (cur_pos[0] - 1 >= 0):
@@ -212,9 +216,10 @@ class path_finder:
                     temp_move_list = move_list.copy()
                     temp_move_list.append(3)
                     breadth_list.append([[cur_pos[0] - 1, cur_pos[1]], temp_move_list])
+                    #can_continue = True
 
         # Returns whether our frontier point has been found, along with the list of points at our current BFS search level
-        return False, breadth_list
+        return False, breadth_list#, can_continue
 
     def mtfb_wrapper(self, cur_pos, end_pos, move_list):
         points = [[cur_pos, move_list]]
@@ -222,10 +227,13 @@ class path_finder:
         self.map_grid[cur_pos[1]][cur_pos[0]][3] = 3
         while True:
             level_points = []
+            #can_continue = False
             for point in points:
                 is_found, temp_points = self.move_to_frontier_bfs(point[0], end_pos, point[1])
                 level_points.extend(temp_points)
 
+                #if (can_continue == False):
+                #    return False
 
                 if (is_found == True):
                     return temp_points[0][1]
@@ -271,6 +279,8 @@ class path_finder:
         cur_pos = [top_x + 7, top_y + 5] # Resetting cur_pos variable to our agent's current global position
         # Getting move_list of moves required to get to our chosen frontier
         move_list = self.mtfb_wrapper(cur_pos, self.next_frontier[1:], move_list)
+        #if (move_list == False):
+        #    continue
         print(move_list)
         print("Path found. Executing...")
 

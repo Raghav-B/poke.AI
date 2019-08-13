@@ -1,0 +1,51 @@
+https://dspace.mit.edu/bitstream/handle/1721.1/119149/16-412j-spring-2005/contents/projects/1aslam_blas_repo.pdf
+
+Data association policy (based on the object detection data we collect):
+We only consider a landmark worthwhile if we have seen it N times (if we have seen it for N frames.) This helps us remove all momentary wrong detections fairly easily.
+
+Use a nearest neighbour approach to determine if the landmark in the next frame is indeed the same landmark from the previous frame. One method to do this is euclidean distance, but in our case this task might be simpler.
+- Will centroid tracking work? Give each bounding box a centroid, and track the change in centroids over multiple frames. Use this to continually sort your list of bounding boxes and to ensure they always point to a correct object. This is in the event that bounding box detection doesn't follow a strict order from left to right everytime.
+
+We can get the odometry of our character based on the number of times the movement keys are pressed - this is 100% accurate.
+
+Easiest way to split the game world is to split it into tiles/squares. Use modulo or something to round and bound things to these tiles.
+
+
+
+
+Algorithm:
+- Get current frame
+    Get centroids for all objects, and divide bounding box regions into tiles and plot on graph.
+- Movement key is sent
+    Track change in centroids. If rate of change is below a certain value, we know it is the same object.
+    Example: forward movement.
+
+    .........  
+    ##.......  Each coordinate is a tuple that contains information on whether that particular point has been visited
+    ##..A....  or not. ((x, y), has_visited, object_type)
+    ##.....##
+    .......##
+
+    .........  
+    .........  
+    ##..A....   Append a new row on top. If dx and dy of centroid is below a certain value, we keep this landmark
+    ##.......   in our map. Also remember to shift the position of character up by one.
+    ##.....##
+    .......##
+
+    Since we distinguish between each object, the more frames a particular object is detected for, its probability of accuracy increases until it hits 1, which is definite. Once the probability hits 1, it can no longer be changed. 
+
+    Probability of a certain object being a fixed landmark drops as the number of frames that an object isn't detected at a particular point increased. 
+
+    The differential of the centroid position helps us determine if we are still detecting the same object or not.
+
+Garbage collection for centroid list
+If a centroid with a particular index is missing from a list for a certain amount of time, we pop it out from the list. New centroids can be simply appended to the list.
+
+Walking procedure:
+- Right, Down, Left, Up. We want it to go up last because it shouldn't be entering builings willy nilly.
+    If we try to move in a particular direction but no change in our centroid position is detected, it means we've reached a boundary. In this case we try the next movement direction.
+
+We need to have a minimum threshold for centroid positional change. Under this threshold any movement of the centroid wont really be considered movement.
+
+For the future, where NPCs are able to move, we'll make it so that any NPC detections do not add to the visualization map.

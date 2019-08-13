@@ -52,8 +52,8 @@ class live_map:
         if (np.array_equal(symbol, [66, 135, 245])): # npc
             self.cur_map_grid[area_bound[3]][area_bound[2]][:3] = [66, 135, 245]
         
-        elif (np.array_equal(symbol, [105, 105, 105])): # boundary
-            self.cur_map_grid[area_bound[3]][area_bound[2]][:3] = [105, 105, 105]
+        #elif (np.array_equal(symbol, [105, 105, 105])): # boundary
+        #    self.cur_map_grid[area_bound[3]][area_bound[2]][:3] = [105, 105, 105]
         
         elif (np.array_equal(symbol, [33, 255, 185])): # exit
             if (not np.array_equal(self.cur_map_grid[area_bound[1]][area_bound[0]][:3], [66, 135, 245])):
@@ -379,10 +379,13 @@ class live_map:
                     symbol = [33, 255, 185] # yellow
                 elif (label == 6): # wall/boundary
                     symbol = [105, 105, 105] # grey
+                #elif (label == 7): # grass
+                #    symbol = [33, 166, 28] # green
+
                 self.fill_area(box, symbol)
             # Draw player character position for localization purpose # green
             self.cur_map_grid[(self.map_offset_y - self.map_min_offset_y) + 5]\
-                [(self.map_offset_x - self.map_min_offset_x) + 7][:3] = [33, 166, 28]
+                [(self.map_offset_x - self.map_min_offset_x) + 7][:3] = [149, 255, 0]
 
             # Draw frontiers on map
             self.draw_frontiers((self.map_offset_x - self.map_min_offset_x), \

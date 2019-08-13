@@ -1,0 +1,141 @@
+Difference between Reinforcement Learning and Genetic Algorithm
+
+- GA ends up with finding an optimal solution for a set of problems
+- RL continues to learn through its lifetime where the character explores the current state and learns as it goes along.
+
+- GA is an inter-life algorithm, which means that it requires many individuals to die in order to progress in terms of its convergence.
+- RL is an intra-life algorithm, where the same network learns continuously.
+
+These approaches can actually be combined.
+
+Reinforcement learning makes decisions based on the perceived states 
+
+
+UNSUPERVISED LEARNING
+Most deep learning techniques all rely on supervised learning, when in fact humans learn in an unsupervised manner. Generally unsupervised learning frameworks are very hard to work with as compared to supervised learning. 
+
+The basic premise of unsupervised learning is figuring out what to do when our dataset has no labels. There is no ground truth data to compare against, so strategies like optimization or backpropagation are useless.
+
+Another perfect example is thinking of school exams. Normally there's an answer key, so you're able to figure out your mistakes and grade yourslf accordingly. However, what if there's no answer key? How would you grade yourself then?
+
+The key idea is that in unsupervised learning algorithms, there is no output for us to match to. We have to generate patterns and we have to learn purely using the inputs themselves. Many people believe that unsupervised learning is the key to develop the holy grail of AI: the AGI, Artificial General Intelligence
+
+Clustering:
+Given a set of unknown data points, we use a clustering algorithm to classify each point into a specific group. This works because in theory data points that belong in the same group will have similar properties and/or features, and this will be opposite for points belonging in different groups. One metric of measuring similarity is euclidean distance between points (Since this distance can very well be multi-dimensional in nature)
+Uses of clustering include:
+- Grouping different genetic or species Grouping
+- Medical imagine, for distinguishing between different kinds of tissue
+-  Market research, for understanding the differences between business and customers based on attributes
+- Recommendation systems, these work by clustering similar objects together and recommending other objects that are a certain distance away from your area of interest.
+One popular clustering algorithm is the K-means clustering algorithm.
+
+k-means clustering:
+Define the k initial centroids (this can be done randomly or using fancier algorithms). Take each data point and assign it to the nearest centroid's cluster. This is euclidean distance. Once the new point has been assigned to the nearest centroid cluster, move the centroid to the centre of these points. Over time, the centroid will stop moving and will converge to the centre of a particular cluster of data.
+
+Agglomerative Clustering:
+This works by putting each data point in its own cluster. This is an iterative method in which after every iteration, the searching distance (multi dimensional distance) is increased. Other clusters that are inside this distance are then put together into one bigger cluster. After all iterations, the entire data is put into ont giant cluster. It is up to the human to stop after a certain number of iterations when distinct clusters have been successfully detected.
+
+K-Nearest Neighbours:
+This can be used in conjunction with unsupervised clustering to classify new objects in our dataset. This works by measuring the euclidean distance between the centroid of our available clusters and our new point and assigning our point to the new cluster.
+Other distance metrics for this include cosine distance, manhattan distance, etc. Basically it takes the top K objects that are nearest in distance to a certain point. Based on which class appears the most in these K values, we are able to predict which class our new point belongs to. The value of K to choose can be determined by measuring a degree of the accuracy of our model. This is known as cross-validation and this is the supervised part of this algorithm.
+
+Hierarchical clustering:
+This builds a hierarchy of parent and child clusters. It begins by giving each data point its own cluster, and based on how close two cluster points are, these clusters are than combined to form a parent cluster. This continues until all data points are in a single cluster. The output of this will be a hierarchy of our clusters. This can be useful in species classification as there are often family trees of related species.
+
+This also gives us flexibility in terms of how many different clusters we want. At the end of the day, it is dependant on humans to determine this.
+
+Autoencoders (Unsupervised Deep Learning)
+This is a type of neural network that learns its own encoding algorithm for a particular large dataset. It does this by essentially predicting its own input, by running the input through a single hidden layer, and getting the output. Since the hidden layer has fewer nodes than the input layer, the network is forced to extract only the most significant features for use in distinguishing between different objects in our dataset. 
+
+These compressed features are represnented in the middle hidden layer, and this can be extracted to help us store our data while taking less space. 
+
+Basically, by using the weights and biases in the nodes in the hidden middle layer, the autoencoder atempts to mold the input values into the desired output values (which are in fact the input values itself) This means that back propagation is indeed involved.
+
+Principal Component Analysis:
+One way of reducing dimensionality is by finding a basis (which has multiple linear combinations) whose linear combinations (or coordinates I believe) are able to fully represent a large amount of variance in your data. This method is known as Principal COmponent Analysis
+
+Many image recognition pipelines often use PCA to reduce the dimensionality of their image inputs without losing important features in the input data.
+Basically we create a basis to represent all the different data in our dataset. We then take the 200 most important scores in that basis, and use these 200 points to generate a new basis that represents data with the highest variance possible.
+
+Singular Value Decomposition:
+In terms of images, this works by allow us to decompose a large image by splitting it into 3 separate matrices that are multiplied with each other. 
+
+Challenges with Unsupervised Learning:
+It is difficult to figure out whether our algorithm is making correct predictions or is learning the correct patterns as there is no supervision (no backpropagation or other feedback techniques)
+
+Further applications of unsupervised learning:
+- Anomaly detection
+- Association mining which can identify sets of items which often occur together. This is the basis for most recommendation systems. 
+
+
+GENERATIVE ADVERSARIAL NETWORK
+This is used to generate new images from an original training set. Basically a forger and a detective work hand in hand to create fakes and detect fakes. The idea is that the forger should start scoring higher than the detective at a certain point. This is when we know that our forger has converged. 
+
+MARKOV CHAIN
+This represents something like a finite state machine where every state has a base probability. This base probability is the probability that at the current step, I am located at a particular state. This is usually represented by a [N x 1] vector.
+
+The edges in the finite state machine contain the probabilities that I will visit other nodes/states given I'm on a particular node. This is represented as a [N x N] matrix, where for each starting point and end point pair, I have a probability of movement. 
+
+Multiplying these two matrices together gives me the probability of where I will most likely end up based on the current edge and node probabilities.
+
+DIFFERENCE BETWEEN TEMPORAL DIFFERENCE AND MONTE CARLO METHOD OF REINFORCEMENT LEARNING
+FOr a particular episode, the monte carlo method only give you an estimate of how much each state in that episode contributed to the final reward at the end of the episode. On the other hand, the temporal different approach provides these estimates upon the completion of every single state in the episode. 
+
+In dynamic programming, we randomly initialize all the states, then we interaively compute the value of each state based on the (possibly previously computed) values of the surrounding states. We do this until there is no longer any considerable improvemet in a state value. (This means we have converged to some sort of maxima)
+
+In the monte carlo approach, we play the episode until the end, and then we move backwards (Is this similar to backpropagation?) through the states and assign each the discounted return of the entire episode. If this return is high, it means that all previous states will be encouraged in the future as they contirbuted to a better result. If the return is low, then all previous states will be discouraged.
+
+In temporal difference, we update the value of the current state based on the estimate of the next state. This calculation is based on the Bellman equation:
+
+Value of current state = value of current state + learning rate * (reward of going to next state + (discount rate * value of next state) - value of current state)
+
+Of course, the first time we run this process, we are not going to get an accurate value. However, it is due to the monte carlo approach that running this process over and over again for the same state, we get values for all the states that converge.
+
+Merging the monte carlo method and dynamic programming is what gives us the temporal difference method. 
+
+TYPES OF POLICY CONTROL IN TEMPORAL DIFFERENCE:
+SARSA:
+This is an on-policy method, it means that we compute the Q value of a state action pair according to a certain policy, and then the agent follows that policy.
+
+Q-Learning:
+This is an off-policy method. This consists of computing the Q-value according to the greedy policy, but the agent does not necessarily follow this policy. (This randomness is introduced by the Epsilon value)
+
+
+MATH BEHIND REINFORCEMENT LEARNING
+Lets consider a markov chain in which all states are sequentially connected one after the other. The estimated value of being at a certain state is given by the value of the states that come after it. It is given by the following formula:
+
+Value(s) = Sum of((Discount^t) * Reward * s(t)) for every value of t
+where t is the number of steps.
+
+Why is the discount rate important. This is built upon the fact that in life, decisions we make earlier on have the largest impact on the end result. Since we are optimizing something, we want our earlier decisions to have higher scores so that we always take steps in the right direction. 
+
+However it is easier to express the value of a state based on the (previously calculated) value of its next state. So instead of summing the reward of all future states, we just consider the next state, and this is given by the formula:
+
+Value(s) = Reward + Discount*Value(s-next)
+
+The above is assuming that all states are connected in sequence. What happens when we have a much more complex markov chain?
+Consider a chain such that the initial state branches out to 4 adjacent states. This is how we calculate the value of our initial state:
+
+Value(s) = (R2 + R3 + R4 + R5 + Discount * (V2 + V3 + V4 + V5)/4)
+
+What this does is take the average of all values of states to which our initial state is connected. By averaging the values of our neighbouring states, we are also able to figure out the expected rewards of the states that come after then, in turn.
+
+However, this formula suggests that we can go to any of the 4 states, however this is not the case as we want to go to the state that gives us the highest perceived reward. This is detemined by probabilities of how likely it is that we'll go to a particular state. Therefore the formula becomes: (These are known as transition probabilities)
+
+Value(s) = (p2R2 + p3R3 + p4R4 + p5R5 + Discount * (p2V2 + p3V3 + p4V4 + p5V5)/4)
+
+We can represent these probabilities of transition in a matrix P, where Pij is the probability of transition from a state i to a state j. When no transition is possible, the Pij will be zero. This is basically an adjacency matrix. (Is that right?)
+
+We rearrange the formula above as follows:
+
+Value(s) = p2*(R2 + 𝛄*V2)+p3*(R3+𝛄*V3) + p4(R4+𝛄*V4) + p5*(R5 + 𝛄*V5)
+which can be further rearranged to form the complex garbage we see everywhere.
+This is known as the value function
+
+ANother layer of complexity is added by considering the probability of us receiving a certain reward. Depending on what happens in the next state, our expected value of probability changes. Basically in the formula above, we replace the absolute reward for the next states with the expected rewards based on the probability of meeting certain conditions upon entering the next state.
+
+However we are not done yet, how do we actually know the transition probabilities? So far we've just assumed they are there, but in reality we get them from the policy function. This is basically the strategy that dictates which action to use at a particular state. 
+
+In standard reinforcement learning models, this strategy is also probabilistic. Therefore our function for the estimated value of a particular state is given by: 
+
+Value when applying policy(s) = Sum of(Probability of ending up in the next state based on policy function) * Value function for our given state

@@ -33,7 +33,7 @@ class poke_ai:
         self.labels_to_names = labels_to_names
 
         keras.backend.tensorflow_backend.set_session(self.get_session())
-        self.detection_model = models.load_model(self.model_path, backbone_name='resnet101')
+        self.detection_model = models.load_model(self.model_path, backbone_name="resnet50")
 
         # Load battle AI model here as well.
         self.battle_model = Sequential()
@@ -124,6 +124,9 @@ class poke_ai:
             # We can break here because the bounding boxes are in descending order in terms of confidence
             if score < (85 / 100):
                 break
+
+            if (label == 7):
+                continue
 
             self.has_detections = True
 
@@ -281,8 +284,11 @@ class poke_ai:
 if __name__ == "__main__":
     # Setup variables here
     game_window_size = {"top": 0, "left": 0, "width": 720, "height": 480}
-    model_path = "../object_detection/keras-retinanet/inference_graphs/map_detector.h5" # Model to be used for detection
-    labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"} # Labels to draw
+    #model_path = "../object_detection/keras-retinanet/inference_graphs/map_detector.h5" # Model to be used for detection
+    #labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"} # Labels to draw
+
+    model_path = "../object_detection/keras-retinanet/inference_graphs/resnet50_csv_13.h5" # Model to be used for detection
+    labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit", 6: "wall", 7:"grass"} # Labels to draw
 
     # Setting up windows
     cv2.namedWindow("Map", cv2.WINDOW_NORMAL)

@@ -20,14 +20,14 @@ def get_session():
     return tf.Session(config=config)
 keras.backend.tensorflow_backend.set_session(get_session())
 
-model_path = os.path.join('inference_graphs', '400p/resnet101_csv_13.h5')
-model = models.load_model(model_path, backbone_name='resnet101')
+model_path = "inference_graphs/resnet50_csv_13.h5"
+model = models.load_model(model_path, backbone_name="resnet50")
 
-labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"}
+labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit", 6: "wall", 7:"grass"}
 
-video = cv2.VideoCapture("../videos/gameplay_reduced.mp4")
+video = cv2.VideoCapture("../training_videos/gameplay_reduced.mp4")
 total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-frame_skip_amt = 1
+frame_skip_amt = 0
 
 cur_frame = 0
 #fourcc = cv2.VideoWriter_fourcc(*"XVID")
