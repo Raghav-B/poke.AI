@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 from PIL import Image, ImageTk
 import cv2
 import numpy as np
@@ -49,10 +50,14 @@ class gui:
         self.game_window_size = {"top": 0, "left": 0, "width": 720, "height": 480}
         self.model_path = "../object_detection/keras-retinanet/inference_graphs/map_detector.h5"#resnet50_csv_13.h5" # Model to be used for detection
         self.labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit", 6: "wall", 7:"grass"} # Labels to draw
+        self.attacks = ["Scratch", "Growl", "Focus Energy", "Ember"]
         self.pa = poke_ai(self.model_path, self.labels_to_names, self.game_window_size)
         self.video = cv2.VideoCapture(0)
         self.cur_map_grid = None
         self.map_num = 0
+
+        treeview_style = ttk.Style()
+        treeview_style.configure("Treeview", rowheight=40)
 
         ### MAP LEGEND ###
         self.legend_label = tk.Label(self.window, text="Map Legend", font=("Helvetica", 12))
@@ -126,10 +131,21 @@ class gui:
         self.bas_label = tk.Label(self.window, text="Battle AI Status", font=("Helvetica", 12))
         self.bas_label.grid(row=8, column=0, columnspan=6, padx=5, pady=5)
 
-        self.battle_ai_listbox = ttk.Treeview(self.window, height=15)#, selectmode="none")
-        self.battle_ai_listbox.heading("#0", text="Battle AI History")
+        self.battle_ai_listbox = ttk.Treeview(self.window, height=15, columns=("Method", \
+            "Model Output", "My HP", "Opp HP"))
+        self.battle_ai_listbox.heading("#0", text="Move Used")
+        self.battle_ai_listbox.heading("#1", text="Method")
+        self.battle_ai_listbox.heading("#2", text="Model Output")
+        self.battle_ai_listbox.heading("#3", text="My HP")
+        self.battle_ai_listbox.heading("#4", text="Opp HP")
+        #self.battle_ai_listbox.heading("#5", text="Status")
+        self.battle_ai_listbox.column(column="#0", width=120)
+        self.battle_ai_listbox.column(column="#1", width=200)
+        self.battle_ai_listbox.column(column="#2", width=250)
+        self.battle_ai_listbox.column(column="#3", width=75)
+        self.battle_ai_listbox.column(column="#4", width=75)
+        #self.battle_ai_listbox.column(column="#5", width=100)
         self.battle_ai_listbox.grid(row=9, column=0, columnspan=6, padx=5, pady=5)
-        self.battle_ai_listbox.column(column="#0", width=720)
         self.battle_history_list = []
         self.battle_ai_listbox.bind("<Double-1>", self.open_battle_history_details)
         self.bal_scroll = ttk.Scrollbar(self.window, orient="vertical", command=self.battle_ai_listbox.yview)
@@ -176,7 +192,7 @@ class gui:
         # Binding function here
         self.ml_scroll = ttk.Scrollbar(self.window, orient="vertical", command=self.mapper_listbox.yview)
         self.ml_scroll.place(x=1437, y=877, height=329)
-        self.mapper_listbox.configure(yscrollcommand=self.ml_scoll.set)
+        self.mapper_listbox.configure(yscrollcommand=self.ml_scroll.set)
 
         self.la_label = tk.Label(self.window, text="Last action performed:", font=("Helvetica", 10))
         self.la_label.grid(row=10, column=7, padx=5, pady=1, sticky="w")
@@ -236,12 +252,13 @@ class gui:
             self.last_action_var.set(str(self.pa.key_pressed))
             self.collision_detected_var.set(str(self.pa.collision_type))
 
-            print(self.battle_history_list)
-            print(self.pa.bat_ai.battle_history_list)
-            if not(np.array_equal(self.battle_history_list, self.pa.bat_ai.battle_history_list)):
+            if len(self.battle_history_list) != len(self.pa.bat_ai.battle_history_list):
                 # After this, two lists should become equal
-                self.battle_history_list[:] = self.pa.bat_ai.battle_history_list[:]
-                self.battle_ai_listbox.insert("", 0, text=self.battle_history_list[-1].text)
+                self.battle_history_list.append(self.pa.bat_ai.battle_history_list[-1])
+                new_item = self.battle_history_list[-1]
+                self.battle_ai_listbox.insert("", 0, text=self.attacks[new_item.text], \
+                    values=(new_item.method_used, new_item.model_output, new_item.my_hp, \
+                    new_item.enemy_hp))
 
         self.initial = False
         self.window.after(1, self.update)
@@ -259,15 +276,17 @@ class gui:
         self.map_num += 1
     
     def open_battle_history_details(self, event):
-        temp_item = self.battle_ai_listbox.index(self.battle_ai_listbox.selection)
+        index = self.battle_ai_listbox.index(self.battle_ai_listbox.selection()[0])
+        index = len(self.battle_history_list) - 1 - index
+        temp_item = self.battle_history_list[index]
         output_str = f"Last Move Selected: {temp_item.text}" + "\n" + f"Move Selection Method: {temp_item.method_used}" + "\n" + \
-            f"Last Prediction Values: {temp_item.model_output}" + \
+            f"Last Prediction Values: {self.pa.bat_ai.action_predicted_rewards[0]}" + \
             "\n" + f"Pokemon HP: {temp_item.my_hp}" + "\n" + f"Enemy HP: {temp_item.enemy_hp}" + "\n" + \
             f"Battle Status: {temp_item.status}"
-        tk.messagebox.showinfo("History Info", output_str)
+        messagebox.showinfo("History Info", output_str)
     
     def open_mapper_history_details(self, event):
-        tk.messagebox.showinfo("Mapper Info", "")
+        messagebox.showinfo("Mapper Info", "")
 
 if __name__ == "__main__":
     gui(tk.Tk(), "poke.AI")

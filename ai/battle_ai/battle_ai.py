@@ -231,19 +231,6 @@ class battle_ai:
             #print("Finding next state...")
             #print("")
 
-            # Adding this turn to history list
-            status = ""
-            if (self.opponent_hp <= 0):
-                status = "Won"
-            elif (self.pokemon_hp <= 0):
-                status = "Lost"
-            else:
-                status = "Ongoing"
-            self.cur_history_object = battle_history_list_obj(str(self.move_index), self.move_method_used, \
-                str(self.action_predicted_rewards[0]), \
-                str(self.pokemon_hp), str(self.opponent_hp), status)
-            self.battle_history_list.append(self.cur_history_object) 
-
             # If current opponent pokemon or my pokemon has been beaten
             if (self.opponent_hp <= 0 or self.pokemon_hp <= 0): # Need to handle self-death in a nicer way eventually
                 self.next_state = np.zeros((1, 2))
@@ -263,6 +250,19 @@ class battle_ai:
                 # Adding this state/action pair to our dataset. Last element is True because 1v1 battle
                 # has ended in this conditional
                 self.battle_data.append((self.init_state, self.move_index, reward, self.next_state, True))
+                # Adding this turn to history list
+                status = ""
+                if (self.opponent_hp <= 0):
+                    status = "Won"
+                elif (self.pokemon_hp <= 0):
+                    status = "Lost"
+                else:
+                    status = "Ongoing"
+                self.cur_history_object = battle_history_list_obj(self.move_index, self.move_method_used, \
+                    self.action_predicted_rewards[0], \
+                    str(self.pokemon_hp), str(self.opponent_hp), status)
+                self.battle_history_list.append(self.cur_history_object) 
+                
                 self.cur_state = "battle_ended"
 
             # Only reaches here when enemy hasn't been beaten yet
@@ -283,6 +283,19 @@ class battle_ai:
                     # Adding this state/action pair to our dataset. Last element is False because 1v1 battle
                     # is still going on
                     self.battle_data.append((self.init_state, self.move_index, reward, self.next_state, False))
+                    # Adding this turn to history list
+                    status = ""
+                    if (self.opponent_hp <= 0):
+                        status = "Won"
+                    elif (self.pokemon_hp <= 0):
+                        status = "Lost"
+                    else:
+                        status = "Ongoing"
+                    self.cur_history_object = battle_history_list_obj(self.move_index, self.move_method_used, \
+                        self.action_predicted_rewards[0], \
+                        str(self.pokemon_hp), str(self.opponent_hp), status)
+                    self.battle_history_list.append(self.cur_history_object) 
+                    
                     self.cur_state = "action_select"
             
             if (self.cur_state == "battle_ended"):
@@ -347,7 +360,10 @@ class battle_history_list_obj():
     def __init__(self, text, method_used, model_output, my_hp, enemy_hp, status):
         self.text = text
         self.method_used = method_used
-        self.model_output = model_output
+        new_model_output = []
+        for i in model_output:
+            new_model_output.append("{:.1f}".format(i))
+        self.model_output = new_model_output
         self.my_hp = my_hp
         self.enemy_hp = enemy_hp
         self.status = status
