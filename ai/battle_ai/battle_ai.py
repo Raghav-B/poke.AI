@@ -40,8 +40,13 @@ class battle_ai:
         self.init_state = None
         self.next_state = None
         self.move_index = None
+        self.move_method_used = None
 
         self.key_wait_time = 0.25
+
+        # Variables for keeping track of battle AI history
+        self.battle_history_list = []
+        self.history_output = None
 
         # Load pre-trained model weights
         #self.battle_model.load_weights("battle_ai/models/battle_model_75.h5")
@@ -193,9 +198,11 @@ class battle_ai:
             
             if (np.random.rand() <= self.epsilon and self.continue_training == True):
                 print("Exploration (random)")
+                self.move_method_used = "Exploration (random)"
                 self.move_index = random.randint(0, 3)
             else:
                 print("Exploitation (prediction)")
+                self.move_method_used = "Exploitation (prediction)"
                 self.move_index = np.argmax(self.action_predicted_rewards[0])
             
             # Performing actual, physical action now
@@ -224,6 +231,19 @@ class battle_ai:
             #print("Finding next state...")
             #print("")
 
+            # Adding this turn to history list
+            status = ""
+            if (self.opponent_hp <= 0):
+                status = "Won"
+            elif (self.pokemon_hp <= 0):
+                status = "Lost"
+            else:
+                status = "Ongoing"
+            self.cur_history_object = battle_history_list_obj(str(self.move_index), self.move_method_used, \
+                str(self.action_predicted_rewards[0]), \
+                str(self.pokemon_hp), str(self.opponent_hp), status)
+            self.battle_history_list.append(self.cur_history_object) 
+
             # If current opponent pokemon or my pokemon has been beaten
             if (self.opponent_hp <= 0 or self.pokemon_hp <= 0): # Need to handle self-death in a nicer way eventually
                 self.next_state = np.zeros((1, 2))
@@ -244,7 +264,7 @@ class battle_ai:
                 # has ended in this conditional
                 self.battle_data.append((self.init_state, self.move_index, reward, self.next_state, True))
                 self.cur_state = "battle_ended"
-            
+
             # Only reaches here when enemy hasn't been beaten yet
             # Action select screen once again
             else:                
@@ -322,3 +342,12 @@ class battle_ai:
                 ctrl.interact()
         
         return frame, "continue"
+
+class battle_history_list_obj():
+    def __init__(self, text, method_used, model_output, my_hp, enemy_hp, status):
+        self.text = text
+        self.method_used = method_used
+        self.model_output = model_output
+        self.my_hp = my_hp
+        self.enemy_hp = enemy_hp
+        self.status = status
