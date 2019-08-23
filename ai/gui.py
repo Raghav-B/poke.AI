@@ -62,10 +62,10 @@ class gui:
 
         ### MAP LEGEND ###
         self.legend_label = tk.Label(self.window, text="Map Legend", font=("Helvetica", 12))
-        self.legend_label.grid(row=0, column=13, padx=5, pady=5)
+        self.legend_label.grid(row=0, column=12, padx=5, pady=5)
         self.legend = tk.Canvas(self.window, width=300, height=375)
-        self.legend.grid(row=1, column=13, rowspan=3, padx=5, pady=5, sticky="n")
-        self.legend.create_rectangle(3, 3, 295, 375, fill="#FFFFFF", outline="#000000", width=2)
+        self.legend.grid(row=1, column=12, rowspan=3, padx=1, pady=5, sticky="n")
+        self.legend.create_rectangle(3, 5, 300, 375, fill="#FFFFFF", outline="#000000", width=2)
         # Agent
         self.legend.create_rectangle(15, 15, 45, 45, width=1, outline="#000000", fill="#00FF95")
         self.legend.create_text(55, 30, anchor="w", font=("Helvetica", 10), text="Agent")
@@ -101,23 +101,27 @@ class gui:
 
         ### EXPLORED MAP ###
         self.mf_label = tk.Label(self.window, text="Explored Map", font=("Helvetica", 12))
-        self.mf_label.grid(row=0, column=7, columnspan=6, padx=5, pady=5)
+        self.mf_label.grid(row=0, column=6, columnspan=6, padx=5, pady=5)
         self.map_frame_outer = tk.Label(self.window, width=720, height=720)
-        self.map_frame_outer.grid(row=1, column=7, rowspan=6, columnspan=6, padx=5, pady=5)
+        self.map_frame_outer.grid(row=1, column=6, rowspan=6, columnspan=6, padx=5, pady=5)
         self.map_frame = tk.Label(self.map_frame_outer, width=720, height=720)
-        self.map_frame.grid(row=1, column=7, rowspan=6, columnspan=6)#, padx=5, pady=5)
+        self.map_frame.grid(row=1, column=6, rowspan=6, columnspan=6)#, padx=5, pady=5)
 
-        ### OPTIONS ###
+        ### OPTIONS BUTTONS ###
         self.is_paused = True
         self.initial = True
         self.pause_button_text = tk.StringVar()
         self.pause_button_text.set("Start")
         self.pause_button = tk.Button(self.window, textvariable=self.pause_button_text, font=("Helvetica", 10), \
-            command=self.pause_ai)
-        self.pause_button.grid(row=4, column=13, padx=5, pady=1, sticky="w")
+            command=self.pause_ai, borderwidth=3)
+        self.pause_button.grid(row=4, column=12, padx=5, pady=1, sticky="nsew")
         
-        self.save_map_button = tk.Button(self.window, text="Save Map", font=("Helvetica", 10), command=self.save_map)
-        self.save_map_button.grid(row=5, column=13, padx=5, pady=1, sticky="w")
+        self.save_map_button = tk.Button(self.window, text="Save Map", font=("Helvetica", 10), command=self.save_map, \
+            borderwidth=3)
+        self.save_map_button.grid(row=5, column=12, padx=5, pady=1, sticky="nsew")
+
+        self.test_button = tk.Button(self.window, text="Test", font=("helvetica", 10), borderwidth=3)
+        self.test_button.grid(row=6, column=12, padx=5, pady=1, sticky="nsew")
         
         #dqnn_train_status = tk.IntVar()
         #self.dqnn_train_checkbox = tk.Checkbutton(self.window, text="Train DQNN", variable=dqnn_train_status, \
@@ -190,11 +194,11 @@ class gui:
 
         ### MAPPER STATUS ###
         self.ms_label = tk.Label(self.window, text="Mapper Status", font=("Helvetica", 12))
-        self.ms_label.grid(row=8, column=7, columnspan=6, padx=5, pady=5)
+        self.ms_label.grid(row=8, column=6, columnspan=6, padx=5, pady=5)
 
         self.mapper_listbox = ttk.Treeview(self.window, selectmode="none")
         self.mapper_listbox.heading("#0", text="Mapper History")
-        self.mapper_listbox.grid(row=9, column=7, columnspan=6, padx=5, pady=5, sticky="nsew")
+        self.mapper_listbox.grid(row=9, column=6, columnspan=6, padx=5, pady=5, sticky="nsew")
         self.mapper_listbox.column(column="#0", width=720)
         self.mapper_history_list = []
         # Binding function here
@@ -203,18 +207,18 @@ class gui:
         self.mapper_listbox.configure(yscrollcommand=self.ml_scroll.set)
 
         self.la_label = tk.Label(self.window, text="Last action performed:", font=("Helvetica", 10))
-        self.la_label.grid(row=10, column=7, padx=5, pady=1, sticky="w")
+        self.la_label.grid(row=10, column=6, padx=5, pady=1, sticky="w")
         self.last_action_var = tk.StringVar()
         self.last_action_var.set(str(self.pa.key_pressed))
         self.la_var_label = tk.Label(self.window, textvariable=self.last_action_var, font=("Helvetica", 10))
-        self.la_var_label.grid(row=10, column=8, padx=5, pady=1, sticky="w")
+        self.la_var_label.grid(row=10, column=7, padx=5, pady=1, sticky="w")
 
         self.cd_label = tk.Label(self.window, text="Collision Detected:", font=("Helvetica", 10))
-        self.cd_label.grid(row=11, column=7, padx=5, pady=1, sticky="w")
+        self.cd_label.grid(row=11, column=6, padx=5, pady=1, sticky="w")
         self.collision_detected_var = tk.StringVar()
         self.collision_detected_var.set(str(self.pa.collision_type))
         self.cd_var_label = tk.Label(self.window, textvariable=self.collision_detected_var, font=("Helvetica", 10))
-        self.cd_var_label.grid(row=11, column=8, padx=5, pady=1, sticky="w")
+        self.cd_var_label.grid(row=11, column=7, padx=5, pady=1, sticky="w")
 
         self.update()
         self.window.mainloop()
@@ -255,7 +259,7 @@ class gui:
 
             self.battles_completed_var.set(str(self.pa.bat_ai.num_episodes_completed))
             self.data_size_var.set(str(len(self.pa.bat_ai.battle_data)))
-            self.last_action_var.set(str(self.pa.bat_ai.last_reward))
+            self.last_reward_var.set(str(self.pa.bat_ai.last_reward))
             print_prediction = []
             for i in self.pa.bat_ai.action_predicted_rewards[0]:
                 print_prediction.append("{:.1f}".format(i))
