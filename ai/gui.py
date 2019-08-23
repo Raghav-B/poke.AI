@@ -152,7 +152,7 @@ class gui:
         self.battle_ai_listbox.column(column="#5", width=30)
         self.battle_ai_listbox.grid(row=9, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
         self.battle_history_list = []
-        self.battle_ai_listbox.bind("<Double-1>", self.open_battle_history_details)
+        #self.battle_ai_listbox.bind("<Double-1>", self.open_battle_history_details)
         self.bal_scroll = ttk.Scrollbar(self.window, orient="vertical", command=self.battle_ai_listbox.yview)
         self.bal_scroll.place(x=701, y=876, height=280)
         self.battle_ai_listbox.configure(yscrollcommand=self.bal_scroll.set)
@@ -196,12 +196,12 @@ class gui:
         self.ms_label = tk.Label(self.window, text="Mapper Status", font=("Helvetica", 12))
         self.ms_label.grid(row=8, column=6, columnspan=6, padx=5, pady=5)
 
-        self.mapper_listbox = ttk.Treeview(self.window, selectmode="none")
+        self.mapper_listbox = ttk.Treeview(self.window)
         self.mapper_listbox.heading("#0", text="Mapper History")
         self.mapper_listbox.grid(row=9, column=6, columnspan=6, padx=5, pady=5, sticky="nsew")
         self.mapper_listbox.column(column="#0", width=720)
         self.mapper_history_list = []
-        # Binding function here
+        self.mapper_listbox.bind("<Double-1>", self.open_mapper_history_details)
         self.ml_scroll = ttk.Scrollbar(self.window, orient="vertical", command=self.mapper_listbox.yview)
         self.ml_scroll.place(x=1436, y=876, height=280)
         self.mapper_listbox.configure(yscrollcommand=self.ml_scroll.set)
@@ -297,18 +297,38 @@ class gui:
         cv2.imwrite("saved_maps/" + str(self.map_num) + ".png", temp)
         self.map_num += 1
     
-    def open_battle_history_details(self, event):
-        index = self.battle_ai_listbox.index(self.battle_ai_listbox.selection()[0])
-        index = len(self.battle_history_list) - 1 - index
-        temp_item = self.battle_history_list[index]
-        output_str = f"Last Move Selected: {temp_item.text}" + "\n" + f"Move Selection Method: {temp_item.method_used}" + "\n" + \
-            f"Last Prediction Values: {self.pa.bat_ai.action_predicted_rewards[0]}" + \
-            "\n" + f"Pokemon HP: {temp_item.my_hp}" + "\n" + f"Enemy HP: {temp_item.enemy_hp}" + "\n" + \
-            f"Battle Status: {temp_item.status}"
-        messagebox.showinfo("History Info", output_str)
+    #def open_battle_history_details(self, event):
+    #    index = self.battle_ai_listbox.index(self.battle_ai_listbox.selection()[0])
+    #    index = len(self.battle_history_list) - 1 - index
+    #    temp_item = self.battle_history_list[index]
+    #    output_str = f"Last Move Selected: {temp_item.text}" + "\n" + f"Move Selection Method: {temp_item.method_used}" + "\n" + \
+    #        f"Last Prediction Values: {self.pa.bat_ai.action_predicted_rewards[0]}" + \
+    #        "\n" + f"Pokemon HP: {temp_item.my_hp}" + "\n" + f"Enemy HP: {temp_item.enemy_hp}" + "\n" + \
+    #        f"Battle Status: {temp_item.status}"
+    #    messagebox.showinfo("History Info", output_str)
     
     def open_mapper_history_details(self, event):
-        messagebox.showinfo("Mapper Info", "")
+        index = self.mapper_listbox.index(self.mapper_listbox.selection()[0])
+        index = len(self.mapper_history_list) - 1 - index
+        temp_item = self.mapper_history_list[index]
+
+        preview_img_left = temp_item.detection_img
+        preview_img_left = cv2.resize(preview_img_left, (720,720))
+
+        preview_img_right = temp_item.map_img[:,:,:3]
+        padding = 0
+        height = preview_img_right.shape[0]
+        width = preview_img_right.shape[1]
+        if height < width:
+            padding = int((width - height) / 2)
+            preview_img_right = cv2.copyMakeBorder(preview_img_right, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
+        elif height > width:
+            padding = int((height - width) / 2)
+            preview_img_right = cv2.copyMakeBorder(preview_img_right, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
+        preview_img_right = cv2.resize(preview_img_right, (720,720), interpolation=cv2.INTER_NEAREST)
+
+        preview_img = np.concatenate((preview_img_left, preview_img_right), axis=1)
+        cv2.imshow("Preview", preview_img)
 
 if __name__ == "__main__":
     gui(tk.Tk(), "poke.AI")
