@@ -33,7 +33,8 @@ class battle_ai:
         self.train_batch_size = 32
 
         self.continue_training = True
-        self.action_predicted_rewards = [0,0]
+        self.action_predicted_rewards = [[0.0, 0.0, 0.0, 0.0]]
+        self.last_reward = 0
         self.num_episodes_completed = 0
         
         # Keeping track of state related variables
@@ -198,11 +199,11 @@ class battle_ai:
             
             if (np.random.rand() <= self.epsilon and self.continue_training == True):
                 print("Exploration (random)")
-                self.move_method_used = "Exploration (random)"
+                self.move_method_used = "Stochastic"
                 self.move_index = random.randint(0, 3)
             else:
                 print("Exploitation (prediction)")
-                self.move_method_used = "Exploitation (prediction)"
+                self.move_method_used = "Predicted"
                 self.move_index = np.argmax(self.action_predicted_rewards[0])
             
             # Performing actual, physical action now
@@ -243,13 +244,13 @@ class battle_ai:
                     base_reward = 200
                 elif (self.pokemon_hp <= 0):
                     base_reward = -200
-                reward = (self.init_state[0][1] - self.next_state[0][1]) - \
+                self.last_reward = (self.init_state[0][1] - self.next_state[0][1]) - \
                     (self.init_state[0][0] - self.next_state[0][0]) + base_reward
-                print("Action reward: " + str(reward))
+                print("Action reward: " + str(self.last_reward))
 
                 # Adding this state/action pair to our dataset. Last element is True because 1v1 battle
                 # has ended in this conditional
-                self.battle_data.append((self.init_state, self.move_index, reward, self.next_state, True))
+                self.battle_data.append((self.init_state, self.move_index, self.last_reward, self.next_state, True))
                 # Adding this turn to history list
                 status = ""
                 if (self.opponent_hp <= 0):
@@ -276,13 +277,13 @@ class battle_ai:
                     self.next_state[0][1] = self.opponent_hp
                     
                     # Performing reward calculation for our last used move
-                    reward = (self.init_state[0][1] - self.next_state[0][1]) - \
+                    self.last_reward = (self.init_state[0][1] - self.next_state[0][1]) - \
                         (self.init_state[0][0] - self.next_state[0][0])
-                    print("Action reward: " + str(reward))
+                    print("Action reward: " + str(self.last_reward))
 
                     # Adding this state/action pair to our dataset. Last element is False because 1v1 battle
                     # is still going on
-                    self.battle_data.append((self.init_state, self.move_index, reward, self.next_state, False))
+                    self.battle_data.append((self.init_state, self.move_index, self.last_reward, self.next_state, False))
                     # Adding this turn to history list
                     status = ""
                     if (self.opponent_hp <= 0):
@@ -356,7 +357,7 @@ class battle_ai:
         
         return frame, "continue"
 
-class battle_history_list_obj():
+class battle_history_list_obj:
     def __init__(self, text, method_used, model_output, my_hp, enemy_hp, status):
         self.text = text
         self.method_used = method_used

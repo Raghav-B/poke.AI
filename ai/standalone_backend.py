@@ -79,6 +79,10 @@ class poke_ai:
         self.in_battle = False
         self.map_grid = np.full((2, 2), 255, dtype=np.uint8)
 
+        # Variables to keep track of mapper history
+        self.mapper_history_list = []
+        self.history_output = None
+
     # Dummy function, does nothing
     def nothing(self, x):
         pass
@@ -159,6 +163,9 @@ class poke_ai:
 
                     self.step_count += 1
                     self.actions = self.mp.get_movelist()
+                    temp_obj = mapping_history_list_obj(f"Found next frontier at {self.mp.pf.next_frontier[1:]}", \
+                        frame, self.map_grid)
+                    self.mapper_history_list.append(temp_obj)
 
                 # All other 0 frames that are not the initial frame
                 else:
@@ -170,6 +177,12 @@ class poke_ai:
                     if (self.action_index >= len(self.actions)):
                         self.action_index = 0
                         self.actions = self.mp.get_movelist()
+                        temp_obj = mapping_history_list_obj(f"Reached frontier at {self.mp.pf.next_frontier[1:]}", \
+                            frame, self.map_grid)
+                        self.mapper_history_list.append(temp_obj)
+                        temp_obj = mapping_history_list_obj(f"Found next frontier at {self.mp.pf.next_frontier[1:]}", \
+                            frame, self.map_grid)
+                        self.mapper_history_list.append(temp_obj)
                     
                     print("Key pressed: " + self.keys[self.actions[self.action_index]])            
                     self.key_pressed, self.ram_vals = self.ctrl.perform_movement(action=self.actions[self.action_index])
@@ -199,6 +212,15 @@ class poke_ai:
                 print(self.collision_type)
                 print("")
 
+                if (self.key_pressed == None):
+                    temp_obj = mapping_history_list_obj(f"Initialising controller", \
+                        frame, self.map_grid)
+                    self.mapper_history_list.append(temp_obj)
+                else:
+                    temp_obj = mapping_history_list_obj(f"Moved {self.keys[self.key_pressed]}", \
+                        frame, self.map_grid)
+                    self.mapper_history_list.append(temp_obj)
+
                 if (self.collision_type == "battle_collision_post" or self.collision_type == "battle_collision_pre"):
                     if (self.collision_type == "battle_collision_pre"):
                         self.action_index -= 1
@@ -218,17 +240,29 @@ class poke_ai:
                     if (not (np.array_equal(self.map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3], [0, 0, 0]) or \
                         np.array_equal(self.map_grid[self.mp.pf.next_frontier[2]][self.mp.pf.next_frontier[1]][:3], [255, 255, 255]))):
                         print("Frontier obstructed, switching to new frontier...")
+                        temp_obj = mapping_history_list_obj(f"Frontier at {self.mp.pf.next_frontier[1:]} obstructued", \
+                            frame, self.map_grid)
+                        self.mapper_history_list.append(temp_obj)
                         self.action_index = -1
                         self.actions = self.mp.get_movelist()
+                        temp_obj = mapping_history_list_obj(f"Found next frontier at {self.mp.pf.next_frontier[1:]}", \
+                            frame, self.map_grid)
+                        self.mapper_history_list.append(temp_obj)
 
                     # Change actions to newly calculated path if a collision occurs
                     if (self.collision_type == "normal_collision"):
+                        temp_obj = mapping_history_list_obj(f"Collision occured, finding new path to frontier", \
+                            frame, self.map_grid)
+                        self.mapper_history_list.append(temp_obj)
                         self.actions = self.mp.pf.frontier_path_collision_handler(self.map_grid, \
                             (self.mp.map_offset_x - self.mp.map_min_offset_x), \
                             (self.mp.map_offset_y - self.mp.map_min_offset_y))
                         if (self.actions == False): # If we have experienced 5 consecutive collisions
                             # Find a new frontier to go towards
                             self.actions = self.mp.get_movelist()
+                            temp_obj = mapping_history_list_obj(f"Found next frontier at {self.mp.pf.next_frontier[1:]}", \
+                                frame, self.map_grid)
+                            self.mapper_history_list.append(temp_obj)
                         self.action_index = -1 # Either way we reset the index
 
                 # Reset 5 frame cycle
@@ -279,6 +313,11 @@ class poke_ai:
         cv2.imshow("Screen", frame)
         cv2.imshow("Map", map_grid[:,:,:3])
 
+class mapping_history_list_obj:
+    def __init__(self, text, detection_img, map_img):
+        self.text = text
+        self.detection_img = detection_img
+        self.map_img = map_img
 
 # Main function
 if __name__ == "__main__":

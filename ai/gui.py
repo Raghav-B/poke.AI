@@ -52,12 +52,13 @@ class gui:
         self.labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit", 6: "wall", 7:"grass"} # Labels to draw
         self.attacks = ["Scratch", "Growl", "Focus Energy", "Ember"]
         self.pa = poke_ai(self.model_path, self.labels_to_names, self.game_window_size)
-        self.video = cv2.VideoCapture(0)
+        #self.video = cv2.VideoCapture(0)
         self.cur_map_grid = None
         self.map_num = 0
 
         treeview_style = ttk.Style()
-        treeview_style.configure("Treeview", rowheight=40)
+        treeview_style.configure("Treeview", rowheight=25)
+        treeview_style.configure("Treeview", font=("Helvetica", 7))
 
         ### MAP LEGEND ###
         self.legend_label = tk.Label(self.window, text="Map Legend", font=("Helvetica", 12))
@@ -118,10 +119,10 @@ class gui:
         self.save_map_button = tk.Button(self.window, text="Save Map", font=("Helvetica", 10), command=self.save_map)
         self.save_map_button.grid(row=5, column=13, padx=5, pady=1, sticky="w")
         
-        dqnn_train_status = tk.IntVar()
-        self.dqnn_train_checkbox = tk.Checkbutton(self.window, text="Train DQNN", variable=dqnn_train_status, \
-            font=("Helvetica", 10))
-        self.dqnn_train_checkbox.grid(row=6, column=13, padx=5, pady=1, sticky="w")
+        #dqnn_train_status = tk.IntVar()
+        #self.dqnn_train_checkbox = tk.Checkbutton(self.window, text="Train DQNN", variable=dqnn_train_status, \
+        #    font=("Helvetica", 10))
+        #self.dqnn_train_checkbox.grid(row=6, column=13, padx=5, pady=1, sticky="w")
         #self.pa.bat_ai.continue_training = self.dqnn_train_checkbox
 
         padding = tk.Label(self.window)
@@ -131,25 +132,25 @@ class gui:
         self.bas_label = tk.Label(self.window, text="Battle AI Status", font=("Helvetica", 12))
         self.bas_label.grid(row=8, column=0, columnspan=6, padx=5, pady=5)
 
-        self.battle_ai_listbox = ttk.Treeview(self.window, height=15, columns=("Method", \
-            "Model Output", "My HP", "Opp HP"))
+        self.battle_ai_listbox = ttk.Treeview(self.window, selectmode="none", columns=("Method", \
+            "Model Output", "My HP", "Opp HP", ""))
         self.battle_ai_listbox.heading("#0", text="Move Used")
         self.battle_ai_listbox.heading("#1", text="Method")
         self.battle_ai_listbox.heading("#2", text="Model Output")
         self.battle_ai_listbox.heading("#3", text="My HP")
         self.battle_ai_listbox.heading("#4", text="Opp HP")
-        #self.battle_ai_listbox.heading("#5", text="Status")
-        self.battle_ai_listbox.column(column="#0", width=120)
-        self.battle_ai_listbox.column(column="#1", width=200)
-        self.battle_ai_listbox.column(column="#2", width=250)
-        self.battle_ai_listbox.column(column="#3", width=75)
-        self.battle_ai_listbox.column(column="#4", width=75)
-        #self.battle_ai_listbox.column(column="#5", width=100)
-        self.battle_ai_listbox.grid(row=9, column=0, columnspan=6, padx=5, pady=5)
+        self.battle_ai_listbox.heading("#5", text="")
+        self.battle_ai_listbox.column(column="#0", width=180)
+        self.battle_ai_listbox.column(column="#1", width=140)
+        self.battle_ai_listbox.column(column="#2", width=180)
+        self.battle_ai_listbox.column(column="#3", width=95)
+        self.battle_ai_listbox.column(column="#4", width=95)
+        self.battle_ai_listbox.column(column="#5", width=30)
+        self.battle_ai_listbox.grid(row=9, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
         self.battle_history_list = []
         self.battle_ai_listbox.bind("<Double-1>", self.open_battle_history_details)
         self.bal_scroll = ttk.Scrollbar(self.window, orient="vertical", command=self.battle_ai_listbox.yview)
-        self.bal_scroll.place(x=699, y=877, height=329)
+        self.bal_scroll.place(x=701, y=876, height=280)
         self.battle_ai_listbox.configure(yscrollcommand=self.bal_scroll.set)
 
         self.bc_label = tk.Label(self.window, text="Battles Completed:", font=("Helvetica", 10))
@@ -166,32 +167,39 @@ class gui:
         self.ds_var_label = tk.Label(self.window, textvariable=self.data_size_var, font=("Helvetica", 10))
         self.ds_var_label.grid(row=11, column=1, padx=5, pady=1, sticky="w")
 
+        self.lr_label = tk.Label(self.window, text="Last Reward:", font=("Helvetica", 10))
+        self.lr_label.grid(row=12, column=0, padx=5, pady=1, sticky="w")
+        self.last_reward_var = tk.StringVar()
+        self.last_reward_var.set(str(self.pa.bat_ai.last_reward))
+        self.lr_var_label = tk.Label(self.window, textvariable=self.last_reward_var, font=("Helvetica", 10))
+        self.lr_var_label.grid(row=12, column=1, padx=5, pady=1, sticky="w")
+
         self.lp_label = tk.Label(self.window, text="Last Prediction Values:", font=("Helvetica", 10))
-        self.lp_label.grid(row=12, column=0, padx=5, pady=1, sticky="w")
+        self.lp_label.grid(row=13, column=0, padx=5, pady=1, sticky="w")
         self.last_prediction_var = tk.StringVar()
         self.last_prediction_var.set(str(self.pa.bat_ai.action_predicted_rewards[0]))
         self.lp_var_label = tk.Label(self.window, textvariable=self.last_prediction_var, font=("Helvetica", 10))
-        self.lp_var_label.grid(row=12, column=1, padx=5, pady=1, sticky="w")
+        self.lp_var_label.grid(row=13, column=1, padx=5, pady=1, sticky="w")
 
         self.rnd_label = tk.Label(self.window, text="Randomness:", font=("Helvetica", 10))
-        self.rnd_label.grid(row=13, column=0, padx=5, pady=1, sticky="w")
+        self.rnd_label.grid(row=14, column=0, padx=5, pady=1, sticky="w")
         self.randomness_var = tk.StringVar()
         self.randomness_var.set(str(self.pa.bat_ai.epsilon))
         self.rnd_var_label = tk.Label(self.window, textvariable=self.randomness_var, font=("Helvetica", 10))
-        self.rnd_var_label.grid(row=13, column=1, padx=5, pady=1, sticky="w")
+        self.rnd_var_label.grid(row=14, column=1, padx=5, pady=1, sticky="w")
 
         ### MAPPER STATUS ###
         self.ms_label = tk.Label(self.window, text="Mapper Status", font=("Helvetica", 12))
         self.ms_label.grid(row=8, column=7, columnspan=6, padx=5, pady=5)
 
-        self.mapper_listbox = ttk.Treeview(self.window, height=15)
+        self.mapper_listbox = ttk.Treeview(self.window, selectmode="none")
         self.mapper_listbox.heading("#0", text="Mapper History")
-        self.mapper_listbox.grid(row=9, column=7, columnspan=6, padx=5, pady=5)
+        self.mapper_listbox.grid(row=9, column=7, columnspan=6, padx=5, pady=5, sticky="nsew")
         self.mapper_listbox.column(column="#0", width=720)
         self.mapper_history_list = []
         # Binding function here
         self.ml_scroll = ttk.Scrollbar(self.window, orient="vertical", command=self.mapper_listbox.yview)
-        self.ml_scroll.place(x=1437, y=877, height=329)
+        self.ml_scroll.place(x=1436, y=876, height=280)
         self.mapper_listbox.configure(yscrollcommand=self.ml_scroll.set)
 
         self.la_label = tk.Label(self.window, text="Last action performed:", font=("Helvetica", 10))
@@ -247,7 +255,11 @@ class gui:
 
             self.battles_completed_var.set(str(self.pa.bat_ai.num_episodes_completed))
             self.data_size_var.set(str(len(self.pa.bat_ai.battle_data)))
-            self.last_prediction_var.set(str(self.pa.bat_ai.action_predicted_rewards[0]))
+            self.last_action_var.set(str(self.pa.bat_ai.last_reward))
+            print_prediction = []
+            for i in self.pa.bat_ai.action_predicted_rewards[0]:
+                print_prediction.append("{:.1f}".format(i))
+            self.last_prediction_var.set(str(print_prediction))
             self.randomness_var.set(str(self.pa.bat_ai.epsilon))
             self.last_action_var.set(str(self.pa.key_pressed))
             self.collision_detected_var.set(str(self.pa.collision_type))
@@ -258,7 +270,13 @@ class gui:
                 new_item = self.battle_history_list[-1]
                 self.battle_ai_listbox.insert("", 0, text=self.attacks[new_item.text], \
                     values=(new_item.method_used, new_item.model_output, new_item.my_hp, \
-                    new_item.enemy_hp))
+                    new_item.enemy_hp, ""))
+            
+            if len(self.mapper_history_list) != len(self.pa.mapper_history_list):
+                # After this the two lists should become equal
+                self.mapper_history_list.append(self.pa.mapper_history_list[-1])
+                new_item = self.mapper_history_list[-1]
+                self.mapper_listbox.insert("", 0, text=new_item.text)
 
         self.initial = False
         self.window.after(1, self.update)
