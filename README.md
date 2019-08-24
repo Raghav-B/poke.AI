@@ -127,6 +127,7 @@ For the first prototype/minimum viable product/whatever you like to call it, my 
 * [LabelImg](https://github.com/tzutalin/labelImg) - to make the task of labelImg images a litle less arduous <3
 * [OpenCV](https://opencv.org/) - various image processing and computer vision uses
 * [ZMQ](https://github.com/zeromq) - interprocess communication between C++ and Python
+* [Tkinter](https://tkdocs.com/) - For creating the GUI
 
 ## Installation and Setup Guide
 
