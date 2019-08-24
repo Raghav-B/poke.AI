@@ -104,8 +104,8 @@ class gui:
             borderwidth=3)
         self.save_map_button.grid(row=5, column=12, padx=5, pady=1, sticky="nsew")
 
-        self.test_button = tk.Button(self.window, text="Test", font=("helvetica", 10), borderwidth=3)
-        self.test_button.grid(row=6, column=12, padx=5, pady=1, sticky="nsew")
+        #self.test_button = tk.Button(self.window, text="Test", font=("helvetica", 10), borderwidth=3)
+        #self.test_button.grid(row=6, column=12, padx=5, pady=1, sticky="nsew")
         
         #dqnn_train_status = tk.IntVar()
         #self.dqnn_train_checkbox = tk.Checkbutton(self.window, text="Train DQNN", variable=dqnn_train_status, \

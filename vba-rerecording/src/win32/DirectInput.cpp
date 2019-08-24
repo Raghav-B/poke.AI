@@ -1081,8 +1081,6 @@ void DirectInput::startZMQ()
     int timeout = 1;
     zmq_setsockopt(requester, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
     zmq_connect(requester, "tcp://localhost:5555");
-
-    DBOUT("HSHAHAHHAHAHAH" << std::endl);
 }
 
 void DirectInput::endZMQ()
