@@ -92,6 +92,7 @@ protected:
 	afx_msg void OnHelpFaq();
 	afx_msg void OnFileOpen();
 	afx_msg void OnFileOpenGBx();
+    afx_msg void ResetController();
 	afx_msg void OnFilePause();
 	afx_msg void OnUpdateFilePause(CCmdUI*pCmdUI);
 	afx_msg void OnFileReset();

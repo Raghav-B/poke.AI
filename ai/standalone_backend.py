@@ -323,10 +323,7 @@ class mapping_history_list_obj:
 if __name__ == "__main__":
     # Setup variables here
     game_window_size = {"top": 0, "left": 0, "width": 720, "height": 480}
-    #model_path = "../object_detection/keras-retinanet/inference_graphs/map_detector.h5" # Model to be used for detection
-    #labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit"} # Labels to draw
-
-    model_path = "../object_detection/keras-retinanet/inference_graphs/resnet50_csv_13.h5" # Model to be used for detection
+    model_path = "../object_detection/keras-retinanet/inference_graphs/map_detector.h5" # Model to be used for detection
     labels_to_names = {0: "pokecen", 1: "pokemart", 2: "npc", 3: "house", 4: "gym", 5: "exit", 6: "wall", 7:"grass"} # Labels to draw
 
     # Setting up windows

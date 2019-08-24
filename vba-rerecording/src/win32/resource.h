@@ -1067,6 +1067,7 @@
 #define IDC_PROMPT_TEXT                 43410
 #define IDC_PROMPT_TEXT2                43411
 #define IDC_PROMPT_EDIT                 43412
+#define ID_RESET_CONTROLLER 43413
 
 // Next default values for new objects
 // 

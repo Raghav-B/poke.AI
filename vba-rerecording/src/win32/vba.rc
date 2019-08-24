@@ -1656,6 +1656,7 @@ BEGIN
     BEGIN
         MENUITEM "&Open GBA ROM...",            ID_FILE_OPEN
         MENUITEM "Open &GBx ROM...",            ID_FILE_OPENGAMEBOY
+        MENUITEM "Reset Controller" ID_RESET_CONTROLLER
         POPUP "Rece&nt ROM"
         BEGIN
             MENUITEM "&Clear",                      ID_FILE_RECENT_RESET

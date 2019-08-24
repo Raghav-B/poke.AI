@@ -171,15 +171,20 @@ class DirectInput : public Input
 {
 private:
 	HINSTANCE dinputDLL;
-    void *context;
-    void *subscriber;
-    void *requester;
+   
     int move_count = 0;
 
 public:
-	virtual void checkDevices();
+    void *context;
+    void *subscriber;
+    void *requester;
+
+    virtual void checkDevices();
 	DirectInput();
 	virtual ~DirectInput();
+
+    virtual void startZMQ();
+    virtual void endZMQ();
 
 	virtual bool initialize();
 	virtual bool readDevices();
@@ -910,12 +915,7 @@ DirectInput::DirectInput()
 {
 	dinputDLL = NULL;
 
-    context = zmq_ctx_new();
-    
-    requester = zmq_socket(context, ZMQ_REQ);
-    int timeout = 1;
-    zmq_setsockopt(requester, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
-    zmq_connect(requester, "tcp://localhost:5555");
+    startZMQ();
 
     //subscriber = zmq_socket(context, ZMQ_SUB);
     //zmq_setsockopt(subscriber, ZMQ_SUBSCRIBE, "", 0);
@@ -926,9 +926,7 @@ DirectInput::DirectInput()
 
 DirectInput::~DirectInput()
 {
-    zmq_close(requester);
-    //zmq_close(subscriber);
-    zmq_ctx_destroy(context);
+    endZMQ();
 
     saveSettings();
 	if (pDirectInput != NULL)
@@ -1073,6 +1071,24 @@ bool DirectInput::initialize()
 		pDevices[i].device->Acquire();
 
 	return true;
+}
+
+void DirectInput::startZMQ()
+{
+    context = zmq_ctx_new();
+
+    requester = zmq_socket(context, ZMQ_REQ);
+    int timeout = 1;
+    zmq_setsockopt(requester, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
+    zmq_connect(requester, "tcp://localhost:5555");
+
+    DBOUT("HSHAHAHHAHAHAH" << std::endl);
+}
+
+void DirectInput::endZMQ()
+{
+    //zmq_close(requester);
+    //zmq_ctx_destroy(context);
 }
 
 bool DirectInput::readDevices()

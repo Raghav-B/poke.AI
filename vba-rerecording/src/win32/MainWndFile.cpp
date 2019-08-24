@@ -26,6 +26,8 @@
 #include "../common/movie.h"
 #include "../common/vbalua.h"
 
+#include "Input.h"
+
 void MainWnd::OnFileOpen()
 {
 	theApp.winCheckFullscreen();
@@ -42,6 +44,22 @@ void MainWnd::OnFileOpenGBx()
 	{
 		winFileRun();
 	}
+}
+
+void MainWnd::ResetController() {
+    //theApp->input.context = zmq_ctx_new();
+    //theApp.input.context = zmq_ctx_new();
+
+    //theApp.initInput();
+    theApp.input->endZMQ();
+    theApp.input->startZMQ();
+
+    //context = zmq_ctx_new();
+
+    //requester = zmq_socket(context, ZMQ_REQ);
+    //int timeout = 1;
+    //zmq_setsockopt(requester, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
+    ///zmq_connect(requester, "tcp://localhost:5555");
 }
 
 void MainWnd::OnFilePause()

@@ -180,7 +180,7 @@ class ubuntu_controller:
 
 class backend_controller:
     def __init__(self):
-        self.consecutive_cmd_delay = 0.25
+        self.consecutive_cmd_delay = 0.1
 
         self.move_context = zmq.Context()
         self.move_socket = self.move_context.socket(zmq.REP)
@@ -253,28 +253,28 @@ class backend_controller:
         if action == 0:
             key_pressed = self.move_up()
             if (self.cur_dir != 0):
-                time.sleep(self.consecutive_cmd_delay)
+                time.sleep(self.consecutive_cmd_delay + 0.18)
                 key_pressed = self.move_up()
             self.cur_dir = 0
 
         elif action == 1:
             key_pressed = self.move_right()
             if (self.cur_dir != 1):
-                time.sleep(self.consecutive_cmd_delay)
+                time.sleep(self.consecutive_cmd_delay + 0.18)
                 key_pressed = self.move_right()
             self.cur_dir = 1
 
         elif action == 2:
             key_pressed = self.move_down()
             if (self.cur_dir != 2):
-                time.sleep(self.consecutive_cmd_delay)
+                time.sleep(self.consecutive_cmd_delay + 0.18)
                 key_pressed = self.move_down()
             self.cur_dir = 2
 
         elif action == 3:
             key_pressed = self.move_left()      
             if (self.cur_dir != 3):
-                time.sleep(self.consecutive_cmd_delay)
+                time.sleep(self.consecutive_cmd_delay + 0.18)
                 key_pressed = self.move_left()
             self.cur_dir = 3
 

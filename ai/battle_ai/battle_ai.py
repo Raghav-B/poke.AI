@@ -358,6 +358,7 @@ class battle_ai:
         # Load pre-trained model weights
         self.battle_model.load_weights(model_path)
         self.epsilon = 0.05 # Disabling randomness
+        self.continue_training = False # Disabling training
         print("Loaded pretained model")
 
 class battle_history_list_obj:

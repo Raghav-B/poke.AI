@@ -17,6 +17,9 @@ public:
 
 	virtual bool initialize() = 0;
 
+    virtual void startZMQ() = 0;
+    virtual void endZMQ() = 0;
+
 	virtual bool readDevices() = 0;
 	virtual u32 readDevice(int which, bool sensor) = 0;
 	virtual CString getKeyName(LONG_PTR key) = 0;
