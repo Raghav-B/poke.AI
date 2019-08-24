@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
+from tkinter import filedialog
 from PIL import Image, ImageTk
 import cv2
 import numpy as np
@@ -10,35 +11,11 @@ from standalone_backend import poke_ai
 
 """
 Stuff to add to GUI. 
-- Speed slider
-
-- Status listbox which can be double-clicked to open image at that point in time
-Possible statuses:
-- Finding frontier: (Frontier location)
-- Moving to frontier: (Actions required to move there)
-- Move: Up, Down, Left Right:
-- In battle: (Model output scores after this battle)
-- 
-- Collision, continuing movement to frontier 
-- Frontier obstructed, finding new frontier (Frontier location)
-- 
-
-
 - Matplotlib graph to show the score for each move slowly converge
 
-
-- Battle AI training status, without output weights
 - Turn on/off DQNN training: self.pa.bat_ai.continue_training = False
-- 
 
 - Try to get custom running speed version to work
-
-Data to show:
-- Move selected:
-- Battle won/lost
-- Battle ended
-- 
-
 """
 
 class gui:
@@ -59,6 +36,13 @@ class gui:
         treeview_style = ttk.Style()
         treeview_style.configure("Treeview", rowheight=25)
         treeview_style.configure("Treeview", font=("Helvetica", 7))
+
+        ### MENU BAR ###
+        self.menubar = tk.Menu(self.window)
+        self.window.config(menu=self.menubar)
+        self.file_menu = tk.Menu(self.menubar)
+        self.menubar.add_cascade(label="File", menu=self.file_menu)
+        self.file_menu.add_command(label="Open Battle AI Weights", command=self.open_pretrained_battle_ai_model)
 
         ### MAP LEGEND ###
         self.legend_label = tk.Label(self.window, text="Map Legend", font=("Helvetica", 12))
@@ -138,7 +122,7 @@ class gui:
 
         self.battle_ai_listbox = ttk.Treeview(self.window, selectmode="none", columns=("Method", \
             "Model Output", "My HP", "Opp HP", ""))
-        self.battle_ai_listbox.heading("#0", text="Move Used")
+        self.battle_ai_listbox.heading("#0", text="Attack Used")
         self.battle_ai_listbox.heading("#1", text="Method")
         self.battle_ai_listbox.heading("#2", text="Model Output")
         self.battle_ai_listbox.heading("#3", text="My HP")
@@ -154,7 +138,7 @@ class gui:
         self.battle_history_list = []
         #self.battle_ai_listbox.bind("<Double-1>", self.open_battle_history_details)
         self.bal_scroll = ttk.Scrollbar(self.window, orient="vertical", command=self.battle_ai_listbox.yview)
-        self.bal_scroll.place(x=701, y=876, height=280)
+        self.bal_scroll.place(x=702, y=876, height=280)
         self.battle_ai_listbox.configure(yscrollcommand=self.bal_scroll.set)
 
         self.bc_label = tk.Label(self.window, text="Battles Completed:", font=("Helvetica", 10))
@@ -203,13 +187,13 @@ class gui:
         self.mapper_history_list = []
         self.mapper_listbox.bind("<Double-1>", self.open_mapper_history_details)
         self.ml_scroll = ttk.Scrollbar(self.window, orient="vertical", command=self.mapper_listbox.yview)
-        self.ml_scroll.place(x=1436, y=876, height=280)
+        self.ml_scroll.place(x=1440, y=876, height=280)
         self.mapper_listbox.configure(yscrollcommand=self.ml_scroll.set)
 
         self.la_label = tk.Label(self.window, text="Last action performed:", font=("Helvetica", 10))
         self.la_label.grid(row=10, column=6, padx=5, pady=1, sticky="w")
         self.last_action_var = tk.StringVar()
-        self.last_action_var.set(str(self.pa.key_pressed))
+        self.last_action_var.set("None")
         self.la_var_label = tk.Label(self.window, textvariable=self.last_action_var, font=("Helvetica", 10))
         self.la_var_label.grid(row=10, column=7, padx=5, pady=1, sticky="w")
 
@@ -265,7 +249,11 @@ class gui:
                 print_prediction.append("{:.1f}".format(i))
             self.last_prediction_var.set(str(print_prediction))
             self.randomness_var.set(str(self.pa.bat_ai.epsilon))
-            self.last_action_var.set(str(self.pa.key_pressed))
+
+            if (self.pa.key_pressed == None):
+                self.last_action_var.set("None")
+            else:
+                self.last_action_var.set(self.pa.keys[self.pa.key_pressed])
             self.collision_detected_var.set(str(self.pa.collision_type))
 
             if len(self.battle_history_list) != len(self.pa.bat_ai.battle_history_list):
@@ -297,15 +285,15 @@ class gui:
         cv2.imwrite("saved_maps/" + str(self.map_num) + ".png", temp)
         self.map_num += 1
     
-    #def open_battle_history_details(self, event):
-    #    index = self.battle_ai_listbox.index(self.battle_ai_listbox.selection()[0])
-    #    index = len(self.battle_history_list) - 1 - index
-    #    temp_item = self.battle_history_list[index]
-    #    output_str = f"Last Move Selected: {temp_item.text}" + "\n" + f"Move Selection Method: {temp_item.method_used}" + "\n" + \
-    #        f"Last Prediction Values: {self.pa.bat_ai.action_predicted_rewards[0]}" + \
-    #        "\n" + f"Pokemon HP: {temp_item.my_hp}" + "\n" + f"Enemy HP: {temp_item.enemy_hp}" + "\n" + \
-    #        f"Battle Status: {temp_item.status}"
-    #    messagebox.showinfo("History Info", output_str)
+    def open_pretrained_battle_ai_model(self):
+        model_path = filedialog.askopenfilename(initialdir="D:/App Development/pokemon_ai/ai/battle_ai/models/", \
+            title="Select model to load", filetypes=(("Saved model files", "*.h5"),))
+        print(model_path)
+        if (model_path == ""):
+            messagebox.showerror("Error", "Model loading cancelled by user")
+        else:
+            self.pa.bat_ai.open_battle_ai_model(model_path)
+            messagebox.showinfo("Info", ("Loaded model at path: " + model_path))
     
     def open_mapper_history_details(self, event):
         index = self.mapper_listbox.index(self.mapper_listbox.selection()[0])

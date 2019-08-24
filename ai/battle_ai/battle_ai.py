@@ -49,9 +49,6 @@ class battle_ai:
         self.battle_history_list = []
         self.history_output = None
 
-        # Load pre-trained model weights
-        #self.battle_model.load_weights("battle_ai/models/battle_model_75.h5")
-
     def update_hps(self, frame):
         # HP Detection
         black_lower_bound = (87, 0, 0)
@@ -356,6 +353,12 @@ class battle_ai:
                 ctrl.interact()
         
         return frame, "continue"
+
+    def open_battle_ai_model(self, model_path):
+        # Load pre-trained model weights
+        self.battle_model.load_weights(model_path)
+        self.epsilon = 0.05 # Disabling randomness
+        print("Loaded pretained model")
 
 class battle_history_list_obj:
     def __init__(self, text, method_used, model_output, my_hp, enemy_hp, status):
