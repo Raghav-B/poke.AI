@@ -69,7 +69,7 @@ For now, the CNN has been trained to detect the following objects:
 The plan is to add more classes once the other core features have been developed.
 
 <p align = "center">
-    <img src="readme_src/detection1.png" alt="Running pure detection without automated movement">
+    <img src="readme_src/detection1.png" alt="Running pure detection without automated movement" height="400">
 </p>
 
 So now our AI can see objects in its immediate environment, but how does it remember the locations of these objects? As soon as an object disappears from the frame and re-enters it at a later time, our agent has no way of knowing it is encountering a previously detected object again!
@@ -77,7 +77,7 @@ So now our AI can see objects in its immediate environment, but how does it reme
 This is where I took a bit of inspiration from [SLAM (Simultaneous Localization and Mapping)](https://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping). By using the movement of our agent (odometry), we try to estimate the expected location of objects that we have detected. However, we have an inherent advantage because there is nothing to estimate in mapping a Pokemon Game World - everything is fixed to a Tile on screen so all coordinates are absolute. So instead of estimation, all we have to do is store all our detected objects in a list somewhere, come up with a way to check if any newly detected objects already exist in our list, and converting the coordinates of the detectd objects from a local scale (our game screen) to the global scale (ground truth map of the entire game).
 
 <p align = "center">
-    <img src="readme_src/mapping2.png" alt="Drawing out a map of the game world on the global scale while moving around randomly">
+    <img src="readme_src/mapping2.png" alt="Drawing out a map of the game world on the global scale while moving around randomly"  height="400">
 </p>
 
 The [mapper.py](ai/mapper.py) script handles most of the mapping and localization process. 
@@ -89,7 +89,7 @@ Now that we have a mapping algorithm, our AI will know exactly where to go! - wh
 After a bit of thinking, it dawned on me that there was no need to really use an AI for this part. This is yet another time when we take inspiration from the field of robotics, specially, something known as Frontier-Based Exploration. This algorithm introduces the concept of *frontiers*, which are points on the boundary of the explored and unexplored regions of an area that a robot/agent is present in. Approaching these frontiers will allow more of the region to be explored. The agent chooses a frontier based on the score assigned to it. In our case, a frontier's score is determined by the types of tiles around it. For example, a frontier next to a boundary will be given a negative score, while a frontier next to the part of a detected house or NPC will be given a higher score.
 
 <p align = "center">
-    <img src="readme_src/frontier_mapping_prototype.png" alt="Drawing out a map of the game world on the global scale while moving around randomly">
+    <img src="readme_src/frontier_mapping_prototype.png" alt="Drawing out a map of the game world on the global scale while moving around randomly"  height="400">
 </p>
 
 We run a simple Breadth First Search (BFS) on the unexplored region (shown by the black tiles) to find a frontier with the highest score. Next, we run another BFS from our agent's current global position to the frontier's position, getting a sequence of actions that will take us to the frontier. The agent will correct its path accordingly if it runs into a collision or detects any new objects blocking its initial path to the frontier.
