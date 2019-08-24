@@ -3,7 +3,7 @@
 An experimental project to attempt to create an AI that can play the 3rd generation Pokemon games (specifically Pokemon Emerald - it's very close to my heart).
 
 <p align = "center">
-    <img src="readme_src/mapping_trial.png" alt="Prototype of mapping with detection">
+    <img src="https://media.giphy.com/media/W1YZOgx00doknuHUcX/giphy.gif" alt="poke.AI demo">
 </p>
 
 ## Introduction
@@ -35,9 +35,21 @@ So what does this mean for this Pokemon AI? Well yes, there are many parts of th
 
 Anyways, I've rambled on for too long, lets dive into the technical details. You can find most of the main code [right here.](object_detection/keras-retinanet/ai/)
 
-## Proposed Features / Modules
+## Features / Modules
 
-### Localization and Mapping of Game World
+For an overview of how the AI works and how its modules interact with each other, see the schematic below.
+
+<p align = "center">
+    <img src="readme_src/pokeai_schematic.png" alt="Schematic of poke.AI">
+</p>
+
+### Localization and Mapping of Game World - Computer Vision & SLAM-inspired Algorithm
+
+After running the AI for about an hour, it was able to map out a modest chunk of the game-world. Note that these results were after mapping was used in conjunction with frontier-based exploration (see below).
+
+<p align = "center">
+    <img src="https://media.giphy.com/media/hQiTN3YD1uY9mNbzeU/giphy.gif" alt="Game world mapping comparison">
+</p>
 
 This is at the absolute core of our AI. Without being able to localize itself in the game and without storing locations of objects and places of interest in memory, our agent won't be able to do anything apart from moving around randomly. (Interestingly, given how probability works, there probably exists a parallel universe somewhere where the AI has finished the game from start to finish purely on randomness alone). Hence we have to figure out a way to give our agent access to this information, because this is exactly what a human player does when playing any game.
 
@@ -64,9 +76,9 @@ This is where I took a bit of inspiration from [SLAM (Simultaneous Localization 
     <img src="readme_src/mapping2.png" alt="Drawing out a map of the game world on the global scale while moving around randomly">
 </p>
 
-The [mapper.py](ai/mapper.py) script handles most of the mapping and localization process.
+The [mapper.py](ai/mapper.py) script handles most of the mapping and localization process. 
 
-### Automated Movement in the Game World
+### Automated Movement in the Game World - Frontier-based Exploration
 
 Now that we have a mapping algorithm, our AI will know exactly where to go! - which might be what you're thinking, but that's wrong. Currently the agent follows a pre-defined set of sequential instructions, [or can move around randomly](https://www.youtube.com/watch?v=PQ_kMoVHZYc). How do we teach the AI how to move around?
 
@@ -80,11 +92,15 @@ We run a simple Breadth First Search (BFS) on the unexplored region (shown by th
 
 The [path_finder.py](ai/path_finder.py) script handles the exploration part of the AI. This is used in tandem with the aforementioned [mapper.py](ai/mapper.py).
 
-### Learning to Battle Pokemon (And Win)
+### Learning to Battle Pokemon (And Win) - Deep Q Learning
+
+<p align = "center">
+    <img src="https://media.giphy.com/media/icD67aSg1Rh9gT2IQe/giphy.gif" alt="Battle AI demo">
+</p>
 
 So far you might feel like you've been cheated. Our AI didn't really *learn* how to play Pokemon - I'm just giving it a general idea about what to do. If you feel this way too then you should find this section a lot more interesting. This is where we plan to incorporate Deep Q-Learning to the Pokemon battle system to get our agent to learn what to do in a fight to get the highest winrate possible. I would suggest [reading up about Deep Q-Learning](https://www.intel.ai/demystifying-deep-reinforcement-learning/#gs.w14f96) to gain a better understanding of how it works.
 
-The reward function used is extremely simplistic, 
+The reward function used is extremely simplistic, it simply takes the difference between the opponent's initial and final health, and your initial and final health after performing a certain move. A move that did more damage to the opponent than the opponent did to you in a single turn, is deemed to be a better move.
 
 Admittedly, there isin't really a need to use a DQNN (Deep Q Neural Network) to figure out the strongest moves, instead we can just keep a total of the damage we've done with each move
 
@@ -92,7 +108,7 @@ This will be done based on a custom reward function and repeated Pokemon battles
 
 The [battle_ai.py](ai/battle_ai/battle_ai.py) script handles most of this training process.
 
-### Further Mechanics
+### Going Further
 
 For the first prototype/minimum viable product/whatever you like to call it, my focus is just on the 3 mechanics above, seeing as how core they are to the gameplay of Pokemon. Once they have been developed adequately, they can be taken further to incorporate more complex behavious such as entering houses, finding particular NPCs, taking cues from in-game text, etc.
 
