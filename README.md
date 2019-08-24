@@ -3,7 +3,7 @@
 An experimental project to attempt to create an AI that can play the 3rd generation Pokemon games (specifically Pokemon Emerald - it's very close to my heart).
 
 <p align = "center">
-    <img src="https://media.giphy.com/media/W1YZOgx00doknuHUcX/giphy.gif" alt="poke.AI demo">
+    <img src="readme_src/poke_ai_main_demo.gif" alt="poke.AI demo">
 </p>
 
 ## Introduction
@@ -43,12 +43,16 @@ For an overview of how the AI works and how its modules interact with each other
     <img src="readme_src/pokeai_schematic.png" alt="Schematic of poke.AI">
 </p>
 
+You may watch a (slightly outdated) video describing the project below:
+
+[![The following video shows the system in action](https://img.youtube.com/vi/cOFERSIO2OU/0.jpg)](https://youtu.be/cOFERSIO2OU)
+
 ### Localization and Mapping of Game World - Computer Vision & SLAM-inspired Algorithm
 
 After running the AI for about an hour, it was able to map out a modest chunk of the game-world. Note that these results were after mapping was used in conjunction with frontier-based exploration (see below).
 
 <p align = "center">
-    <img src="https://media.giphy.com/media/hQiTN3YD1uY9mNbzeU/giphy.gif" alt="Game world mapping comparison">
+    <img src="readme_src/mapping_comparison.gif" alt="Game world mapping comparison">
 </p>
 
 This is at the absolute core of our AI. Without being able to localize itself in the game and without storing locations of objects and places of interest in memory, our agent won't be able to do anything apart from moving around randomly. (Interestingly, given how probability works, there probably exists a parallel universe somewhere where the AI has finished the game from start to finish purely on randomness alone). Hence we have to figure out a way to give our agent access to this information, because this is exactly what a human player does when playing any game.
@@ -95,7 +99,7 @@ The [path_finder.py](ai/path_finder.py) script handles the exploration part of t
 ### Learning to Battle Pokemon (And Win) - Deep Q Learning
 
 <p align = "center">
-    <img src="https://media.giphy.com/media/icD67aSg1Rh9gT2IQe/giphy.gif" alt="Battle AI demo">
+    <img src="readme_src/dqn_demo.gif" alt="Battle AI demo">
 </p>
 
 So far you might feel like you've been cheated. Our AI didn't really *learn* how to play Pokemon - I'm just giving it a general idea about what to do. If you feel this way too then you should find this section a lot more interesting. This is where we plan to incorporate Deep Q-Learning to the Pokemon battle system to get our agent to learn what to do in a fight to get the highest winrate possible. I would suggest [reading up about Deep Q-Learning](https://www.intel.ai/demystifying-deep-reinforcement-learning/#gs.w14f96) to gain a better understanding of how it works.
