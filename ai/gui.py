@@ -6,6 +6,8 @@ from PIL import Image, ImageTk
 import cv2
 import numpy as np
 import threading
+import sys
+import queue
 
 from standalone_backend import poke_ai
 
@@ -30,7 +32,7 @@ class gui:
         self.attacks = ["Scratch", "Growl", "Focus Energy", "Ember"]
         self.pa = poke_ai(self.model_path, self.labels_to_names, self.game_window_size)
         #self.video = cv2.VideoCapture(0)
-        self.cur_map_grid = None
+        self.raw_frame, self.raw_map_grid = self.pa.run_step()
         self.map_num = 0
 
         treeview_style = ttk.Style()
@@ -204,43 +206,26 @@ class gui:
         self.cd_var_label = tk.Label(self.window, textvariable=self.collision_detected_var, font=("Helvetica", 10))
         self.cd_var_label.grid(row=11, column=7, padx=5, pady=1, sticky="w")
 
-        self.update()
+        ### MULTITHREADING ###
+        self.thread_queue = queue.Queue()
+
+        self.gui_update()
         self.window.mainloop()
     
-    def update(self):
-        if not (self.is_paused == True and self.initial == False):
+    def ai_thread_worker(self):
+        print("Worker outside pause")
+        while not self.is_paused:
+            print("Worker working")
             frame, map_grid = self.pa.run_step()
-            #ret, frame = self.video.read()
-            #map_grid = frame.copy()
+            self.thread_queue.put((frame, map_grid))
 
-            frame = cv2.resize(frame, (720,720), interpolation=cv2.INTER_LINEAR)
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
-            frame = Image.fromarray(frame)
-            frame = ImageTk.PhotoImage(image=frame)
-            self.detect_frame.imgtk = frame
-            self.detect_frame.configure(image=frame)
-            
-            # Padding map to make it square
-            width = map_grid.shape[1]
-            height = map_grid.shape[0]
-            
-            map_grid = map_grid[:,:,:3]
-            padding = 0
-            if height < width:
-                padding = int((width - height) / 2)
-                map_grid = cv2.copyMakeBorder(map_grid, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
-            elif height > width:
-                padding = int((height - width) / 2)
-                map_grid = cv2.copyMakeBorder(map_grid, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
-
-            map_grid = cv2.resize(map_grid, (720,720), interpolation=cv2.INTER_NEAREST)
-            self.cur_map_grid = map_grid.copy()
-            map_grid = cv2.cvtColor(map_grid, cv2.COLOR_BGR2RGBA)
-            map_grid = Image.fromarray(map_grid)
-            map_grid = ImageTk.PhotoImage(image=map_grid)
-            self.map_frame.imgtk = map_grid
-            self.map_frame.configure(image=map_grid)
-
+    def gui_update(self):
+        #if self.is_paused == False or self.initial == True:
+            # Checking if thread_queue has been updated with new frame and map_grid information
+        if self.thread_queue.qsize():
+            print(self.thread_queue.qsize())
+            print("Checking queue")
+            self.raw_frame, self.raw_map_grid = self.thread_queue.get(0)
             self.battles_completed_var.set(str(self.pa.bat_ai.num_episodes_completed))
             self.data_size_var.set(str(len(self.pa.bat_ai.battle_data)))
             self.last_reward_var.set(str(self.pa.bat_ai.last_reward))
@@ -270,18 +255,50 @@ class gui:
                 new_item = self.mapper_history_list[-1]
                 self.mapper_listbox.insert("", 0, text=new_item.text)
 
+        frame = cv2.resize(self.raw_frame, (720,720), interpolation=cv2.INTER_LINEAR)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+        frame = Image.fromarray(frame)
+        frame = ImageTk.PhotoImage(image=frame)
+        self.detect_frame.imgtk = frame
+        self.detect_frame.configure(image=frame)
+        
+        # Padding map to make it square
+        width = self.raw_map_grid.shape[1]
+        height = self.raw_map_grid.shape[0]
+        
+        self.raw_map_grid = self.raw_map_grid[:,:,:3]
+        padding = 0
+        if height < width:
+            padding = int((width - height) / 2)
+            self.raw_map_grid = cv2.copyMakeBorder(self.raw_map_grid, padding, padding, 0, 0, cv2.BORDER_CONSTANT, (0, 0, 0))
+        elif height > width:
+            padding = int((height - width) / 2)
+            self.raw_map_grid = cv2.copyMakeBorder(self.raw_map_grid, 0, 0, padding, padding, cv2.BORDER_CONSTANT, (0, 0, 0))
+
+        map_grid = cv2.resize(self.raw_map_grid, (720,720), interpolation=cv2.INTER_NEAREST)
+        map_grid = cv2.cvtColor(map_grid, cv2.COLOR_BGR2RGBA)
+        map_grid = Image.fromarray(map_grid)
+        map_grid = ImageTk.PhotoImage(image=map_grid)
+        self.map_frame.imgtk = map_grid
+        self.map_frame.configure(image=map_grid)
+
         self.initial = False
-        self.window.after(1, self.update)
+        self.window.after(1, self.gui_update)
     
     def pause_ai(self):
         self.is_paused = not self.is_paused
+
+        if (self.is_paused == False):
+            self.ai_thread = threading.Thread(target=self.ai_thread_worker)
+            self.ai_thread.start()
+
         if (self.pause_button_text.get() == "Pause"):
             self.pause_button_text.set("Resume")
         else:
             self.pause_button_text.set("Pause")
     
     def save_map(self):
-        temp = cv2.resize(self.cur_map_grid, (1080,1080), interpolation=cv2.INTER_NEAREST)
+        temp = cv2.resize(self.raw_map_grid, (1080,1080), interpolation=cv2.INTER_NEAREST)
         cv2.imwrite("saved_maps/" + str(self.map_num) + ".png", temp)
         self.map_num += 1
     
@@ -320,3 +337,5 @@ class gui:
 
 if __name__ == "__main__":
     gui(tk.Tk(), "poke.AI")
+
+    sys.exit()
