@@ -1,4 +1,5 @@
 # poke.AI
+**Winner of the Judge's Choice Award for NUS School of Computing's Orbital 2019 project showcase**
 
 An experimental project to attempt to create an AI that can play the 3rd generation Pokemon games (specifically Pokemon Emerald - it's very close to my heart).
 
