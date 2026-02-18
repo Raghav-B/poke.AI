@@ -2,7 +2,7 @@
   "id": "bootstrap-full-pipeline",
   "revision": 0,
   "last_node_id": 34,
-  "last_link_id": 34,
+  "last_link_id": 35,
   "nodes": [
     {
       "id": 3,
@@ -937,18 +937,62 @@
       "bgcolor": "#745"
     },
     {
-      "id": 32,
-      "type": "ShowText|pysssss",
+      "id": 34,
+      "type": "NumberToString",
       "pos": [440, 1040],
-      "size": [315, 76],
+      "size": [315, 82],
       "flags": {},
       "order": 21,
       "mode": 0,
       "inputs": [
         {
+          "name": "number",
+          "type": "NUMBER",
+          "link": 32
+        },
+        {
+          "name": "prefix",
+          "type": "STRING",
+          "widget": { "name": "prefix" },
+          "link": null
+        },
+        {
+          "name": "decimals",
+          "type": "INT",
+          "widget": { "name": "decimals" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "slot_index": 0,
+          "links": [35]
+        }
+      ],
+      "title": "Score → Text",
+      "properties": {
+        "cnr_id": "poke-ai-utils",
+        "Node name for S&R": "NumberToString"
+      },
+      "widgets_values": ["Score: ", 4],
+      "color": "#523",
+      "bgcolor": "#745"
+    },
+    {
+      "id": 32,
+      "type": "ShowText|pysssss",
+      "pos": [810, 1040],
+      "size": [315, 76],
+      "flags": {},
+      "order": 22,
+      "mode": 0,
+      "inputs": [
+        {
           "name": "text",
           "type": "STRING",
-          "link": 32
+          "link": 35
         }
       ],
       "outputs": [
@@ -974,7 +1018,7 @@
       "pos": [794, 1730],
       "size": [315, 76],
       "flags": {},
-      "order": 22,
+      "order": 23,
       "mode": 0,
       "inputs": [
         {
@@ -1024,8 +1068,9 @@
     [28, 9, 0, 25, 0, "IMAGE"],
     [30, 9, 0, 30, 0, "IMAGE"],
     [31, 21, 0, 31, 0, "SCORE"],
-    [32, 31, 0, 32, 0, "NUMBER"],
-    [33, 23, 0, 33, 0, "STRING"]
+    [32, 31, 0, 34, 0, "NUMBER"],
+    [33, 23, 0, 33, 0, "STRING"],
+    [35, 34, 0, 32, 0, "STRING"]
   ],
   "groups": [
     {
