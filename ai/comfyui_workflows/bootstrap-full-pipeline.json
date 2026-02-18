@@ -1,0 +1,990 @@
+{
+  "id": "bootstrap-full-pipeline",
+  "revision": 0,
+  "last_node_id": 31,
+  "last_link_id": 31,
+  "nodes": [
+    {
+      "id": 3,
+      "type": "VAELoader",
+      "pos": [50, 570],
+      "size": [315, 58],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "vae_name",
+          "name": "vae_name",
+          "type": "COMBO",
+          "widget": { "name": "vae_name" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "VAE",
+          "name": "VAE",
+          "type": "VAE",
+          "slot_index": 0,
+          "links": [10]
+        }
+      ],
+      "title": "FLUX VAE",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": ["ae.safetensors"],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 2,
+      "type": "DualCLIPLoader",
+      "pos": [50, 380],
+      "size": [315, 130],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "clip_name1",
+          "name": "clip_name1",
+          "type": "COMBO",
+          "widget": { "name": "clip_name1" },
+          "link": null
+        },
+        {
+          "localized_name": "clip_name2",
+          "name": "clip_name2",
+          "type": "COMBO",
+          "widget": { "name": "clip_name2" },
+          "link": null
+        },
+        {
+          "localized_name": "type",
+          "name": "type",
+          "type": "COMBO",
+          "widget": { "name": "type" },
+          "link": null
+        },
+        {
+          "localized_name": "device",
+          "name": "device",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": { "name": "device" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "CLIP",
+          "name": "CLIP",
+          "type": "CLIP",
+          "slot_index": 0,
+          "links": [2]
+        }
+      ],
+      "title": "CLIP Loaders (T5 + CLIP-L)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "DualCLIPLoader"
+      },
+      "widgets_values": [
+        "t5xxl_fp16.safetensors",
+        "clip_l.safetensors",
+        "flux",
+        "default"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 16,
+      "type": "LoraLoader",
+      "pos": [450.844326128417, 418.21698188175475],
+      "size": [315, 126],
+      "flags": {},
+      "order": 8,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "MODEL",
+          "link": 13
+        },
+        {
+          "localized_name": "clip",
+          "name": "clip",
+          "type": "CLIP",
+          "link": 14
+        },
+        {
+          "localized_name": "lora_name",
+          "name": "lora_name",
+          "type": "COMBO",
+          "widget": { "name": "lora_name" },
+          "link": null
+        },
+        {
+          "localized_name": "strength_model",
+          "name": "strength_model",
+          "type": "FLOAT",
+          "widget": { "name": "strength_model" },
+          "link": null
+        },
+        {
+          "localized_name": "strength_clip",
+          "name": "strength_clip",
+          "type": "FLOAT",
+          "widget": { "name": "strength_clip" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "MODEL",
+          "name": "MODEL",
+          "type": "MODEL",
+          "slot_index": 0,
+          "links": [3]
+        },
+        {
+          "localized_name": "CLIP",
+          "name": "CLIP",
+          "type": "CLIP",
+          "slot_index": 1,
+          "links": [4, 5]
+        }
+      ],
+      "title": "LoRA Skin Realism",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": ["photorealistic_skin_no_plastic.safetensors", 0.7, 0.6],
+      "color": "#224",
+      "bgcolor": "#336"
+    },
+    {
+      "id": 15,
+      "type": "Note",
+      "pos": [50, 30],
+      "size": [900, 120],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "BOOTSTRAP INSTRUCTIONS",
+      "properties": {},
+      "widgets_values": [
+        "BOOTSTRAP LoRA Dataset Generator\n\n1. FLUX UNET: flux1-dev.safetensors (fp8)\n2. LoRA Character (verde): sua LoRA \u2014 strength 1.0-1.2\n3. LoRA Skin Realism (azul): mode=4 (bypass) ou ative 0.4-0.7\n4. Positive Prompt: cole prompts do bootstrap_prompts.txt\n5. Image Size: batch=4, resolucao por tipo:\n   Rosto: 832x1216 | Meio corpo: 832x1216 | Corpo: 768x1344\n6. KSampler: CFG 1.0, euler, simple, 28 steps, RANDOMIZE\n7. Queue cada prompt. Curadoria automatica abaixo.\n\nSCORING:\n- Aesthetic Score > 7.0 (bom), > 8.0 (excelente)\n- Face Similarity cosine > 0.65 (similar), > 0.75 (muito similar)\n- Imagens aprovadas em bootstrap/approved/"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 1,
+      "type": "UNETLoader",
+      "pos": [50.42755992775325, 246.18768084172387],
+      "size": [315, 82],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "unet_name",
+          "name": "unet_name",
+          "type": "COMBO",
+          "widget": { "name": "unet_name" },
+          "link": null
+        },
+        {
+          "localized_name": "weight_dtype",
+          "name": "weight_dtype",
+          "type": "COMBO",
+          "widget": { "name": "weight_dtype" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "MODEL",
+          "name": "MODEL",
+          "type": "MODEL",
+          "slot_index": 0,
+          "links": [1]
+        }
+      ],
+      "title": "FLUX UNET",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": ["flux1-dev.safetensors", "fp8_e4m3fn"],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 4,
+      "type": "LoraLoader",
+      "pos": [455.67685155753367, 246.27125715193858],
+      "size": [315, 126],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        },
+        {
+          "localized_name": "clip",
+          "name": "clip",
+          "type": "CLIP",
+          "link": 2
+        },
+        {
+          "localized_name": "lora_name",
+          "name": "lora_name",
+          "type": "COMBO",
+          "widget": { "name": "lora_name" },
+          "link": null
+        },
+        {
+          "localized_name": "strength_model",
+          "name": "strength_model",
+          "type": "FLOAT",
+          "widget": { "name": "strength_model" },
+          "link": null
+        },
+        {
+          "localized_name": "strength_clip",
+          "name": "strength_clip",
+          "type": "FLOAT",
+          "widget": { "name": "strength_clip" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "MODEL",
+          "name": "MODEL",
+          "type": "MODEL",
+          "slot_index": 0,
+          "links": [13]
+        },
+        {
+          "localized_name": "CLIP",
+          "name": "CLIP",
+          "type": "CLIP",
+          "slot_index": 1,
+          "links": [14]
+        }
+      ],
+      "title": "LoRA Character",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": ["rose v16.safetensors", 1, 1],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 21,
+      "type": "CalculateAestheticScore",
+      "pos": [76.40574135835848, 908.4636553500318],
+      "size": [315, 80],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 20
+        },
+        {
+          "localized_name": "aesthetic_model",
+          "name": "aesthetic_model",
+          "type": "AESTHETIC_MODEL",
+          "link": 22
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "SCORE",
+          "name": "SCORE",
+          "type": "SCORE",
+          "slot_index": 0,
+          "links": []
+        }
+      ],
+      "title": "Aesthetic Score",
+      "properties": {
+        "cnr_id": "ComfyUI-Strimmlarns-Aesthetic-Score",
+        "ver": "42bed3fd78488dda50d83bdc39b5cff6772919c9",
+        "Node name for S&R": "CalculateAestheticScore"
+      },
+      "widgets_values": [],
+      "color": "#523",
+      "bgcolor": "#745"
+    },
+    {
+      "id": 20,
+      "type": "LoadAesteticModel",
+      "pos": [-323.59425864164183, 908.4636553500318],
+      "size": [315, 58],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model_name",
+          "name": "model_name",
+          "type": "COMBO",
+          "widget": { "name": "model_name" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "AESTHETIC_MODEL",
+          "name": "AESTHETIC_MODEL",
+          "type": "AESTHETIC_MODEL",
+          "slot_index": 0,
+          "links": [22]
+        }
+      ],
+      "title": "Load Aesthetic Model",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "LoadAesteticModel"
+      },
+      "widgets_values": ["chadscorer.pth"],
+      "color": "#523",
+      "bgcolor": "#745"
+    },
+    {
+      "id": 8,
+      "type": "KSampler",
+      "pos": [1362.2956730769217, 260.3485576923073],
+      "size": [315, 262],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "MODEL",
+          "link": 3
+        },
+        {
+          "localized_name": "positive",
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 6
+        },
+        {
+          "localized_name": "negative",
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 7
+        },
+        {
+          "localized_name": "latent_image",
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 8
+        },
+        {
+          "localized_name": "seed",
+          "name": "seed",
+          "type": "INT",
+          "widget": { "name": "seed" },
+          "link": null
+        },
+        {
+          "localized_name": "steps",
+          "name": "steps",
+          "type": "INT",
+          "widget": { "name": "steps" },
+          "link": null
+        },
+        {
+          "localized_name": "cfg",
+          "name": "cfg",
+          "type": "FLOAT",
+          "widget": { "name": "cfg" },
+          "link": null
+        },
+        {
+          "localized_name": "sampler_name",
+          "name": "sampler_name",
+          "type": "COMBO",
+          "widget": { "name": "sampler_name" },
+          "link": null
+        },
+        {
+          "localized_name": "scheduler",
+          "name": "scheduler",
+          "type": "COMBO",
+          "widget": { "name": "scheduler" },
+          "link": null
+        },
+        {
+          "localized_name": "denoise",
+          "name": "denoise",
+          "type": "FLOAT",
+          "widget": { "name": "denoise" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "LATENT",
+          "name": "LATENT",
+          "type": "LATENT",
+          "slot_index": 0,
+          "links": [9]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [4294967295, "randomize", 28, 1, "euler", "simple", 1]
+    },
+    {
+      "id": 5,
+      "type": "CLIPTextEncode",
+      "pos": [856.3003318082481, 244.62451429425747],
+      "size": [446.13404377064194, 388.076369255768],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "clip",
+          "name": "clip",
+          "type": "CLIP",
+          "link": 4
+        },
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "widget": { "name": "text" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "CONDITIONING",
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "slot_index": 0,
+          "links": [6]
+        }
+      ],
+      "title": "Positive Prompt",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "ROSE, Three-quarter view portrait photo of a young woman with dark brown hair loosely pulled back with face-framing tendrils, hazel-brown eyes, natural makeup, looking slightly off camera to the right, soft studio lighting, light gray seamless background, natural skin texture, editorial portrait photography, shot on 105mm f/2.0 lens, clean composition"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 7,
+      "type": "EmptyLatentImage",
+      "pos": [906.3609626891277, 1069.3798533461038],
+      "size": [315, 106],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "width",
+          "name": "width",
+          "type": "INT",
+          "widget": { "name": "width" },
+          "link": null
+        },
+        {
+          "localized_name": "height",
+          "name": "height",
+          "type": "INT",
+          "widget": { "name": "height" },
+          "link": null
+        },
+        {
+          "localized_name": "batch_size",
+          "name": "batch_size",
+          "type": "INT",
+          "widget": { "name": "batch_size" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "LATENT",
+          "name": "LATENT",
+          "type": "LATENT",
+          "slot_index": 0,
+          "links": [8]
+        }
+      ],
+      "title": "Image Size (batch=4)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [896, 1344, 4],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 23,
+      "type": "FaceComparator",
+      "pos": [403.42590270303856, 1337.5649964738407],
+      "size": [315, 120],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "image1",
+          "name": "image1",
+          "type": "IMAGE",
+          "link": 23
+        },
+        {
+          "localized_name": "image2",
+          "name": "image2",
+          "type": "IMAGE",
+          "link": 21
+        },
+        {
+          "localized_name": "similarity_threshold",
+          "name": "similarity_threshold",
+          "type": "FLOAT",
+          "widget": { "name": "similarity_threshold" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "slot_index": 0,
+          "links": []
+        },
+        {
+          "localized_name": "is_same_person",
+          "name": "is_same_person",
+          "type": "BOOLEAN",
+          "slot_index": 1,
+          "links": []
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "slot_index": 2,
+          "links": []
+        }
+      ],
+      "title": "Face Similarity (InsightFace)",
+      "properties": {
+        "aux_id": "fr0nky0ng/ComfyUI-Face-Comparator",
+        "ver": "3d4e37501aa87a33ebe5ba6f3fce232260d3deb5",
+        "Node name for S&R": "FaceComparator"
+      },
+      "widgets_values": [0.4],
+      "color": "#253",
+      "bgcolor": "#375"
+    },
+    {
+      "id": 22,
+      "type": "LoadImage",
+      "pos": [13.751859142562772, 1344.5721936862903],
+      "size": [307.5334486206224, 446.43142570007353],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "COMBO",
+          "widget": { "name": "image" },
+          "link": null
+        },
+        {
+          "localized_name": "choose file to upload",
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "widget": { "name": "upload" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [23]
+        },
+        {
+          "localized_name": "MASK",
+          "name": "MASK",
+          "type": "MASK",
+          "slot_index": 1,
+          "links": []
+        }
+      ],
+      "title": "Reference Face (original image)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": ["2026-02-18T18.45.38_1.jpg", "image"],
+      "color": "#253",
+      "bgcolor": "#375"
+    },
+    {
+      "id": 9,
+      "type": "VAEDecode",
+      "pos": [1749.4267061647893, 244.16017112765323],
+      "size": [210, 46],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "samples",
+          "name": "samples",
+          "type": "LATENT",
+          "link": 9
+        },
+        {
+          "localized_name": "vae",
+          "name": "vae",
+          "type": "VAE",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [11, 12, 20, 21, 27, 28, 30]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 10,
+      "type": "PreviewImage",
+      "pos": [1735.3007366231004, 343.7432782152113],
+      "size": [400, 400],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 11
+        }
+      ],
+      "outputs": [],
+      "title": "Preview",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 11,
+      "type": "SaveImage",
+      "pos": [2171.248838008445, 262.1762702477111],
+      "size": [315, 270],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 12
+        },
+        {
+          "localized_name": "filename_prefix",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": { "name": "filename_prefix" },
+          "link": null
+        }
+      ],
+      "outputs": [],
+      "title": "Save ALL Generated (backup)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": ["bootstrap/all/img"]
+    },
+    {
+      "id": 24,
+      "type": "PreviewImage",
+      "pos": [794.3998831649482, 1379.9793361785134],
+      "size": [300, 300],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 27
+        }
+      ],
+      "outputs": [],
+      "title": "Preview Approved",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": [],
+      "color": "#253",
+      "bgcolor": "#375"
+    },
+    {
+      "id": 25,
+      "type": "SaveImage",
+      "pos": [1238.120032480687, 1313.4090922482812],
+      "size": [232.29337765531432, 270],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 28
+        },
+        {
+          "localized_name": "filename_prefix",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": { "name": "filename_prefix" },
+          "link": null
+        }
+      ],
+      "outputs": [],
+      "title": "Save APPROVED (dataset)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": ["bootstrap/approved/img"],
+      "color": "#253",
+      "bgcolor": "#375"
+    },
+    {
+      "id": 6,
+      "type": "CLIPTextEncode",
+      "pos": [855.6859612001573, 643.560530140426],
+      "size": [454.7378680926706, 349.3530378158408],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "clip",
+          "name": "clip",
+          "type": "CLIP",
+          "link": 5
+        },
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "widget": { "name": "text" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "CONDITIONING",
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "slot_index": 0,
+          "links": [7]
+        }
+      ],
+      "title": "Negative Prompt",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "plump lips, filler lips, lip injections, pouty lips, glossy lips, overlined lips, duck lips"
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 30,
+      "type": "PreviewImage",
+      "pos": [492.657438237147, 869.2961001048122],
+      "size": [300, 300],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 30
+        }
+      ],
+      "outputs": [],
+      "title": "AESTHETIC SCORE (preview)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": [],
+      "color": "#523",
+      "bgcolor": "#745"
+    }
+  ],
+  "links": [
+    [1, 1, 0, 4, 0, "MODEL"],
+    [2, 2, 0, 4, 1, "CLIP"],
+    [3, 16, 0, 8, 0, "MODEL"],
+    [4, 16, 1, 5, 0, "CLIP"],
+    [5, 16, 1, 6, 0, "CLIP"],
+    [6, 5, 0, 8, 1, "CONDITIONING"],
+    [7, 6, 0, 8, 2, "CONDITIONING"],
+    [8, 7, 0, 8, 3, "LATENT"],
+    [9, 8, 0, 9, 0, "LATENT"],
+    [10, 3, 0, 9, 1, "VAE"],
+    [11, 9, 0, 10, 0, "IMAGE"],
+    [12, 9, 0, 11, 0, "IMAGE"],
+    [13, 4, 0, 16, 0, "MODEL"],
+    [14, 4, 1, 16, 1, "CLIP"],
+    [20, 9, 0, 21, 0, "IMAGE"],
+    [21, 9, 0, 23, 1, "IMAGE"],
+    [22, 20, 0, 21, 1, "AESTHETIC_MODEL"],
+    [23, 22, 0, 23, 0, "IMAGE"],
+    [27, 9, 0, 24, 0, "IMAGE"],
+    [28, 9, 0, 25, 0, "IMAGE"],
+    [30, 9, 0, 30, 0, "IMAGE"]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Model Loaders",
+      "bounding": [30, 170, 380, 490],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "LoRA Stack (Character + Skin)",
+      "bounding": [430, 170, 360, 410],
+      "color": "#3a8",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "Prompts + Latent",
+      "bounding": [830, 170, 491.5469515824111, 896.2186249076688],
+      "color": "#88a",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "Sampler + Output",
+      "bounding": [1330, 170, 1180, 700],
+      "color": "#a83",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 5,
+      "title": "Aesthetic Scoring",
+      "bounding": [-343.5942586416418, 838.463655350032, 800, 180],
+      "color": "#8A6529",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 6,
+      "title": "Face Similarity + Approved Output",
+      "bounding": [-14.248282827355922, 1257.0041617790425, 1170, 550],
+      "color": "#2E7D32",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.573085533011684,
+      "offset": [654.6902094090209, -328.51411778570167]
+    },
+    "frontendVersion": "1.39.14",
+    "workflowRendererVersion": "LG"
+  },
+  "version": 0.4
+}
