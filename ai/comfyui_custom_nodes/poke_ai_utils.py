@@ -17,7 +17,8 @@ class NumberToString:
             },
             "optional": {
                 "prefix": ("STRING", {"default": "Score: "}),
-                "decimals": ("INT", {"default": 4, "min": 0, "max": 10}),
+                "decimals": ("INT", {"default": 2, "min": 0, "max": 10}),
+                "divisor": ("FLOAT", {"default": 1.0, "min": 0.001, "max": 10000.0, "step": 0.1}),
             },
         }
 
@@ -25,8 +26,9 @@ class NumberToString:
     FUNCTION = "execute"
     CATEGORY = "poke.AI/utils"
 
-    def execute(self, number, prefix="Score: ", decimals=4):
-        return (f"{prefix}{number:.{decimals}f}",)
+    def execute(self, number, prefix="Score: ", decimals=2, divisor=1.0):
+        value = number / divisor
+        return (f"{prefix}{value:.{decimals}f}",)
 
 
 NODE_CLASS_MAPPINGS = {

@@ -185,7 +185,7 @@
       "title": "BOOTSTRAP INSTRUCTIONS",
       "properties": {},
       "widgets_values": [
-        "BOOTSTRAP LoRA Dataset Generator\n\n1. FLUX UNET: flux1-dev.safetensors (fp8)\n2. LoRA Character (verde): sua LoRA \u2014 strength 1.0-1.2\n3. LoRA Skin Realism (azul): mode=4 (bypass) ou ative 0.4-0.7\n4. Positive Prompt: cole prompts do bootstrap_prompts.txt\n5. Image Size: batch=4, resolucao por tipo:\n   Rosto: 832x1216 | Meio corpo: 832x1216 | Corpo: 768x1344\n6. KSampler: CFG 1.0, euler, simple, 28 steps, RANDOMIZE\n7. Queue cada prompt. Curadoria automatica abaixo.\n\nSCORING:\n- Aesthetic Score > 7.0 (bom), > 8.0 (excelente)\n- Face Similarity cosine > 0.65 (similar), > 0.75 (muito similar)\n- Imagens aprovadas em bootstrap/approved/"
+        "BOOTSTRAP LoRA Dataset Generator\n\n1. FLUX UNET: flux1-dev.safetensors (fp8)\n2. LoRA Character (verde): sua LoRA \u2014 strength 1.0-1.2\n3. LoRA Skin Realism (azul): mode=4 (bypass) ou ative 0.4-0.7\n4. Positive Prompt: cole prompts do bootstrap_prompts.txt\n5. Image Size: batch=1 (use Queue Amount p/ gerar varias), resolucao por tipo:\n   Rosto: 832x1216 | Meio corpo: 832x1216 | Corpo: 768x1344\n6. KSampler: CFG 1.0, euler, simple, 28 steps, RANDOMIZE\n7. Queue cada prompt. Curadoria automatica abaixo.\n\nSCORING:\n- Aesthetic Score > 7.0 (bom), > 8.0 (excelente)\n- Face Similarity cosine > 0.65 (similar), > 0.75 (muito similar)\n- Imagens aprovadas em bootstrap/approved/"
       ],
       "color": "#432",
       "bgcolor": "#653"
@@ -555,13 +555,13 @@
           "links": [8]
         }
       ],
-      "title": "Image Size (batch=4)",
+      "title": "Image Size",
       "properties": {
         "cnr_id": "comfy-core",
         "ver": "0.14.1",
         "Node name for S&R": "EmptyLatentImage"
       },
-      "widgets_values": [896, 1344, 4],
+      "widgets_values": [896, 1344, 1],
       "color": "#223",
       "bgcolor": "#335"
     },
@@ -961,6 +961,12 @@
           "type": "INT",
           "widget": { "name": "decimals" },
           "link": null
+        },
+        {
+          "name": "divisor",
+          "type": "FLOAT",
+          "widget": { "name": "divisor" },
+          "link": null
         }
       ],
       "outputs": [
@@ -976,7 +982,7 @@
         "cnr_id": "poke-ai-utils",
         "Node name for S&R": "NumberToString"
       },
-      "widgets_values": ["Score: ", 4],
+      "widgets_values": ["Aesthetic: ", 2, 100.0],
       "color": "#523",
       "bgcolor": "#745"
     },
