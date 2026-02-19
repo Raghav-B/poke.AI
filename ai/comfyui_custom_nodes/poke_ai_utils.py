@@ -6,7 +6,7 @@ then restart ComfyUI.
 
 Dependencies (already satisfied if Strimmlarns Aesthetic Score
 and ComfyUI-Face-Comparator are installed):
-  pip install open_clip_torch insightface onnxruntime-gpu
+  pip install open-clip-torch insightface onnxruntime-gpu
 """
 
 import numpy as np
@@ -55,8 +55,10 @@ _face_app = None
 def _get_clip(device="cuda"):
     global _clip_model, _clip_preprocess
     if _clip_model is None:
-        import clip
-        _clip_model, _clip_preprocess = clip.load("ViT-L/14", device=device)
+        import open_clip
+        _clip_model, _, _clip_preprocess = open_clip.create_model_and_transforms(
+            "ViT-L-14", pretrained="openai", device=device,
+        )
     return _clip_model, _clip_preprocess
 
 
@@ -159,8 +161,8 @@ class ImageCurator:
         clip_model, preprocess = _get_clip(device)
 
         mlp = _AestheticMLP(768)
-        state = torch.load(aesthetic_model, map_location=device, weights_only=False)
-        mlp.load_state_dict(state)
+        # aesthetic_model is already a state_dict loaded by LoadAesteticModel
+        mlp.load_state_dict(aesthetic_model)
         mlp.to(device).eval()
 
         face_app = _get_face_app()
