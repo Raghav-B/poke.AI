@@ -1,8 +1,8 @@
 {
   "id": "bootstrap-full-pipeline",
   "revision": 0,
-  "last_node_id": 34,
-  "last_link_id": 35,
+  "last_node_id": 35,
+  "last_link_id": 41,
   "nodes": [
     {
       "id": 3,
@@ -185,7 +185,7 @@
       "title": "BOOTSTRAP INSTRUCTIONS",
       "properties": {},
       "widgets_values": [
-        "BOOTSTRAP LoRA Dataset Generator\n\n1. FLUX UNET: flux1-dev.safetensors (fp8)\n2. LoRA Character (verde): sua LoRA \u2014 strength 1.0-1.2\n3. LoRA Skin Realism (azul): mode=4 (bypass) ou ative 0.4-0.7\n4. Positive Prompt: cole prompts do bootstrap_prompts.txt\n5. Image Size: batch=1 (use Queue Amount p/ gerar varias), resolucao por tipo:\n   Rosto: 832x1216 | Meio corpo: 832x1216 | Corpo: 768x1344\n6. KSampler: CFG 1.0, euler, simple, 28 steps, RANDOMIZE\n7. Queue cada prompt. Curadoria automatica abaixo.\n\nSCORING:\n- Aesthetic Score > 7.0 (bom), > 8.0 (excelente)\n- Face Similarity cosine > 0.65 (similar), > 0.75 (muito similar)\n- Imagens aprovadas em bootstrap/approved/"
+        "BOOTSTRAP LoRA Dataset Generator\n\n1. FLUX UNET: flux1-dev.safetensors (fp8)\n2. LoRA Character (verde): sua LoRA \u2014 strength 1.0-1.2\n3. LoRA Skin Realism (azul): mode=4 (bypass) ou ative 0.4-0.7\n4. Positive Prompt: cole prompts do bootstrap_prompts.txt\n5. Image Size: batch=4, resolucao por tipo:\n   Rosto: 832x1216 | Meio corpo: 832x1216 | Corpo: 768x1344\n6. KSampler: CFG 1.0, euler, simple, 28 steps, RANDOMIZE\n7. Queue cada prompt. ImageCurator filtra automaticamente.\n\nCURATION (ImageCurator):\n- Aesthetic Score >= 6.0 (escala 0-10, ajustavel)\n- Face Similarity >= 0.65 (InsightFace cosine, ajustavel)\n- Somente imagens aprovadas vao para bootstrap/approved/"
       ],
       "color": "#432",
       "bgcolor": "#653"
@@ -303,50 +303,9 @@
       "bgcolor": "#353"
     },
     {
-      "id": 21,
-      "type": "CalculateAestheticScore",
-      "pos": [76.40574135835848, 908.4636553500318],
-      "size": [315, 80],
-      "flags": {},
-      "order": 15,
-      "mode": 0,
-      "inputs": [
-        {
-          "localized_name": "image",
-          "name": "image",
-          "type": "IMAGE",
-          "link": 20
-        },
-        {
-          "localized_name": "aesthetic_model",
-          "name": "aesthetic_model",
-          "type": "AESTHETIC_MODEL",
-          "link": 22
-        }
-      ],
-      "outputs": [
-        {
-          "localized_name": "SCORE",
-          "name": "SCORE",
-          "type": "SCORE",
-          "slot_index": 0,
-          "links": [31]
-        }
-      ],
-      "title": "Aesthetic Score",
-      "properties": {
-        "cnr_id": "ComfyUI-Strimmlarns-Aesthetic-Score",
-        "ver": "42bed3fd78488dda50d83bdc39b5cff6772919c9",
-        "Node name for S&R": "CalculateAestheticScore"
-      },
-      "widgets_values": [],
-      "color": "#523",
-      "bgcolor": "#745"
-    },
-    {
       "id": 20,
       "type": "LoadAesteticModel",
-      "pos": [-323.59425864164183, 908.4636553500318],
+      "pos": [-324, 908],
       "size": [315, 58],
       "flags": {},
       "order": 4,
@@ -366,7 +325,7 @@
           "name": "AESTHETIC_MODEL",
           "type": "AESTHETIC_MODEL",
           "slot_index": 0,
-          "links": [22]
+          "links": [38]
         }
       ],
       "title": "Load Aesthetic Model",
@@ -555,82 +514,21 @@
           "links": [8]
         }
       ],
-      "title": "Image Size",
+      "title": "Image Size (batch=4)",
       "properties": {
         "cnr_id": "comfy-core",
         "ver": "0.14.1",
         "Node name for S&R": "EmptyLatentImage"
       },
-      "widgets_values": [896, 1344, 1],
+      "widgets_values": [896, 1344, 4],
       "color": "#223",
       "bgcolor": "#335"
     },
     {
-      "id": 23,
-      "type": "FaceComparator",
-      "pos": [403.42590270303856, 1337.5649964738407],
-      "size": [315, 120],
-      "flags": {},
-      "order": 16,
-      "mode": 0,
-      "inputs": [
-        {
-          "localized_name": "image1",
-          "name": "image1",
-          "type": "IMAGE",
-          "link": 23
-        },
-        {
-          "localized_name": "image2",
-          "name": "image2",
-          "type": "IMAGE",
-          "link": 21
-        },
-        {
-          "localized_name": "similarity_threshold",
-          "name": "similarity_threshold",
-          "type": "FLOAT",
-          "widget": { "name": "similarity_threshold" },
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "localized_name": "text",
-          "name": "text",
-          "type": "STRING",
-          "slot_index": 0,
-          "links": [33]
-        },
-        {
-          "localized_name": "is_same_person",
-          "name": "is_same_person",
-          "type": "BOOLEAN",
-          "slot_index": 1,
-          "links": []
-        },
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "slot_index": 2,
-          "links": []
-        }
-      ],
-      "title": "Face Similarity (InsightFace)",
-      "properties": {
-        "aux_id": "fr0nky0ng/ComfyUI-Face-Comparator",
-        "ver": "3d4e37501aa87a33ebe5ba6f3fce232260d3deb5",
-        "Node name for S&R": "FaceComparator"
-      },
-      "widgets_values": [0.4],
-      "color": "#253",
-      "bgcolor": "#375"
-    },
-    {
       "id": 22,
       "type": "LoadImage",
-      "pos": [13.751859142562772, 1344.5721936862903],
-      "size": [307.5334486206224, 446.43142570007353],
+      "pos": [-324, 1020],
+      "size": [307, 446],
       "flags": {},
       "order": 6,
       "mode": 0,
@@ -656,7 +554,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "slot_index": 0,
-          "links": [23]
+          "links": [37]
         },
         {
           "localized_name": "MASK",
@@ -704,7 +602,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "slot_index": 0,
-          "links": [11, 12, 20, 21, 27, 28, 30]
+          "links": [11, 12, 36]
         }
       ],
       "properties": {
@@ -731,7 +629,7 @@
         }
       ],
       "outputs": [],
-      "title": "Preview",
+      "title": "Preview ALL",
       "properties": {
         "cnr_id": "comfy-core",
         "ver": "0.14.1",
@@ -770,67 +668,6 @@
         "Node name for S&R": "SaveImage"
       },
       "widgets_values": ["bootstrap/all/img"]
-    },
-    {
-      "id": 24,
-      "type": "PreviewImage",
-      "pos": [794.3998831649482, 1379.9793361785134],
-      "size": [300, 300],
-      "flags": {},
-      "order": 17,
-      "mode": 0,
-      "inputs": [
-        {
-          "localized_name": "images",
-          "name": "images",
-          "type": "IMAGE",
-          "link": 27
-        }
-      ],
-      "outputs": [],
-      "title": "Preview Approved",
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.14.1",
-        "Node name for S&R": "PreviewImage"
-      },
-      "widgets_values": [],
-      "color": "#253",
-      "bgcolor": "#375"
-    },
-    {
-      "id": 25,
-      "type": "SaveImage",
-      "pos": [1238.120032480687, 1313.4090922482812],
-      "size": [232.29337765531432, 270],
-      "flags": {},
-      "order": 18,
-      "mode": 0,
-      "inputs": [
-        {
-          "localized_name": "images",
-          "name": "images",
-          "type": "IMAGE",
-          "link": 28
-        },
-        {
-          "localized_name": "filename_prefix",
-          "name": "filename_prefix",
-          "type": "STRING",
-          "widget": { "name": "filename_prefix" },
-          "link": null
-        }
-      ],
-      "outputs": [],
-      "title": "Save APPROVED (dataset)",
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.14.1",
-        "Node name for S&R": "SaveImage"
-      },
-      "widgets_values": ["bootstrap/approved/img"],
-      "color": "#253",
-      "bgcolor": "#375"
     },
     {
       "id": 6,
@@ -877,128 +714,139 @@
       "bgcolor": "#533"
     },
     {
-      "id": 30,
+      "id": 35,
+      "type": "ImageCurator",
+      "pos": [76, 900],
+      "size": [380, 160],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 36
+        },
+        {
+          "name": "reference_image",
+          "type": "IMAGE",
+          "link": 37
+        },
+        {
+          "name": "aesthetic_model",
+          "type": "AESTHETIC_MODEL",
+          "link": 38
+        },
+        {
+          "name": "aesthetic_threshold",
+          "type": "FLOAT",
+          "widget": { "name": "aesthetic_threshold" },
+          "link": null
+        },
+        {
+          "name": "face_threshold",
+          "type": "FLOAT",
+          "widget": { "name": "face_threshold" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "approved_images",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [39, 40]
+        },
+        {
+          "name": "report",
+          "type": "STRING",
+          "slot_index": 1,
+          "links": [41]
+        }
+      ],
+      "title": "Image Curator (poke.AI)",
+      "properties": {
+        "cnr_id": "poke-ai-utils",
+        "Node name for S&R": "ImageCurator"
+      },
+      "widgets_values": [6.0, 0.65],
+      "color": "#352",
+      "bgcolor": "#573"
+    },
+    {
+      "id": 24,
       "type": "PreviewImage",
-      "pos": [492.657438237147, 869.2961001048122],
+      "pos": [520, 900],
       "size": [300, 300],
       "flags": {},
-      "order": 19,
+      "order": 16,
       "mode": 0,
       "inputs": [
         {
           "localized_name": "images",
           "name": "images",
           "type": "IMAGE",
-          "link": 30
+          "link": 39
         }
       ],
       "outputs": [],
-      "title": "AESTHETIC SCORE (preview)",
+      "title": "Preview Approved",
       "properties": {
         "cnr_id": "comfy-core",
         "ver": "0.14.1",
         "Node name for S&R": "PreviewImage"
       },
       "widgets_values": [],
-      "color": "#523",
-      "bgcolor": "#745"
+      "color": "#253",
+      "bgcolor": "#375"
     },
     {
-      "id": 31,
-      "type": "ScoreToNumber",
-      "pos": [76, 1040],
-      "size": [315, 58],
+      "id": 25,
+      "type": "SaveImage",
+      "pos": [880, 900],
+      "size": [280, 270],
       "flags": {},
-      "order": 20,
+      "order": 17,
       "mode": 0,
       "inputs": [
         {
-          "name": "score",
-          "type": "SCORE",
-          "link": 31
-        }
-      ],
-      "outputs": [
-        {
-          "name": "NUMBER",
-          "type": "NUMBER",
-          "slot_index": 0,
-          "links": [32]
-        }
-      ],
-      "title": "Score To Number",
-      "properties": {
-        "cnr_id": "ComfyUI-Strimmlarns-Aesthetic-Score",
-        "ver": "42bed3fd78488dda50d83bdc39b5cff6772919c9",
-        "Node name for S&R": "ScoreToNumber"
-      },
-      "widgets_values": [],
-      "color": "#523",
-      "bgcolor": "#745"
-    },
-    {
-      "id": 34,
-      "type": "NumberToString",
-      "pos": [440, 1040],
-      "size": [315, 82],
-      "flags": {},
-      "order": 21,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "number",
-          "type": "NUMBER",
-          "link": 32
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 40
         },
         {
-          "name": "prefix",
+          "localized_name": "filename_prefix",
+          "name": "filename_prefix",
           "type": "STRING",
-          "widget": { "name": "prefix" },
-          "link": null
-        },
-        {
-          "name": "decimals",
-          "type": "INT",
-          "widget": { "name": "decimals" },
-          "link": null
-        },
-        {
-          "name": "divisor",
-          "type": "FLOAT",
-          "widget": { "name": "divisor" },
+          "widget": { "name": "filename_prefix" },
           "link": null
         }
       ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "slot_index": 0,
-          "links": [35]
-        }
-      ],
-      "title": "Score → Text",
+      "outputs": [],
+      "title": "Save APPROVED (dataset)",
       "properties": {
-        "cnr_id": "poke-ai-utils",
-        "Node name for S&R": "NumberToString"
+        "cnr_id": "comfy-core",
+        "ver": "0.14.1",
+        "Node name for S&R": "SaveImage"
       },
-      "widgets_values": ["Aesthetic: ", 2, 100.0],
-      "color": "#523",
-      "bgcolor": "#745"
+      "widgets_values": ["bootstrap/approved/img"],
+      "color": "#253",
+      "bgcolor": "#375"
     },
     {
       "id": 32,
       "type": "ShowText|pysssss",
-      "pos": [810, 1040],
-      "size": [315, 76],
+      "pos": [76, 1120],
+      "size": [500, 120],
       "flags": {},
-      "order": 22,
+      "order": 18,
       "mode": 0,
       "inputs": [
         {
           "name": "text",
           "type": "STRING",
-          "link": 35
+          "link": 41
         }
       ],
       "outputs": [
@@ -1009,46 +857,14 @@
           "links": []
         }
       ],
-      "title": "Aesthetic Score Value",
+      "title": "Curator Report",
       "properties": {
         "cnr_id": "comfyui-custom-scripts",
         "Node name for S&R": "ShowText|pysssss"
       },
       "widgets_values": [""],
-      "color": "#523",
-      "bgcolor": "#745"
-    },
-    {
-      "id": 33,
-      "type": "ShowText|pysssss",
-      "pos": [794, 1730],
-      "size": [315, 76],
-      "flags": {},
-      "order": 23,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 33
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "slot_index": 0,
-          "links": []
-        }
-      ],
-      "title": "Face Similarity Result",
-      "properties": {
-        "cnr_id": "comfyui-custom-scripts",
-        "Node name for S&R": "ShowText|pysssss"
-      },
-      "widgets_values": [""],
-      "color": "#253",
-      "bgcolor": "#375"
+      "color": "#352",
+      "bgcolor": "#573"
     }
   ],
   "links": [
@@ -1066,17 +882,12 @@
     [12, 9, 0, 11, 0, "IMAGE"],
     [13, 4, 0, 16, 0, "MODEL"],
     [14, 4, 1, 16, 1, "CLIP"],
-    [20, 9, 0, 21, 0, "IMAGE"],
-    [21, 9, 0, 23, 1, "IMAGE"],
-    [22, 20, 0, 21, 1, "AESTHETIC_MODEL"],
-    [23, 22, 0, 23, 0, "IMAGE"],
-    [27, 9, 0, 24, 0, "IMAGE"],
-    [28, 9, 0, 25, 0, "IMAGE"],
-    [30, 9, 0, 30, 0, "IMAGE"],
-    [31, 21, 0, 31, 0, "SCORE"],
-    [32, 31, 0, 34, 0, "NUMBER"],
-    [33, 23, 0, 33, 0, "STRING"],
-    [35, 34, 0, 32, 0, "STRING"]
+    [36, 9, 0, 35, 0, "IMAGE"],
+    [37, 22, 0, 35, 1, "IMAGE"],
+    [38, 20, 0, 35, 2, "AESTHETIC_MODEL"],
+    [39, 35, 0, 24, 0, "IMAGE"],
+    [40, 35, 0, 25, 0, "IMAGE"],
+    [41, 35, 1, 32, 0, "STRING"]
   ],
   "groups": [
     {
@@ -1113,16 +924,8 @@
     },
     {
       "id": 5,
-      "title": "Aesthetic Scoring",
-      "bounding": [-343.5942586416418, 838.463655350032, 1150, 320],
-      "color": "#8A6529",
-      "font_size": 24,
-      "flags": {}
-    },
-    {
-      "id": 6,
-      "title": "Face Similarity + Approved Output",
-      "bounding": [-14.248282827355922, 1257.0041617790425, 1170, 620],
+      "title": "Image Curation (Aesthetic + Face)",
+      "bounding": [-344, 838, 1230, 460],
       "color": "#2E7D32",
       "font_size": 24,
       "flags": {}
